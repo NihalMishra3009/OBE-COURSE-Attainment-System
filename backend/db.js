@@ -6,13 +6,19 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+const dbUrl = process.env.DATABASE_URL || "";
 const needsSsl =
   (process.env.PGSSLMODE && process.env.PGSSLMODE.toLowerCase() === "require") ||
-  (process.env.DATABASE_URL && process.env.DATABASE_URL.includes("sslmode=require"));
+  dbUrl.includes("sslmode=require");
+
+const allowInsecure =
+  (process.env.PGSSL_ALLOW_INSECURE && process.env.PGSSL_ALLOW_INSECURE.toLowerCase() === "true") ||
+  dbUrl.includes("supabase.com") ||
+  dbUrl.includes("pooler.supabase.com");
 
 export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: needsSsl ? { rejectUnauthorized: false } : undefined
+  connectionString: dbUrl,
+  ssl: needsSsl || allowInsecure ? { rejectUnauthorized: false } : undefined
 });
 
 const __filename = fileURLToPath(import.meta.url);
