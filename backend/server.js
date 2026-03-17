@@ -28,6 +28,23 @@ function signToken(user){
   return jwt.sign({username: user.username, role: user.role}, JWT_SECRET, {expiresIn: "7d"});
 }
 
+async function ensureDefaultUsers(){
+  const {rows} = await pool.query("SELECT COUNT(*)::int AS cnt FROM users");
+  if(rows[0].cnt > 0) return;
+  const defaults = [
+    {username:"admin", password:"admin123", role:"admin", name:"Admin User", dept:"Computer Engineering"},
+    {username:"head", password:"head123", role:"head", name:"Head of Dept", dept:"Computer Engineering"},
+    {username:"faculty1", password:"pass123", role:"faculty", name:"Dr. A. Sharma", dept:"Computer Engineering"}
+  ];
+  for(const u of defaults){
+    const hash = await bcrypt.hash(u.password, 10);
+    await pool.query(
+      "INSERT INTO users (username, pass_hash, role, name, dept) VALUES ($1,$2,$3,$4,$5) ON CONFLICT (username) DO NOTHING",
+      [u.username, hash, u.role, u.name, u.dept]
+    );
+  }
+}
+
 function auth(req,res,next){
   const header = req.headers.authorization || "";
   const token = header.startsWith("Bearer ") ? header.slice(7) : "";
@@ -51,6 +68,7 @@ app.post("/api/auth/login", async (req,res)=>{
   if(!username || !password) return res.status(400).json({error:"Missing credentials"});
   try{
     await ensureSchema();
+    await ensureDefaultUsers();
     const {rows} = await pool.query(
       "SELECT username, pass_hash, role, name, dept FROM users WHERE username=$1",
       [username]
@@ -176,13 +194,16 @@ app.delete("/api/subjects/:id", auth, async (req,res)=>{
 app.get("/health", (req,res)=>res.json({ok:true}));
 
 const port = process.env.PORT || 3000;
-ensureSchema().then(()=>{
-  app.listen(port, ()=>{
-    console.log(`Server running on http://localhost:${port}`);
+ensureSchema()
+  .then(()=>ensureDefaultUsers())
+  .then(()=>{
+    app.listen(port, ()=>{
+      console.log(`Server running on http://localhost:${port}`);
+    });
+  })
+  .catch(()=>{
+    app.listen(port, ()=>{
+      console.log(`Server running on http://localhost:${port}`);
+    });
   });
-}).catch(()=>{
-  app.listen(port, ()=>{
-    console.log(`Server running on http://localhost:${port}`);
-  });
-});
 
