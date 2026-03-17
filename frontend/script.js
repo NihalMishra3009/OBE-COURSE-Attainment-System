@@ -77,6 +77,12 @@ function scheduleSave(){
   saveTimer = setTimeout(()=>saveSubject(APP.currentSubjectId).catch(()=>{}), 800);
 }
 
+function manualSave(){
+  saveSubject(APP.currentSubjectId)
+    .then(()=>showToast('Saved','success'))
+    .catch((e)=>showToast(e.message||'Save failed','error'));
+}
+
 async function saveSubject(id){
   const s = APP.subjects[id];
   if(!s) return;
