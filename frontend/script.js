@@ -26,6 +26,14 @@ if (!API_BASE) {
     API_BASE = 'http://localhost:3000';
   }
 }
+
+// Keep backend warm while the page is open (helps reduce cold starts)
+function warmupBackend(){
+  if(!API_BASE) return;
+  fetch(API_BASE + '/health/db').catch(()=>{});
+}
+warmupBackend();
+setInterval(warmupBackend, 4 * 60 * 1000);
 let AUTH_TOKEN = localStorage.getItem('auth_token') || '';
 
 function setAuthToken(t){
