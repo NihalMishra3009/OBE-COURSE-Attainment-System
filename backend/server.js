@@ -10,7 +10,10 @@ import { pool, ensureSchema } from "./db.js";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+const corsOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(",").map(s=>s.trim())
+  : "*";
+app.use(cors({ origin: corsOrigins }));
 app.use(express.json({limit: "5mb"}));
 
 const __filename = fileURLToPath(import.meta.url);

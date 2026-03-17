@@ -20,9 +20,11 @@ let USERS = {
 // ============================================================
 //  API HELPERS
 // ============================================================
-let API_BASE = '';
-if (location.protocol === 'file:' || (location.port && location.port !== '3000')) {
-  API_BASE = 'http://localhost:3000';
+let API_BASE = (window.__API_BASE || '').trim();
+if (!API_BASE) {
+  if (location.protocol === 'file:' || (location.port && location.port !== '3000')) {
+    API_BASE = 'http://localhost:3000';
+  }
 }
 let AUTH_TOKEN = localStorage.getItem('auth_token') || '';
 

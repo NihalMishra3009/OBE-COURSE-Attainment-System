@@ -6,8 +6,13 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+const needsSsl =
+  (process.env.PGSSLMODE && process.env.PGSSLMODE.toLowerCase() === "require") ||
+  (process.env.DATABASE_URL && process.env.DATABASE_URL.includes("sslmode=require"));
+
 export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
+  connectionString: process.env.DATABASE_URL,
+  ssl: needsSsl ? { rejectUnauthorized: false } : undefined
 });
 
 const __filename = fileURLToPath(import.meta.url);
