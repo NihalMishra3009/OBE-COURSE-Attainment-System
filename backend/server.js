@@ -2,7 +2,6 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { pool, ensureSchema } from "./db.js";
@@ -51,11 +50,12 @@ app.post("/api/auth/login", async (req,res)=>{
   if(!username || !password) return res.status(400).json({error:"Missing credentials"});
   try{
     await ensureSchema();
-    const {rows} = await pool.query("SELECT username, pass_hash, role, name, dept FROM users WHERE username=$1", [username]);
+    const {rows} = await pool.query(
+      "SELECT username, role, name, dept FROM users WHERE username=$1 AND pass_hash = crypt($2, pass_hash)",
+      [username, password]
+    );
     if(rows.length===0) return res.status(401).json({error:"Invalid username or password"});
     const user = rows[0];
-    const ok = await bcrypt.compare(password, user.pass_hash);
-    if(!ok) return res.status(401).json({error:"Invalid username or password"});
     const token = signToken(user);
     res.json({token, user:{username:user.username, role:user.role, name:user.name, dept:user.dept}});
   }catch(e){
@@ -89,8 +89,10 @@ app.post("/api/users", auth, requireAdmin, async (req,res)=>{
   const {username,password,role,name,dept} = req.body || {};
   if(!username || !password || !role || !name || !dept) return res.status(400).json({error:"Missing fields"});
   try{
-    const hash = await bcrypt.hash(password, 10);
-    await pool.query("INSERT INTO users (username, pass_hash, role, name, dept) VALUES ($1,$2,$3,$4,$5)", [username, hash, role, name, dept]);
+    await pool.query(
+      "INSERT INTO users (username, pass_hash, role, name, dept) VALUES ($1, crypt($2, gen_salt('bf')), $3, $4, $5)",
+      [username, password, role, name, dept]
+    );
     res.json({ok:true});
   }catch(e){
     res.status(500).json({error:"Failed to add user"});
