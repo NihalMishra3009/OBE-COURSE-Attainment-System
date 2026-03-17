@@ -1,0 +1,12 @@
+﻿# Node
+node_modules/
+
+# Env
+backend/.env
+
+# Logs
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db

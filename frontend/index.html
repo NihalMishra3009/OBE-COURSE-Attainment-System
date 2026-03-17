@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NBA OBE — Course Attainment System</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- =============================================================== -->
+<!--  LOGIN PAGE                                                     -->
+<!-- =============================================================== -->
+<div id="loginPage">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="badge">NBA</div>
+      <h1>OBE Attainment System</h1>
+      <p>National Board of Accreditation — Course File Manager</p>
+    </div>
+    <div class="login-tabs">
+      <button class="login-tab active" onclick="switchLoginRole('admin')">Admin</button>
+      <button class="login-tab" onclick="switchLoginRole('head')">Head</button>
+      <button class="login-tab" onclick="switchLoginRole('faculty')">Faculty</button>
+    </div>
+    <div class="demo-accounts">
+      <strong>🔑 Demo Credentials</strong>
+      <div class="demo-row"><span>Admin</span><span><b>admin</b> / admin123</span></div>
+      <div class="demo-row"><span>Head</span><span><b>head</b> / head123</span></div>
+      <div class="demo-row"><span>Faculty</span><span><b>faculty1</b> / pass123</span></div>
+    </div>
+    <div class="form-field">
+      <label>Username</label>
+      <input id="loginUser" type="text" placeholder="Enter username" value="faculty1">
+    </div>
+    <div class="form-field">
+      <label>Password</label>
+      <input id="loginPass" type="password" placeholder="Enter password" value="pass123">
+    </div>
+    <div class="form-field" id="deptField" style="display:none">
+      <label>Department</label>
+      <select id="loginDept" id="loginDept">
+        <option>Loading...</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="doLogin()">Sign In →</button>
+    <p id="loginErr" style="color:var(--red);font-size:12px;margin-top:10px;text-align:center;display:none"></p>
+  </div>
+</div>
+
+<!-- =============================================================== -->
+<!--  APP SHELL                                                      -->
+<!-- =============================================================== -->
+<div id="appShell">
+  <div class="shell-grid">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <div class="badge">NBA</div>
+          <div><h2>OBE System</h2><p>Attainment Calculator</p></div>
+        </div>
+      </div>
+      <div class="sidebar-user">
+        <div class="user-chip">
+          <div class="user-avatar" id="sideAvatar" style="background:var(--accent)">A</div>
+          <div class="user-info">
+            <div class="user-name" id="sideUserName">—</div>
+            <div class="user-role"><span class="role-badge" id="sideRoleBadge">—</span></div>
+          </div>
+          <button class="btn btn-sm btn-outline" onclick="doLogout()" title="Logout" style="padding:4px 8px;font-size:11px;flex-shrink:0">⏻</button>
+        </div>
+      </div>
+      <nav class="sidebar-nav" id="sideNav"><!-- filled by JS --></nav>
+      <div class="sidebar-footer">
+        <label style="color:rgba(255,255,255,.4);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px">Active Subject</label>
+        <select class="subject-selector" id="globalSubjectSel" onchange="switchSubject(this.value)"></select>
+        <button class="btn btn-sm" onclick="openAddSubjectModal()" style="width:100%;margin-top:8px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px dashed rgba(255,255,255,.2)">+ Add Subject</button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main-content">
+      <div class="topbar">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</div>
+          <div class="topbar-title">
+            <h2 id="topbarTitle">Dashboard</h2>
+            <p id="topbarSub">NBA Course File Attainment System</p>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-sm btn-gold" onclick="generateFullReport()">📄 Full Report</button>
+          <button class="btn btn-sm btn-success" onclick="exportAllExcel()">📊 Excel Export</button>
+          <button class="btn btn-sm btn-purple" onclick="calculateAll()">⚡ Calculate All</button>
+        </div>
+      </div>
+      <div class="content-body" id="contentBody">
+        <!-- Pages injected here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL OVERLAY -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header"><h3 id="modalTitle">Modal</h3><button class="btn btn-sm btn-outline" onclick="closeModal()">✕</button></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer" id="modalFooter"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast">✓ Saved</div>
+<script src="script.js"></script>
+</html>
+
+
