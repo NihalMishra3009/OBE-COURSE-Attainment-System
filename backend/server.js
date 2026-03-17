@@ -80,6 +80,7 @@ app.post("/api/auth/login", async (req,res)=>{
     const token = signToken(user);
     res.json({token, user:{username:user.username, role:user.role, name:user.name, dept:user.dept}});
   }catch(e){
+    console.error("Login error:", e);
     res.status(500).json({error:"Login failed"});
   }
 });
@@ -192,6 +193,14 @@ app.delete("/api/subjects/:id", auth, async (req,res)=>{
 });
 
 app.get("/health", (req,res)=>res.json({ok:true}));
+app.get("/health/db", async (req,res)=>{
+  try{
+    await pool.query("SELECT 1");
+    res.json({ok:true});
+  }catch(e){
+    res.status(500).json({ok:false, error:e.message});
+  }
+});
 
 const port = process.env.PORT || 3000;
 ensureSchema()
