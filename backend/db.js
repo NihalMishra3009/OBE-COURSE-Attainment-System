@@ -6,19 +6,34 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const dbUrl = process.env.DATABASE_URL || "";
+const rawUrl = process.env.DATABASE_URL || "";
+let dbUrl = rawUrl;
+const lower = rawUrl.toLowerCase();
+
 const needsSsl =
   (process.env.PGSSLMODE && process.env.PGSSLMODE.toLowerCase() === "require") ||
-  dbUrl.includes("sslmode=require");
+  lower.includes("sslmode=require");
 
 const allowInsecure =
   (process.env.PGSSL_ALLOW_INSECURE && process.env.PGSSL_ALLOW_INSECURE.toLowerCase() === "true") ||
-  dbUrl.includes("supabase.com") ||
-  dbUrl.includes("pooler.supabase.com");
+  lower.includes("supabase.com") ||
+  lower.includes("pooler.supabase.com");
+
+// If we need to allow insecure SSL, strip sslmode from URL to prevent override
+if (allowInsecure && rawUrl) {
+  try {
+    const u = new URL(rawUrl);
+    u.searchParams.delete("sslmode");
+    u.searchParams.delete("sslrootcert");
+    dbUrl = u.toString();
+  } catch {
+    dbUrl = rawUrl;
+  }
+}
 
 export const pool = new Pool({
   connectionString: dbUrl,
-  ssl: needsSsl || allowInsecure ? { rejectUnauthorized: false } : undefined
+  ssl: (needsSsl || allowInsecure) ? { rejectUnauthorized: false } : undefined
 });
 
 const __filename = fileURLToPath(import.meta.url);
