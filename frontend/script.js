@@ -455,7 +455,7 @@ function renderCourseInfo(el){
   h+='<div class="fg"><label>PSO Target (0.00–3.00)</label>';
   h+='<input type="number" id="pso_target" value="'+s.psoTarget.toFixed(2)+'" min="0" max="3" step="0.01" style="padding:9px;border:1.5px solid var(--border2);border-radius:6px;font-family:monospace;width:100%"></div>';
   h+='<div class="fg"><label>Direct Weight (%)</label>';
-  h+='<input type="number" id="dir_wt" value="'+(s.directWeight*100)+'" min="50" max="90" step="5" style="padding:9px;border:1.5px solid var(--border2);border-radius:6px;width:100%"></div>';
+  h+='<input type="number" id="dir_wt" value="'+Math.round(s.directWeight*100)+'" min="50" max="90" step="5" style="padding:9px;border:1.5px solid var(--border2);border-radius:6px;width:100%"></div>';
   h+='</div>';
   // ---- Dynamic Attainment Level Configuration (NBA Standard) ----
   const savedLvlPct = s.attainLvlPct || {3:65,2:55,1:45};
@@ -552,7 +552,7 @@ function renderCourseInfo(el){
   h+='<p style="font-size:11px;color:var(--text2);margin:6px 0 10px">CES = Course Exit Survey. Ratings on 1–5 scale. Set the target score and weight below.</p>';
   h+='<div class="g4">';
   h+='<div class="fg"><label>CES Target Score (1–5)</label><input type="number" id="ces_target" value="'+(s.cesTarget||3.5)+'" min="1" max="5" step="0.1" style="padding:9px;border:1.5px solid #bae6fd;border-radius:6px;width:100%"></div>';
-  h+='<div class="fg"><label>Indirect Weight (%)</label><input type="number" id="indir_wt" value="'+(s.indirectWeight*100)+'" min="10" max="50" step="5" style="padding:9px;border:1.5px solid #bae6fd;border-radius:6px;width:100%"></div>';
+  h+='<div class="fg"><label>Indirect Weight (%)</label><input type="number" id="indir_wt" value="'+Math.round(s.indirectWeight*100)+'" min="10" max="50" step="5" style="padding:9px;border:1.5px solid #bae6fd;border-radius:6px;width:100%"></div>';
   h+='<div class="fg"><label>CES → Attainment (Score ≥4 → L3)</label><div style="padding:9px;background:#e0f2fe;border-radius:6px;font-size:12px">≥4.0→L3 | ≥3.5→L2 | ≥2.5→L1 | else→0</div></div>';
   h+='<div class="fg"><label>CES Survey Status</label><div style="padding:9px;background:#d1fae5;border-radius:6px;font-size:12px;color:var(--green)">'+( (s.cesData&&s.cesData.length)?s.cesData.length+' responses loaded':'Upload in Section 11')+'</div></div>';
   h+='</div></div>';
@@ -611,7 +611,7 @@ function saveCourseInfo(){
   s.poTarget=parseFloat((+gv('po_target',s.poTarget)).toFixed(2));
   s.psoTarget=parseFloat((+gv('pso_target',s.psoTarget)).toFixed(2));
   s.directWeight=(+gv('dir_wt',s.directWeight*100))/100;
-  s.indirectWeight=1-s.directWeight;
+  s.indirectWeight=Math.round((1-s.directWeight)*100)/100;
   s.cesTarget=+(gv('ces_target',s.cesTarget||3.5));
   // Save SEE/CIE/CES level ranges (already saved live via updateLvlRange)
   if(!s.seeLvl) s.seeLvl={1:{min:40,max:54},2:{min:55,max:74},3:{min:75,max:100}};
