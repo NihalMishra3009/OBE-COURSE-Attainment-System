@@ -1523,7 +1523,36 @@ function uploadCES(input){
   const reader=new FileReader();
   reader.onload=e=>{
     const wb=XLSX.read(e.target.result,{type:'array'});
-    sub().cesData=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:0});
+    const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:""});
+    const coCount=sub().cos.length;
+    sub().cesData=rows.map(r=>{
+      const out={};
+      const keys=Object.keys(r||{});
+      keys.forEach(k=>{
+        const rawKey=String(k).trim();
+        const norm=rawKey.toLowerCase().replace(/[\s_-]/g,'');
+        const val=r[k];
+        if(!out['Roll No'] && (norm==='rollno' || norm==='rollnumber' || norm==='roll')){
+          out['Roll No']=val;
+          return;
+        }
+        const m=norm.match(/^co(\d+)(rating)?$/);
+        if(m){
+          const idx=+m[1];
+          if(idx>=1 && idx<=coCount){
+            out['CO'+idx+'_Rating']=val;
+          }
+        }
+      });
+      // ensure all CO columns exist
+      for(let i=1;i<=coCount;i++){
+        const key='CO'+i+'_Rating';
+        const v=out[key];
+        out[key]=(v===undefined||v===null||v==="")?0:+v||0;
+      }
+      if(out['Roll No']===undefined) out['Roll No']=r['Roll No']||r['RollNo']||'';
+      return out;
+    });
     showToast(sub().cesData.length+' CES responses loaded','success');renderCES(document.getElementById(PAGES[11].id));
   };reader.readAsArrayBuffer(f);
 }
