@@ -473,7 +473,7 @@ function renderCourseInfo(el){
   h+='</div></div>';
 
   // NBA Standard SEE / CIE / CES table - editable ranges
-  h+='<div class="tbl-wrap"><table style="font-size:12px;border-collapse:collapse;width:100%">';
+  h+='<div class="tbl-wrap"><table class="attain-table" style="font-size:12px;border-collapse:collapse;width:100%">';
   h+='<thead>';
   h+='<tr style="background:#1e40af;color:#fff">';
   h+='<th rowspan="2" style="padding:8px 12px;border:1px solid #93c5fd;text-align:center;width:60px">Level</th>';

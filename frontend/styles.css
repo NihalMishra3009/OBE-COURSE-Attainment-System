@@ -192,6 +192,7 @@ table{width:100%;border-collapse:collapse;font-size:13px}
 thead tr{background:var(--surface2)}
 th{padding:10px 12px;font-weight:700;color:var(--text2);font-size:11px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;border-bottom:2px solid var(--border);text-align:center}
 th.left{text-align:left}
+table.attain-table thead th{color:#fff}
 td{padding:9px 12px;border-bottom:1px solid var(--border);text-align:center;vertical-align:middle}
 td.left{text-align:left}
 tr:last-child td{border-bottom:none}
