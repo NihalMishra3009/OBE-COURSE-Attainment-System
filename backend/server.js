@@ -11,9 +11,19 @@ dotenv.config();
 
 const app = express();
 const corsOrigins = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.split(",").map(s=>s.trim())
-  : "*";
-app.use(cors({ origin: corsOrigins }));
+  ? process.env.CORS_ORIGIN.split(",").map(s=>s.trim()).filter(Boolean)
+  : [];
+const allowAll = corsOrigins.includes("*");
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true);
+    if (allowAll) return cb(null, true);
+    if (corsOrigins.includes(origin)) return cb(null, true);
+    if (origin.endsWith(".pages.dev")) return cb(null, true);
+    if (origin === "http://localhost:3000") return cb(null, true);
+    return cb(new Error("Not allowed by CORS"));
+  }
+}));
 app.use(express.json({limit: "5mb"}));
 
 const __filename = fileURLToPath(import.meta.url);
