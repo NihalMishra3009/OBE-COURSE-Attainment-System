@@ -2144,7 +2144,36 @@ function generateFullReport(){
   setTimeout(()=>{
     const s=sub();
     PAGES.forEach((_,i)=>renderPage(i));
-    const allPages=Array.from(document.querySelectorAll('.page')).map((p,i)=>'<div style="page-break-before:'+(i>0?'always':'avoid')+'"><h3 style="color:#2563eb;border-bottom:2px solid #2563eb;padding:8px 0;margin-bottom:12px">'+PAGES[i].section+'</h3>'+p.innerHTML+'</div>').join('');
+    const sanitizePage=(p)=>{
+      const clone=p.cloneNode(true);
+      const toText=(el)=>{
+        let val='';
+        if(el.tagName==='SELECT'){
+          val=el.options[el.selectedIndex]?.text||'';
+        } else if(el.type==='checkbox' || el.type==='radio'){
+          val=el.checked?'Yes':'No';
+        } else {
+          val=el.value ?? el.textContent ?? '';
+        }
+        const span=document.createElement('span');
+        span.textContent=val;
+        span.style.display='inline-block';
+        span.style.minWidth='40px';
+        span.style.padding='2px 6px';
+        span.style.border='1px solid #cbd5e1';
+        span.style.borderRadius='4px';
+        span.style.background='#fff';
+        span.style.fontFamily='inherit';
+        span.style.fontSize='11px';
+        return span;
+      };
+      clone.querySelectorAll('input,select,textarea').forEach(el=>{
+        el.replaceWith(toText(el));
+      });
+      clone.querySelectorAll('.btn,.upload-zone').forEach(el=>el.remove());
+      return clone.innerHTML;
+    };
+    const allPages=Array.from(document.querySelectorAll('.page')).map((p,i)=>'<div style="page-break-before:'+(i>0?'always':'avoid')+'"><h3 style="color:#2563eb;border-bottom:2px solid #2563eb;padding:8px 0;margin-bottom:12px">'+PAGES[i].section+'</h3>'+sanitizePage(p)+'</div>').join('');
     const w=window.open('','_blank');
     if(w){
       w.document.write('<!DOCTYPE html><html><head><title>NBA Course File — '+s.name+'</title>'
