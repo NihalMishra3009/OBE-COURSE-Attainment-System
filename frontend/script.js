@@ -152,7 +152,7 @@ function createDefaultSubject(name,code,dept,ay,sem,faculty){
     labTWCols:['Experiment 1','Experiment 2','Experiment 3'],
     labTWMarks:{},
     cesData:[],
-    poLearningHrs:Array(14*6).fill(0),
+    poLearningHrs:Array(14*6).fill(null),
     coAttainment:Array(6).fill(null),
     poAttainment:Array(11).fill(null),
     psoAttainment:Array(3).fill(null),
@@ -1619,19 +1619,19 @@ function renderPOHours(el){
     const coTotalHrs=coTotals[ci];
     h+='<tr><td><span class="co-tag">'+co.id+'</span><br><span style="font-size:10px;color:var(--text3)">'+coTotalHrs+'h</span></td>';
     allPOs.forEach((_,pi)=>{
-      h+='<td><input type="number" value="'+getVal(ci,pi)+'" min="0" step="0.5" onchange="updatePOHour('+ci+','+pi+',this.value)" style="width:52px"></td>';
+      h+='<td><input type="number" value="'+getVal(ci,pi)+'" min="0" step="0.5" oninput="updatePOHour('+ci+','+pi+',this.value)" style="width:52px"></td>';
     });
-    h+='<td><strong>'+allPOs.reduce((a,_,pi)=>a+getVal(ci,pi),0).toFixed(1)+'</strong></td></tr>';
+    h+='<td><strong id="pohr-row-'+ci+'">'+allPOs.reduce((a,_,pi)=>a+getVal(ci,pi),0).toFixed(1)+'</strong></td></tr>';
   });
   h+='</tbody><tfoot>';
   h+='<tr style="background:var(--surface2)"><td class="left"><strong>Total Hrs</strong></td>';
-  allPOs.forEach((_,pi)=>{ h+='<td><strong>'+s.cos.reduce((a,_,ci)=>a+getVal(ci,pi),0).toFixed(1)+'</strong></td>'; });
+  allPOs.forEach((_,pi)=>{ h+='<td><strong id="pohr-col-'+pi+'">'+s.cos.reduce((a,_,ci)=>a+getVal(ci,pi),0).toFixed(1)+'</strong></td>'; });
   h+='<td></td></tr>';
   h+='<tr style="background:#dbeafe"><td class="left"><strong style="color:var(--accent)">Avg Hrs/CO</strong></td>';
   allPOs.forEach((_,pi)=>{
     const total=s.cos.reduce((a,_,ci)=>a+getVal(ci,pi),0);
     const mapped=s.cos.filter((_,ci)=>s.copoPOMatrix[ci][pi]>0).length||1;
-    h+='<td><strong style="color:var(--accent)">'+( total/mapped).toFixed(2)+'</strong></td>';
+    h+='<td><strong id="pohr-avg-'+pi+'" style="color:var(--accent)">'+( total/mapped).toFixed(2)+'</strong></td>';
   });
   h+='<td></td></tr>';
   h+='</tfoot></table></div></div></div>';
@@ -1641,8 +1641,43 @@ function renderPOHours(el){
 function updatePOHour(ci,pi,val){
   const s=sub();
   const idx=pi*s.cos.length+ci;
-  s.poLearningHrs[idx]=+val||0;
-  renderPOHours(document.getElementById('pg14'));
+  if(val===null || val===undefined || val===""){
+    s.poLearningHrs[idx]=null;
+  } else {
+    s.poLearningHrs[idx]=+val||0;
+  }
+  updatePOHourTotals();
+}
+
+function updatePOHourTotals(){
+  const s=sub();
+  const allPOsCount=s.pos.length+s.psos.length;
+  const coCount=s.cos.length;
+  const coTotals=s.cos.map((_,ci)=>s.hourCols.reduce((a,_,hi)=>a+(s.coHours[ci][hi]||0),0));
+  const getAuto=(ci,pi)=>{
+    const mv=s.copoPOMatrix[ci][pi]||0;
+    return mv>0?Math.round(coTotals[ci]*(mv/6)*10)/10:0;
+  };
+  const getVal=(ci,pi)=>{
+    const idx=pi*coCount+ci;
+    const v=s.poLearningHrs[idx];
+    if(v!==undefined && v!==null && v!=="") return +v||0;
+    return getAuto(ci,pi);
+  };
+
+  for(let ci=0;ci<coCount;ci++){
+    const rowTotal=Array.from({length:allPOsCount},(_,pi)=>getVal(ci,pi)).reduce((a,b)=>a+b,0);
+    const rowEl=document.getElementById('pohr-row-'+ci);
+    if(rowEl) rowEl.textContent=rowTotal.toFixed(1);
+  }
+  for(let pi=0;pi<allPOsCount;pi++){
+    const colTotal=Array.from({length:coCount},(_,ci)=>getVal(ci,pi)).reduce((a,b)=>a+b,0);
+    const colEl=document.getElementById('pohr-col-'+pi);
+    if(colEl) colEl.textContent=colTotal.toFixed(1);
+    const mapped=s.cos.filter((_,ci)=>s.copoPOMatrix[ci][pi]>0).length||1;
+    const avgEl=document.getElementById('pohr-avg-'+pi);
+    if(avgEl) avgEl.textContent=(colTotal/mapped).toFixed(2);
+  }
 }
 
 // ============================================================
