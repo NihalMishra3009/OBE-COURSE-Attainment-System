@@ -97,6 +97,30 @@ async function deleteSubject(id){
   await apiFetch('/api/subjects/'+encodeURIComponent(id), {method:'DELETE'});
 }
 
+async function deleteCurrentSubject(){
+  const ids=Object.keys(APP.subjects);
+  if(ids.length<=1){
+    showToast('At least one subject is required','error');
+    return;
+  }
+  const id=APP.currentSubjectId;
+  const s=APP.subjects[id];
+  if(!id || !s) return;
+  if(!confirm('Delete subject "'+s.name+'" ('+s.code+')? This cannot be undone.')) return;
+  try{
+    await deleteSubject(id);
+    delete APP.subjects[id];
+    APP.currentSubjectId=Object.keys(APP.subjects)[0];
+    buildSubjectSelector();
+    syncSubjectSelector();
+    buildContentPages();
+    navigateTo(0);
+    showToast('Subject deleted','success');
+  }catch(e){
+    showToast(e.message||'Delete failed','error');
+  }
+}
+
 async function refreshUsers(){
   if(APP.user && APP.user.role==='admin'){
     const data = await apiFetch('/api/users');
@@ -343,7 +367,10 @@ function renderDashboard(el){
   html+='<div class="kpi purple"><div class="kpi-val">'+(APP.user.role==='admin'?Object.keys(USERS).length:1)+'</div><div class="kpi-label">Users</div></div>';
   html+='</div>';
   html+='<div class="card"><div class="card-header"><div class="card-title">📚 My Subjects</div>';
-  html+='<button class="btn btn-sm btn-outline" onclick="openAddSubjectModal()">+ Add Subject</button></div><div class="card-body">';
+  html+='<div style="display:flex;gap:8px;align-items:center">';
+  html+='<button class="btn btn-sm btn-outline" onclick="deleteCurrentSubject()">Delete Subject</button>';
+  html+='<button class="btn btn-sm btn-outline" onclick="openAddSubjectModal()">+ Add Subject</button>';
+  html+='</div></div><div class="card-body">';
   html+='<div class="g3">';
   subjects.forEach(s=>{
     html+='<div class="subject-card '+(s.id===APP.currentSubjectId?'active-sub':'')+'" onclick="switchSubjectAndGo(\''+s.id+'\',1)">';
