@@ -56,6 +56,13 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   font-size:28px;font-weight:800;color:#fff;letter-spacing:-1px;
   box-shadow:0 8px 24px rgba(37,99,235,.4);margin-bottom:16px;
 }
+.login-logo-img{
+  width:72px;height:72px;border-radius:18px;
+  object-fit:contain;
+  background:#fff;
+  box-shadow:0 8px 24px rgba(15,23,42,.2);
+  margin-bottom:16px;
+}
 .login-logo h1{font-size:22px;font-weight:800;color:var(--text)}
 .login-logo p{font-size:13px;color:var(--text2);margin-top:4px}
 .login-tabs{display:flex;background:var(--surface3);border-radius:var(--radius-sm);padding:3px;margin-bottom:24px}
