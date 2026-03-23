@@ -41,9 +41,10 @@ frontend/   # Static UI (HTML/CSS/JS)
 - The frontend auto-saves subject changes to the backend.
 - `backend/.env` is ignored by git.
 ## Deploying
-### Frontend (Netlify)
-- Publish directory: `frontend`
+### Frontend (Cloudflare Pages)
+- Framework preset: `None`
 - Build command: (empty)
+- Build output directory: `frontend`
 - Set backend URL in `frontend/config.js`:
   ```js
   window.__API_BASE = "https://your-service.up.railway.app";
@@ -53,7 +54,7 @@ frontend/   # Static UI (HTML/CSS/JS)
 - Set environment variables:
   - `DATABASE_URL` = Supabase Postgres connection string
   - `JWT_SECRET` = any strong secret
-  - `CORS_ORIGIN` = your Netlify URL (e.g. https://your-site.netlify.app)
+  - `CORS_ORIGIN` = your Cloudflare Pages URL (e.g. https://your-site.pages.dev)
 
 ### Database (Supabase)
 - Use the Supabase **Postgres** connection string.
