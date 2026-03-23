@@ -1630,8 +1630,8 @@ function renderPOHours(el){
   h+='<tr style="background:#dbeafe"><td class="left"><strong style="color:var(--accent)">Avg Hrs/CO</strong></td>';
   allPOs.forEach((_,pi)=>{
     const total=s.cos.reduce((a,_,ci)=>a+getVal(ci,pi),0);
-    const mapped=s.cos.filter((_,ci)=>s.copoPOMatrix[ci][pi]>0).length||1;
-    h+='<td><strong id="pohr-avg-'+pi+'" style="color:var(--accent)">'+( total/mapped).toFixed(2)+'</strong></td>';
+    const counted=s.cos.filter((_,ci)=>getVal(ci,pi)>0).length||1;
+    h+='<td><strong id="pohr-avg-'+pi+'" style="color:var(--accent)">'+( total/counted).toFixed(2)+'</strong></td>';
   });
   h+='<td></td></tr>';
   h+='</tfoot></table></div></div></div>';
@@ -1674,7 +1674,7 @@ function updatePOHourTotals(){
     const colTotal=Array.from({length:coCount},(_,ci)=>getVal(ci,pi)).reduce((a,b)=>a+b,0);
     const colEl=document.getElementById('pohr-col-'+pi);
     if(colEl) colEl.textContent=colTotal.toFixed(1);
-    const mapped=s.cos.filter((_,ci)=>s.copoPOMatrix[ci][pi]>0).length||1;
+    const mapped=s.cos.filter((_,ci)=>getVal(ci,pi)>0).length||1;
     const avgEl=document.getElementById('pohr-avg-'+pi);
     if(avgEl) avgEl.textContent=(colTotal/mapped).toFixed(2);
   }
