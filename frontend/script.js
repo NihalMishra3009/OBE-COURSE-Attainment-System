@@ -1596,6 +1596,18 @@ function renderMonitoring(el){
 function renderPOHours(el){
   const s=sub();
   const allPOs=[...s.pos.map((_,i)=>'PO'+(i+1)),'PSO1','PSO2','PSO3'];
+  const coCount=s.cos.length;
+  const coTotals=s.cos.map((_,ci)=>s.hourCols.reduce((a,_,hi)=>a+(s.coHours[ci][hi]||0),0));
+  const getAuto=(ci,pi)=>{
+    const mv=s.copoPOMatrix[ci][pi]||0;
+    return mv>0?Math.round(coTotals[ci]*(mv/6)*10)/10:0;
+  };
+  const getVal=(ci,pi)=>{
+    const idx=pi*coCount+ci;
+    const v=s.poLearningHrs[idx];
+    if(v!==undefined && v!==null && v!=="") return +v||0;
+    return getAuto(ci,pi);
+  };
   let h='<div class="instr"><strong>📌 Instructions:</strong> Enter learning hours attributable to each PO/PSO via each CO. Pre-filled from CO-PO matrix. Avg Hrs/CO calculated automatically.</div>';
   h+='<div class="card"><div class="card-header"><div class="card-title">⏰ PO/PSO Learning Hours</div>';
   h+='<button class="btn btn-sm btn-success" onclick="showToast(\'PO Hours saved!\',\'success\')">💾 Save</button>';
@@ -1604,29 +1616,33 @@ function renderPOHours(el){
   allPOs.forEach(p=>{ h+='<th>'+p+'</th>'; });
   h+='<th>Total</th></tr></thead><tbody>';
   s.cos.forEach((co,ci)=>{
-    const coTotalHrs=s.hourCols.reduce((a,_,hi)=>a+(s.coHours[ci][hi]||0),0);
+    const coTotalHrs=coTotals[ci];
     h+='<tr><td><span class="co-tag">'+co.id+'</span><br><span style="font-size:10px;color:var(--text3)">'+coTotalHrs+'h</span></td>';
     allPOs.forEach((_,pi)=>{
-      const mv=s.copoPOMatrix[ci][pi]||0;
-      const autoHrs=mv>0?Math.round(coTotalHrs*(mv/6)*10)/10:0;
-      const storedKey=pi*6+ci;
-      h+='<td><input type="number" value="'+(s.poLearningHrs[storedKey]||autoHrs)+'" min="0" step="0.5" onchange="sub().poLearningHrs['+(storedKey)+']=+this.value" style="width:52px"></td>';
+      h+='<td><input type="number" value="'+getVal(ci,pi)+'" min="0" step="0.5" onchange="updatePOHour('+ci+','+pi+',this.value)" style="width:52px"></td>';
     });
-    h+='<td><strong>'+allPOs.reduce((a,_,pi)=>a+(s.poLearningHrs[pi*6+ci]||0),0).toFixed(1)+'</strong></td></tr>';
+    h+='<td><strong>'+allPOs.reduce((a,_,pi)=>a+getVal(ci,pi),0).toFixed(1)+'</strong></td></tr>';
   });
   h+='</tbody><tfoot>';
   h+='<tr style="background:var(--surface2)"><td class="left"><strong>Total Hrs</strong></td>';
-  allPOs.forEach((_,pi)=>{ h+='<td><strong>'+s.cos.reduce((a,_,ci)=>a+(s.poLearningHrs[pi*6+ci]||0),0).toFixed(1)+'</strong></td>'; });
+  allPOs.forEach((_,pi)=>{ h+='<td><strong>'+s.cos.reduce((a,_,ci)=>a+getVal(ci,pi),0).toFixed(1)+'</strong></td>'; });
   h+='<td></td></tr>';
   h+='<tr style="background:#dbeafe"><td class="left"><strong style="color:var(--accent)">Avg Hrs/CO</strong></td>';
   allPOs.forEach((_,pi)=>{
-    const total=s.cos.reduce((a,_,ci)=>a+(s.poLearningHrs[pi*6+ci]||0),0);
+    const total=s.cos.reduce((a,_,ci)=>a+getVal(ci,pi),0);
     const mapped=s.cos.filter((_,ci)=>s.copoPOMatrix[ci][pi]>0).length||1;
     h+='<td><strong style="color:var(--accent)">'+( total/mapped).toFixed(2)+'</strong></td>';
   });
   h+='<td></td></tr>';
   h+='</tfoot></table></div></div></div>';
   el.innerHTML=h;
+}
+
+function updatePOHour(ci,pi,val){
+  const s=sub();
+  const idx=pi*s.cos.length+ci;
+  s.poLearningHrs[idx]=+val||0;
+  renderPOHours(document.getElementById('pg14'));
 }
 
 // ============================================================
