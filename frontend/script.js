@@ -2533,12 +2533,12 @@ function generateFullReport(){
 
     const logoSrc=location.origin+'/SIGCE LOGO.jpeg';
     const coverPage=
-      '<div style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:linear-gradient(160deg,#0f172a 0%,#1e3a5f 60%,#0f2a4a 100%);padding:60px 40px;text-align:center;page-break-after:always">'
-      +'<div style="width:110px;height:110px;border-radius:22px;background:#fff;display:flex;align-items:center;justify-content:center;margin-bottom:28px;box-shadow:0 16px 48px rgba(0,0,0,.35)">'
+      '<div style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#fff;padding:60px 40px;text-align:center;page-break-after:always">'
+      +'<div style="width:110px;height:110px;border-radius:22px;background:#fff;display:flex;align-items:center;justify-content:center;margin-bottom:28px;box-shadow:0 16px 28px rgba(15,23,42,.18)">'
       +'<img src="'+logoSrc+'" alt="SIGCE Logo" style="width:90px;height:90px;object-fit:contain"></div>'
-      +'<div style="color:#fff;font-size:26px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px">Smt. Indira Gandhi College of Engineering</div>'
-      +'<div style="color:#93c5fd;font-size:16px;font-weight:600;margin-bottom:40px">Outcome Based Education — Attainment Report</div>'
-      +'<div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:32px 48px;max-width:560px;width:100%">'
+      +'<div style="color:#0f172a;font-size:26px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px">Smt. Indira Gandhi College of Engineering</div>'
+      +'<div style="color:#334155;font-size:16px;font-weight:600;margin-bottom:40px">Outcome Based Education — Attainment Report</div>'
+      +'<div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:32px 48px;max-width:560px;width:100%;box-shadow:0 18px 40px rgba(15,23,42,.12)">'
       +'<table style="width:100%;border-collapse:collapse;color:#000;font-size:14px">'
       +'<tr><td style="padding:10px 0;border-bottom:1px solid #e2e8f0;color:#000;width:180px;text-align:left;font-weight:700">Course Name</td><td style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-weight:700">'+s.name+'</td></tr>'
       +'<tr><td style="padding:10px 0;border-bottom:1px solid #e2e8f0;color:#000;text-align:left;font-weight:700">Course Code</td><td style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left;font-weight:700">'+s.code+'</td></tr>'
@@ -2551,7 +2551,7 @@ function generateFullReport(){
       +'<tr><td style="padding:10px 0;border-bottom:1px solid #e2e8f0;color:#000;text-align:left;font-weight:700">CO Target</td><td style="padding:10px 0;border-bottom:1px solid #e2e8f0;text-align:left">'+s.coTargetLevel.toFixed(2)+' | Threshold '+s.coTargetPct+'%</td></tr>'
       +'<tr><td style="padding:10px 0;color:#000;text-align:left;font-weight:700">Generated</td><td style="padding:10px 0;text-align:left">'+new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'})+'</td></tr>'
       +'</table></div>'
-      +'<div style="margin-top:40px;color:rgba(255,255,255,.4);font-size:11px">Outcome Based Education Framework</div>'
+      +'<div style="margin-top:40px;color:#64748b;font-size:11px">Outcome Based Education Framework</div>'
       +'</div>';
 
     const coAchieved=s.coAttainment.filter(function(c){return c&&c.achieved;}).length;
