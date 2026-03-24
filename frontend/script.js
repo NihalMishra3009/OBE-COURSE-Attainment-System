@@ -2141,9 +2141,10 @@ function printCertificate(){
 // ============================================================
 function generateFullReport(){
   calculateAll();
-  setTimeout(()=>{
+  setTimeout(function(){
     const s=sub();
-    PAGES.forEach((_,i)=>renderPage(i));
+    PAGES.forEach(function(_,i){renderPage(i);});
+
     const sanitizePage=(p)=>{
       const clone=p.cloneNode(true);
       const toText=(el)=>{
@@ -2167,40 +2168,123 @@ function generateFullReport(){
         span.style.fontSize='11px';
         return span;
       };
-      clone.querySelectorAll('input,select,textarea').forEach(el=>{
-        el.replaceWith(toText(el));
-      });
+      clone.querySelectorAll('input,select,textarea').forEach(el=>{el.replaceWith(toText(el));});
       clone.querySelectorAll('.btn,.upload-zone').forEach(el=>el.remove());
       return clone.innerHTML;
     };
-    const allPages=Array.from(document.querySelectorAll('.page')).map((p,i)=>'<div style="page-break-before:'+(i>0?'always':'avoid')+'"><h3 style="color:#2563eb;border-bottom:2px solid #2563eb;padding:8px 0;margin-bottom:12px">'+PAGES[i].section+'</h3>'+sanitizePage(p)+'</div>').join('');
+
+    const indexRows=PAGES.slice(1).map(function(p,i){
+      return '<tr>'
+        +'<td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;color:#2563eb">'+(i+1)+'</td>'
+        +'<td style="padding:6px 10px;border:1px solid #e2e8f0;font-size:13px">'+p.icon+' '+p.section+'</td>'
+        +'<td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#94a3b8;font-size:12px">'+(i+2)+'</td>'
+        +'</tr>';
+    }).join('');
+
+    const coverPage=
+      '<div style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:linear-gradient(160deg,#0f172a 0%,#1e3a5f 60%,#0f2a4a 100%);padding:60px 40px;text-align:center;page-break-after:always">'
+      +'<div style="width:100px;height:100px;border-radius:24px;background:linear-gradient(135deg,#2563eb,#0ea5e9);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;color:#fff;letter-spacing:-2px;margin-bottom:32px;box-shadow:0 16px 48px rgba(37,99,235,.5)">SIGCE</div>'
+      +'<div style="color:#fff;font-size:30px;font-weight:800;letter-spacing:-1px;margin-bottom:8px">OBE Course File</div>'
+      +'<div style="color:#93c5fd;font-size:16px;font-weight:600;margin-bottom:40px">Outcome Based Education — Attainment Report</div>'
+      +'<div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:32px 48px;max-width:560px;width:100%">'
+      +'<table style="width:100%;border-collapse:collapse;color:#fff;font-size:14px">'
+      +'<tr><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);color:#93c5fd;width:180px;text-align:left;font-weight:600">Course Name</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);text-align:left;font-weight:700">'+s.name+'</td></tr>'
+      +'<tr><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);color:#93c5fd;text-align:left;font-weight:600">Course Code</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);text-align:left;font-weight:700">'+s.code+'</td></tr>'
+      +'<tr><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);color:#93c5fd;text-align:left;font-weight:600">Department</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);text-align:left">'+s.dept+'</td></tr>'
+      +'<tr><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);color:#93c5fd;text-align:left;font-weight:600">Program</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);text-align:left">'+(s.program||'B.E. '+s.dept)+'</td></tr>'
+      +'<tr><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);color:#93c5fd;text-align:left;font-weight:600">Faculty</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);text-align:left">'+s.faculty+'</td></tr>'
+      +'<tr><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);color:#93c5fd;text-align:left;font-weight:600">Academic Year</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);text-align:left">'+s.ay+' | Semester '+s.sem+'</td></tr>'
+      +'<tr><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);color:#93c5fd;text-align:left;font-weight:600">Batch / Division</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);text-align:left">'+(s.batch||'—')+'</td></tr>'
+      +'<tr><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);color:#93c5fd;text-align:left;font-weight:600">Credits</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);text-align:left">'+s.credits+' Credits | '+(s.totalHours||48)+' Hours</td></tr>'
+      +'<tr><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);color:#93c5fd;text-align:left;font-weight:600">CO Target</td><td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);text-align:left">'+s.coTargetLevel.toFixed(2)+' | Threshold '+s.coTargetPct+'%</td></tr>'
+      +'<tr><td style="padding:10px 0;color:#93c5fd;text-align:left;font-weight:600">Generated</td><td style="padding:10px 0;text-align:left">'+new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'})+'</td></tr>'
+      +'</table></div>'
+      +'<div style="margin-top:40px;color:rgba(255,255,255,.4);font-size:11px">Outcome Based Education Framework</div>'
+      +'</div>';
+
+    const coAchieved=s.coAttainment.filter(function(c){return c&&c.achieved;}).length;
+    const coTotal=s.cos.length;
+    const poAchieved=s.poAttainment.filter(function(p){return p&&p.achieved;}).length;
+
+    const indexPage=
+      '<div style="padding:40px;page-break-after:always">'
+      +'<div style="border-bottom:3px solid #2563eb;padding-bottom:16px;margin-bottom:24px;display:flex;align-items:flex-end;justify-content:space-between">'
+      +'<div><div style="font-size:10px;font-weight:700;color:#2563eb;text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">OBE Course File</div>'
+      +'<h1 style="font-size:28px;font-weight:800;color:#0f172a;margin:0">Table of Contents</h1></div>'
+      +'<div style="text-align:right;font-size:12px;color:#64748b">'
+      +'<div><strong>'+s.code+'</strong> — '+s.name+'</div>'
+      +'<div>'+s.dept+' | AY '+s.ay+'</div>'
+      +'</div></div>'
+      +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px">'
+      +'<div style="background:#dbeafe;border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;color:#1d4ed8">'+coTotal+'</div><div style="font-size:11px;color:#1e40af;font-weight:600">Course Outcomes</div></div>'
+      +'<div style="background:#d1fae5;border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;color:#059669">'+coAchieved+'</div><div style="font-size:11px;color:#065f46;font-weight:600">COs Achieved</div></div>'
+      +'<div style="background:#fef3c7;border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;color:#d97706">'+s.students.length+'</div><div style="font-size:11px;color:#92400e;font-weight:600">Students</div></div>'
+      +'<div style="background:#ede9fe;border-radius:10px;padding:14px;text-align:center"><div style="font-size:24px;font-weight:800;color:#7c3aed">'+poAchieved+'</div><div style="font-size:11px;color:#4c1d95;font-weight:600">POs Achieved</div></div>'
+      +'</div>'
+      +'<table style="width:100%;border-collapse:collapse;font-size:13px">'
+      +'<thead><tr style="background:#0f172a;color:#fff">'
+      +'<th style="padding:10px 14px;border:1px solid #334155;width:50px;text-align:center">#</th>'
+      +'<th style="padding:10px 14px;border:1px solid #334155;text-align:left">Section Title</th>'
+      +'<th style="padding:10px 14px;border:1px solid #334155;width:60px;text-align:center">Page</th>'
+      +'</tr></thead>'
+      +'<tbody>'+indexRows+'</tbody>'
+      +'</table>'
+      +'</div>';
+
+    const sectionPages=Array.from(document.querySelectorAll('.page')).map(function(p,i){
+      if(i===0) return '';
+      const secNum=PAGES[i].label;
+      const secTitle=PAGES[i].section;
+      return '<div style="page-break-before:always;padding:32px 40px">'
+        +'<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:2.5px solid #2563eb;padding-bottom:10px;margin-bottom:20px">'
+        +'<div>'
+        +'<div style="font-size:10px;font-weight:700;color:#2563eb;text-transform:uppercase;letter-spacing:2px;margin-bottom:2px">'+secNum+'</div>'
+        +'<h2 style="font-size:18px;font-weight:800;color:#0f172a;margin:0">'+secTitle+'</h2>'
+        +'</div>'
+        +'<div style="text-align:right;font-size:10px;color:#94a3b8"><div>'+s.code+' — '+s.name+'</div><div>'+s.ay+'</div></div>'
+        +'</div>'
+        +sanitizePage(p)
+        +'</div>';
+    }).join('');
+
+    const allCSS=Array.from(document.styleSheets).map(function(ss){
+      try{return Array.from(ss.cssRules).map(function(r){return r.cssText;}).join('\n');}
+      catch(e){return '';}
+    }).join('\n');
+
     const w=window.open('','_blank');
     if(w){
-      w.document.write('<!DOCTYPE html><html><head><title>NBA Course File — '+s.name+'</title>'
-        +'<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">'
-        +'<style>body{font-family:"Plus Jakarta Sans",sans-serif;padding:24px;font-size:12px}'
-        +'.card{border:1px solid #e2e8f0;border-radius:8px;margin-bottom:12px;padding:12px}'
-        +'table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid #cbd5e1;padding:5px 8px}'
-        +'.co-tag{background:#dbeafe;color:#2563eb;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700}'
-        +'.tag{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600}'
-        +'.tag-green{background:#d1fae5;color:#059669}.tag-red{background:#fee2e2;color:#dc2626}'
-        +'.tag-blue{background:#dbeafe;color:#2563eb}.tag-gold{background:#fef3c7;color:#d97706}'
-        +'.tag-purple{background:#ede9fe;color:#7c3aed}'
-        +'@media print{h3{font-size:13px}}</style>'
+      w.document.write(
+        '<!DOCTYPE html><html lang="en"><head>'
+        +'<meta charset="UTF-8">'
+        +'<title>OBE Course File — '+s.name+' ('+s.code+')</title>'
+        +'<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">'
+        +'<style>'
+        +allCSS
+        +'body{background:#fff!important;font-family:"Plus Jakarta Sans",sans-serif}'
+        +'.sidebar,.topbar,.mobile-menu-btn,.nav-item,.btn-primary,.btn-outline,.btn-sm,.btn-gold,.btn-success,.btn-purple,.btn-danger,.subject-selector,.sidebar-footer,.instr{display:none!important}'
+        +'.page{display:block!important;opacity:1!important}'
+        +'.shell-grid,.main-content{display:block!important}'
+        +'.content-body{padding:0!important}'
+        +'@page{margin:15mm;size:A4}'
+        +'@media print{'
+        +'  .page{page-break-inside:avoid}'
+        +'  button,.btn{display:none!important}'
+        +'  input[type=range]{display:none}'
+        +'  .tbl-wrap{overflow:visible!important}'
+        +'}'
+        +'</style>'
         +'</head><body>'
-        +'<div style="background:#0f172a;color:#fff;padding:20px;border-radius:8px;margin-bottom:20px">'
-        +'<h1 style="margin:0;font-size:20px">NBA OBE Course File Report</h1>'
-        +'<div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:8px;font-size:12px;opacity:.8">'
-        +'<span>📚 '+s.name+' ('+s.code+')</span><span>🏛 '+s.dept+'</span>'
-        +'<span>👨‍🏫 '+s.faculty+'</span><span>📅 AY '+s.ay+'</span>'
-        +'<span>🎯 Target: '+s.coTargetLevel.toFixed(2)+'</span>'
-        +'<span>📄 '+new Date().toLocaleDateString('en-IN')+'</span></div></div>'
-        +allPages+'</body></html>');
+        +coverPage
+        +indexPage
+        +sectionPages
+        +'</body></html>'
+      );
       w.document.close();
-      setTimeout(()=>w.print(),1000);
+      setTimeout(function(){w.print();},1200);
     }
-    showToast('Full report opened!','success');
-  },600);
+    showToast('Full report ready — '+PAGES.length+' sections','success');
+  },800);
 }
 
 // ============================================================
