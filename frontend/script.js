@@ -144,6 +144,8 @@ function createDefaultSubject(name,code,dept,ay,sem,faculty){
     coTargetPct:60,
     coTargetLevel:2.00,
     poTarget:2.00, psoTarget:2.00,
+    poTargets:Array(11).fill(2.00),
+    psoTargets:Array(3).fill(2.00),
     cos:[
       {id:'CO1',objective:'Understand fundamentals of '+name,outcome:'Students will be able to explain core concepts of '+name,bloom:'Understand',wk:['WK1','WK2'],pi:''},
       {id:'CO2',objective:'Apply principles to solve problems',outcome:'Students will be able to apply engineering methods to solve domain problems',bloom:'Apply',wk:['WK2','WK3'],pi:''},
@@ -477,12 +479,39 @@ function renderCourseInfo(el){
   h+='<div class="g4" style="margin-bottom:16px">';
   h+='<div class="fg"><label>CO Target (0.00–3.00)</label>';
   h+='<input type="number" id="co_target" value="'+s.coTargetLevel.toFixed(2)+'" min="0" max="3" step="0.01" style="padding:9px;border:1.5px solid var(--border2);border-radius:6px;font-family:monospace;width:100%"></div>';
-  h+='<div class="fg"><label>PO Target (0.00–3.00)</label>';
-  h+='<input type="number" id="po_target" value="'+s.poTarget.toFixed(2)+'" min="0" max="3" step="0.01" style="padding:9px;border:1.5px solid var(--border2);border-radius:6px;font-family:monospace;width:100%"></div>';
-  h+='<div class="fg"><label>PSO Target (0.00–3.00)</label>';
-  h+='<input type="number" id="pso_target" value="'+s.psoTarget.toFixed(2)+'" min="0" max="3" step="0.01" style="padding:9px;border:1.5px solid var(--border2);border-radius:6px;font-family:monospace;width:100%"></div>';
-  h+='<div class="fg"><label>Direct Weight (%)</label>';
-  h+='<input type="number" id="dir_wt" value="'+Math.round(s.directWeight*100)+'" min="50" max="90" step="5" style="padding:9px;border:1.5px solid var(--border2);border-radius:6px;width:100%"></div>';
+  h+='</div>';
+  h+='<div class="card" style="margin-bottom:12px;border-left:4px solid var(--accent)">';
+  h+='<div class="card-header"><div class="card-title">🎯 PO Individual Targets (PO1 – PO11)</div>';
+  h+='<button class="btn btn-sm btn-outline" onclick="setAllPOTargets()">Set All</button></div>';
+  h+='<div class="card-body">';
+  h+='<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">';
+  if(!s.poTargets || s.poTargets.length<s.pos.length) s.poTargets=Array(s.pos.length).fill(s.poTarget||2.00);
+  s.pos.forEach((po,pi)=>{
+    h+='<div style="text-align:center;min-width:64px">';
+    h+='<div style="font-size:10px;font-weight:700;color:var(--accent);margin-bottom:4px">PO'+(pi+1)+'</div>';
+    h+='<input type="number" id="po_t_'+pi+'" value="'+s.poTargets[pi].toFixed(2)+'" min="0" max="3" step="0.01" style="width:64px;padding:6px 4px;border:1.5px solid var(--border2);border-radius:6px;font-family:monospace;font-size:13px;font-weight:700;text-align:center" title="'+po+'">';
+    h+='<div style="font-size:9px;color:var(--text3);margin-top:2px;max-width:64px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+po+'">'+po.substring(0,10)+'</div>';
+    h+='</div>';
+  });
+  h+='</div></div></div>';
+  h+='<div class="card" style="margin-bottom:16px;border-left:4px solid var(--purple)">';
+  h+='<div class="card-header"><div class="card-title">🎓 PSO Individual Targets (PSO1 – PSO'+s.psos.length+')</div>';
+  h+='<button class="btn btn-sm btn-outline" style="border-color:var(--purple);color:var(--purple)" onclick="setAllPSOTargets()">Set All</button></div>';
+  h+='<div class="card-body">';
+  h+='<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">';
+  if(!s.psoTargets || s.psoTargets.length<s.psos.length) s.psoTargets=Array(s.psos.length).fill(s.psoTarget||2.00);
+  s.psos.forEach((pso,pi)=>{
+    h+='<div style="text-align:center;min-width:100px">';
+    h+='<div style="font-size:10px;font-weight:700;color:var(--purple);margin-bottom:4px">PSO'+(pi+1)+'</div>';
+    h+='<input type="number" id="pso_t_'+pi+'" value="'+s.psoTargets[pi].toFixed(2)+'" min="0" max="3" step="0.01" style="width:80px;padding:6px 4px;border:1.5px solid #c4b5fd;border-radius:6px;font-family:monospace;font-size:13px;font-weight:700;text-align:center">';
+    h+='<div style="font-size:9px;color:var(--text3);margin-top:2px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+pso+'">'+pso.substring(0,14)+'</div>';
+    h+='</div>';
+  });
+  h+='</div></div></div>';
+  h+='<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding:12px;background:var(--surface2);border-radius:8px">';
+  h+='<div style="font-size:12px;font-weight:700;color:var(--text2)">Direct Assessment Weight (%)</div>';
+  h+='<input type="number" id="dir_wt" value="'+Math.round(s.directWeight*100)+'" min="50" max="90" step="5" style="width:80px;padding:8px;border:1.5px solid var(--border2);border-radius:6px;font-family:monospace;font-size:14px;font-weight:700">';
+  h+='<div style="font-size:11px;color:var(--text2)">Indirect Weight: <strong>'+(100-Math.round(s.directWeight*100))+'%</strong></div>';
   h+='</div>';
   // ---- Dynamic Attainment Level Configuration (NBA Standard) ----
   const savedLvlPct = s.attainLvlPct || {3:65,2:55,1:45};
@@ -596,6 +625,26 @@ function updateTargetPct(v){
   const live=document.getElementById('tpct_live');
   if(live)live.textContent=v+'%';
 }
+
+function setAllPOTargets(){
+  const s=sub();
+  const v=parseFloat(prompt('Set target for all POs (0.00–3.00):', (s.poTarget||2.00).toFixed(2)));
+  if(isNaN(v)) return;
+  if(!s.poTargets || s.poTargets.length<s.pos.length) s.poTargets=Array(s.pos.length).fill(2.00);
+  s.poTargets=s.poTargets.map(()=>v);
+  s.poTarget=v;
+  renderCourseInfo(document.getElementById(PAGES[1].id));
+}
+
+function setAllPSOTargets(){
+  const s=sub();
+  const v=parseFloat(prompt('Set target for all PSOs (0.00–3.00):', (s.psoTarget||2.00).toFixed(2)));
+  if(isNaN(v)) return;
+  if(!s.psoTargets || s.psoTargets.length<s.psos.length) s.psoTargets=Array(s.psos.length).fill(2.00);
+  s.psoTargets=s.psoTargets.map(()=>v);
+  s.psoTarget=v;
+  renderCourseInfo(document.getElementById(PAGES[1].id));
+}
 function updateAttainLvl(lvl,val){
   if(!sub().attainLvlPct) sub().attainLvlPct={1:45,2:55,3:65};
   sub().attainLvlPct[lvl]=+val;
@@ -635,8 +684,6 @@ function saveCourseInfo(){
   s.cieWeight=(+gv('c_ciewt',s.cieWeight*100))/100;
   s.eseWeight=(+gv('c_esewt',s.eseWeight*100))/100;
   s.coTargetLevel=parseFloat((+gv('co_target',s.coTargetLevel)).toFixed(2));
-  s.poTarget=parseFloat((+gv('po_target',s.poTarget)).toFixed(2));
-  s.psoTarget=parseFloat((+gv('pso_target',s.psoTarget)).toFixed(2));
   s.directWeight=(+gv('dir_wt',s.directWeight*100))/100;
   s.indirectWeight=Math.round((1-s.directWeight)*100)/100;
   s.cesTarget=+(gv('ces_target',s.cesTarget||3.5));
@@ -644,6 +691,14 @@ function saveCourseInfo(){
   if(!s.seeLvl) s.seeLvl={1:{min:40,max:54},2:{min:55,max:74},3:{min:75,max:100}};
   if(!s.cieLvl) s.cieLvl={1:{min:40,max:54},2:{min:55,max:74},3:{min:75,max:100}};
   if(!s.cesLvl) s.cesLvl={1:{min:75,max:80},2:{min:80,max:85},3:{min:85,max:100}};
+  // Save PO/PSO individual targets
+  if(!s.poTargets || s.poTargets.length<s.pos.length) s.poTargets=Array(s.pos.length).fill(s.poTarget||2.00);
+  s.pos.forEach((_,pi)=>{const el2=document.getElementById('po_t_'+pi);if(el2)s.poTargets[pi]=parseFloat((+el2.value).toFixed(2));});
+  s.poTarget=s.poTargets.reduce((a,b)=>a+b,0)/s.poTargets.length;
+  if(!s.psoTargets || s.psoTargets.length<s.psos.length) s.psoTargets=Array(s.psos.length).fill(s.psoTarget||2.00);
+  s.psos.forEach((_,pi)=>{const el2=document.getElementById('pso_t_'+pi);if(el2)s.psoTargets[pi]=parseFloat((+el2.value).toFixed(2));});
+  s.psoTarget=s.psoTargets.reduce((a,b)=>a+b,0)/s.psoTargets.length;
+
   // Save dynamic attainment level thresholds
   if(!s.attainLvlPct) s.attainLvlPct={};
   [1,2,3].forEach(l=>{const el2=document.getElementById('lvl_pct_'+l);if(el2)s.attainLvlPct[l]=+el2.value;});
