@@ -1477,47 +1477,235 @@ function uploadLabMarks(input){
 // ============================================================
 function renderCES(el){
   const s=sub();
-  let h='<div class="instr"><strong>📌 Instructions:</strong> Upload Course Exit Survey (CES). Columns: Roll No, CO1_Rating...CO6_Rating (scale 1-5).</div>';
-  h+='<div class="card"><div class="card-header"><div class="card-title">📋 CES Survey</div>';
-  h+='<div style="display:flex;gap:8px">';
-  h+='<button class="btn btn-sm btn-gold" onclick="downloadCESTemplate()">⬇ Template</button>';
-  h+='<button class="btn btn-sm btn-outline" onclick="document.getElementById(\'cesUpload\').click()">📁 Upload</button>';
-  h+='<input type="file" id="cesUpload" accept=".xlsx,.xls" style="display:none" onchange="uploadCES(this)">';
-  h+='<button class="btn btn-sm btn-success" onclick="generateSampleCES()">🎲 Sample CES</button>';
-  h+='</div></div><div class="card-body">';
-  if(!s.cesData.length){
-    h+='<div class="upload-zone" onclick="document.getElementById(\'cesUpload\').click()"><div class="upload-icon">📊</div><div class="upload-title">Upload CES Survey Excel</div><div class="upload-sub">Required columns: Roll No, CO1_Rating through CO6_Rating (scale 1-5)</div></div>';
-  } else {
-    const target=3.5;
-    const coScores=s.cos.map((_,ci)=>{const vals=s.cesData.map(r=>+(r['CO'+(ci+1)+'_Rating']||0)).filter(v=>v>0);return vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length):0;});
-    h+='<div class="g4" style="margin-bottom:16px">';
-    h+='<div class="kpi blue"><div class="kpi-val">'+s.cesData.length+'</div><div class="kpi-label">Responses</div></div>';
-    h+='<div class="kpi green"><div class="kpi-val">'+coScores.filter(v=>v>=target).length+'/6</div><div class="kpi-label">COs Achieved</div></div>';
-    h+='<div class="kpi gold"><div class="kpi-val">'+target+'</div><div class="kpi-label">Target Score</div></div>';
-    h+='<div class="kpi purple"><div class="kpi-val">'+(coScores.reduce((a,b)=>a+b,0)/coScores.length).toFixed(2)+'</div><div class="kpi-label">Overall Avg</div></div>';
-    h+='</div>';
-    h+='<div class="tbl-wrap"><table><thead><tr><th>CO</th><th class="left">Outcome</th><th>Avg Score</th><th>Stars</th><th>Target</th><th>Status</th></tr></thead><tbody>';
-    s.cos.forEach((co,ci)=>{
-      const score=coScores[ci];const met=score>=target;
-      const stars='★'.repeat(Math.min(5,Math.round(score)))+'☆'.repeat(Math.max(0,5-Math.round(score)));
-      h+='<tr><td><span class="co-tag">'+co.id+'</span></td>';
-      h+='<td class="left" style="font-size:12px">'+co.outcome.substring(0,60)+'...</td>';
-      h+='<td><strong style="color:'+(met?'var(--green)':'var(--red)')+'">'+score.toFixed(2)+'</strong></td>';
-      h+='<td style="color:#f59e0b">'+stars+'</td>';
-      h+='<td>'+target+'</td>';
-      h+='<td><span class="tag '+(met?'tag-green':'tag-red')+'">'+(met?'✓ Met':'✗ Below')+'</span></td></tr>';
-    });
-    h+='</tbody></table></div>';
+  const indirectTypes=['CES','Peer Review','Alumni Survey','Employer Survey','Exit Survey'];
+  const indirAssessments=s.assessments.filter(a=>indirectTypes.includes(a.type));
+  if(window._cesTab===undefined) window._cesTab='ces';
+  const activeTab=window._cesTab;
+
+  let h='<div class="instr"><strong>📌 Instructions:</strong> Manage all Indirect Assessments — upload or enter ratings manually (1–5 scale per CO). Each tab shows a full student-wise table with CO averages.</div>';
+
+  const tabBtns=[];
+  tabBtns.push('<button class="btn btn-sm '+(activeTab==='ces'?'btn-primary':'btn-outline')+'" onclick="setCESTab(this)" data-tab="ces">📊 CES Survey</button>');
+  indirAssessments.forEach((a,i)=>{
+    tabBtns.push('<button class="btn btn-sm '+(activeTab==='indir_'+i?'btn-purple':'btn-outline')+'" onclick="setCESTab(this)" data-tab="indir_'+i+'">🔁 '+a.name+'</button>');
+  });
+  h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;border-bottom:2px solid var(--border);padding-bottom:10px">'+tabBtns.join('')+'</div>';
+
+  if(activeTab==='ces'){
+    h+='<div class="card"><div class="card-header"><div class="card-title">📊 Course Exit Survey (CES)</div>';
+    h+='<div style="display:flex;gap:6px;flex-wrap:wrap">';
+    h+='<button class="btn btn-sm btn-gold" onclick="downloadCESTemplate()">⬇ Template</button>';
+    h+='<button class="btn btn-sm btn-outline" onclick="triggerUpload(\"cesUpload\")">📁 Upload Excel</button>';
+    h+='<input type="file" id="cesUpload" accept=".xlsx,.xls" style="display:none" onchange="uploadCES(this)">';
+    h+='<button class="btn btn-sm btn-success" onclick="generateSampleCES()">🎲 Sample</button>';
+    h+='<button class="btn btn-sm btn-danger" style="background:var(--red-light);color:var(--red)" onclick="clearCESData()">🗑 Clear</button>';
+    h+='</div></div><div class="card-body">';
+
+    if(!s.cesData||!s.cesData.length){
+      h+='<div class="upload-zone" onclick="triggerUpload(\"cesUpload\")" style="margin-bottom:16px">';
+      h+='<div class="upload-icon">📊</div>';
+      h+='<div class="upload-title">Upload CES Survey Excel</div>';
+      h+='<div class="upload-sub">Columns: Roll No, CO1_Rating … CO'+s.cos.length+'_Rating (1–5 scale). Or click 🎲 Sample to auto-generate.</div></div>';
+      if(s.students.length){
+        h+='<div style="text-align:center;color:var(--text3);font-size:12px;margin-bottom:10px">— or enter ratings manually —</div>';
+        h+=buildCESManualTable(s);
+      } else {
+        h+='<div style="text-align:center;padding:20px;color:var(--text3)">Add students first (Section 3), then enter CES ratings here.</div>';
+      }
+    } else {
+      const target=s.cesTarget||3.5;
+      const coScores=s.cos.map((_,ci)=>{
+        const vals=s.cesData.map(r=>+(r['CO'+(ci+1)+'_Rating']||0)).filter(v=>v>0);
+        return vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length):0;
+      });
+      const overall=coScores.reduce((a,b)=>a+b,0)/Math.max(coScores.length,1);
+
+      h+='<div class="g4" style="margin-bottom:16px">';
+      h+='<div class="kpi blue"><div class="kpi-val">'+s.cesData.length+'</div><div class="kpi-label">Responses</div><div class="kpi-sub">of '+s.students.length+' students</div></div>';
+      h+='<div class="kpi green"><div class="kpi-val">'+coScores.filter(v=>v>=target).length+'/'+s.cos.length+'</div><div class="kpi-label">COs Achieved</div><div class="kpi-sub">Target '+target.toFixed(1)+'</div></div>';
+      h+='<div class="kpi gold"><div class="kpi-val">'+overall.toFixed(2)+'</div><div class="kpi-label">Overall Avg</div><div class="kpi-sub">Scale 1–5</div></div>';
+      h+='<div class="kpi purple"><div class="kpi-val">'+(s.cesData.length/Math.max(s.students.length,1)*100).toFixed(0)+'%</div><div class="kpi-label">Response Rate</div></div>';
+      h+='</div>';
+
+      h+='<div style="padding:12px;background:var(--surface2);border-radius:8px;margin-bottom:14px">';
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
+      h+='<strong style="font-size:12px;color:var(--accent)">CO-wise Average Rating (target: '+target.toFixed(1)+')</strong>';
+      h+='<span style="font-size:11px;color:var(--text2)">Scale 1–5</span></div>';
+      h+='<div style="display:flex;gap:8px;align-items:flex-end;height:80px">';
+      coScores.forEach((sc,ci)=>{
+        const pct=(sc/5)*100;
+        const col=sc>=target?'var(--green)':sc>=(target-0.5)?'var(--gold)':'var(--red)';
+        h+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">';
+        h+='<span style="font-size:10px;font-weight:800;color:'+col+'">'+sc.toFixed(1)+'</span>';
+        h+='<div style="width:100%;background:#e2e8f0;border-radius:3px 3px 0 0;height:50px;display:flex;align-items:flex-end">';
+        h+='<div style="width:100%;height:'+pct+'%;background:'+col+';border-radius:3px 3px 0 0;min-height:2px"></div></div>';
+        h+='<span style="font-size:10px;font-weight:700;color:var(--text2)">'+s.cos[ci].id+'</span>';
+        h+='</div>';
+      });
+      h+='</div></div>';
+
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
+      h+='<strong style="font-size:13px">📋 Student-wise Ratings Table</strong>';
+      h+='<span style="font-size:11px;color:var(--text2)">Edit any cell directly | Color: 🟢 ≥4 🟡 ≥3 🔴 <3</span>';
+      h+='</div>';
+      h+='<div class="tbl-wrap"><table><thead><tr style="background:#f1f5f9">';
+      h+='<th style="width:36px">#</th><th class="left" style="min-width:90px">Roll No</th><th class="left" style="min-width:110px">Name</th>';
+      s.cos.forEach(co=>{h+='<th style="min-width:62px">'+co.id+'<div style="font-size:9px;font-weight:400;color:var(--text3)">1–5</div></th>';});
+      h+='<th style="min-width:50px">Avg</th></tr></thead><tbody>';
+
+      s.cesData.forEach((row,ri)=>{
+        const ratings=s.cos.map((_,ci)=>+(row['CO'+(ci+1)+'_Rating']||0));
+        const filled=ratings.filter(v=>v>0);
+        const avg=filled.length?(filled.reduce((a,b)=>a+b,0)/filled.length):0;
+        const stObj=s.students.find(st=>st.roll==row['Roll No'])||{};
+        h+='<tr style="background:'+(ri%2?'var(--surface2)':'var(--surface)')+'">';
+        h+='<td style="font-size:11px;color:var(--text3);text-align:center">'+(ri+1)+'</td>';
+        h+='<td class="left"><code style="font-size:11px">'+row['Roll No']+'</code></td>';
+        h+='<td class="left" style="font-size:12px">'+(stObj.name||'—')+'</td>';
+        s.cos.forEach((_,ci)=>{
+          const v=+(row['CO'+(ci+1)+'_Rating']||0);
+          const bg=v>=4?'#d1fae5':v>=3?'#fef3c7':v>=1?'#fee2e2':'';
+          h+='<td style="padding:3px 4px;background:'+bg+'">';
+          h+='<input type="number" value="'+v+'" min="0" max="5" step="0.5" data-ri="'+ri+'" data-ci="'+ci+'" onchange="setCESRating(+this.dataset.ri,+this.dataset.ci,+this.value);updateCellBg(this.parentElement,+this.value)" style="width:52px;padding:3px;border:1px solid #e2e8f0;border-radius:4px;font-family:monospace;font-size:12px;font-weight:700;text-align:center;background:transparent">';
+          h+='</td>';
+        });
+        h+='<td style="text-align:center"><strong style="font-family:monospace;font-size:12px;color:'+(avg>=target?'var(--green)':'var(--red)')+'">'+( avg?avg.toFixed(1):'—')+'</strong></td>';
+        h+='</tr>';
+      });
+
+      h+='<tr style="background:#dbeafe">';
+      h+='<td colspan="3" class="left" style="padding:7px 10px;font-size:12px;font-weight:700;color:#1d4ed8">CLASS AVERAGE</td>';
+      coScores.forEach(sc=>{
+        const col=sc>=target?'var(--green)':sc>=(target-0.5)?'var(--gold)':'var(--red)';
+        h+='<td style="text-align:center;font-family:monospace;font-size:13px;font-weight:800;color:'+col+'">'+sc.toFixed(2)+'</td>';
+      });
+      h+='<td style="text-align:center;font-family:monospace;font-size:12px;font-weight:700;color:var(--accent)">'+overall.toFixed(2)+'</td>';
+      h+='</tr></tbody></table></div>';
+
+      h+='<div style="margin-top:14px;padding:12px;background:var(--surface2);border-radius:8px">';
+      h+='<strong style="font-size:12px;color:var(--text)">CO Attainment from CES</strong>';
+      h+='<div class="tbl-wrap" style="margin-top:8px"><table><thead><tr style="background:var(--surface3)">';
+      h+='<th>CO</th><th class="left">Outcome</th><th>Avg</th><th>Stars</th><th>Level</th><th>Status</th></tr></thead><tbody>';
+      s.cos.forEach((co,ci)=>{
+        const sc=coScores[ci];const t=target;
+        const att=sc>=4?3:sc>=t?2:sc>=2.5?1:0;
+        const met=sc>=t;
+        const stars='★'.repeat(Math.min(5,Math.round(sc)))+'☆'.repeat(Math.max(0,5-Math.round(sc)));
+        h+='<tr><td><span class="co-tag">'+co.id+'</span></td>';
+        h+='<td class="left" style="font-size:11px">'+co.outcome.substring(0,55)+'...</td>';
+        h+='<td><strong style="font-family:monospace;color:'+(met?'var(--green)':'var(--red)')+'">'+sc.toFixed(2)+'</strong></td>';
+        h+='<td style="color:#f59e0b">'+stars+'</td>';
+        h+='<td><div style="width:26px;height:26px;border-radius:50%;background:'+(att===3?'var(--green)':att===2?'var(--gold)':att===1?'var(--accent)':'var(--red)')+';color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;margin:auto">'+att+'</div></td>';
+        h+='<td><span class="tag '+(met?'tag-green':'tag-red')+'">'+(met?'✓ Achieved':'✗ Gap')+'</span></td></tr>';
+      });
+      h+='</tbody></table></div></div>';
+    }
+    h+='</div></div>';
   }
-  h+='</div></div>';
+
+  indirAssessments.forEach((a,i)=>{
+    if(activeTab!==('indir_'+i)) return;
+    if(!s.indirMarks) s.indirMarks={};
+    const aKey='indir_'+a.id;
+    if(!s.indirMarks[aKey]) s.indirMarks[aKey]={};
+
+    const coAvgs=s.cos.map((_,ci)=>{
+      const vals=Object.values(s.indirMarks[aKey]).map(row=>+(row['CO'+(ci+1)]||0)).filter(v=>v>0);
+      return vals.length?(vals.reduce((x,y)=>x+y,0)/vals.length):0;
+    });
+    const tgt=+(a.indirTarget||3.5);
+
+    h+='<div class="card" style="border-left:4px solid var(--purple)">';
+    h+='<div class="card-header">';
+    h+='<div class="card-title">🔁 '+a.name+' <span style="font-size:11px;color:var(--text2);font-weight:400">('+a.type+' · '+(a.method||'Survey')+' · Target: '+tgt+')</span></div>';
+    h+='<div style="display:flex;gap:6px">';
+    h+='<button class="btn btn-sm btn-gold" onclick="downloadIndirTemplate(\"'+a.id+'\")">⬇ Template</button>';
+    h+='<button class="btn btn-sm btn-outline" onclick="triggerUpload(\"iu_'+a.id+'\")">📁 Upload</button>';
+    h+='<input type="file" id="iu_'+a.id+'" accept=".xlsx,.xls" style="display:none" onchange="uploadIndirMarks(this,\"'+a.id+'\")">';
+    h+='<button class="btn btn-sm btn-success" onclick="sampleIndirMarks(\"'+a.id+'\")">🎲 Sample</button>';
+    h+='</div></div><div class="card-body">';
+
+    h+='<div class="g4" style="margin-bottom:14px">';
+    h+='<div class="kpi purple" style="padding:10px"><div class="kpi-val" style="font-size:20px">'+Object.keys(s.indirMarks[aKey]).length+'</div><div class="kpi-label">Responses</div></div>';
+    h+='<div class="kpi green" style="padding:10px"><div class="kpi-val" style="font-size:20px">'+coAvgs.filter(v=>v>=tgt).length+'/'+s.cos.length+'</div><div class="kpi-label">COs Met</div></div>';
+    h+='<div class="kpi gold" style="padding:10px"><div class="kpi-val" style="font-size:20px">'+tgt+'</div><div class="kpi-label">Target</div></div>';
+    const overallIndir=coAvgs.filter(v=>v>0).reduce((x,y)=>x+y,0)/Math.max(coAvgs.filter(v=>v>0).length,1);
+    h+='<div class="kpi blue" style="padding:10px"><div class="kpi-val" style="font-size:20px">'+(overallIndir?overallIndir.toFixed(2):'—')+'</div><div class="kpi-label">Overall Avg</div></div>';
+    h+='</div>';
+
+    h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
+    h+='<strong style="font-size:13px">📋 Student-wise Rating Entry Table (1–5 per CO)</strong>';
+    h+='<span style="font-size:11px;color:var(--text2)">Enter or upload ratings. Auto-saved.</span>';
+    h+='</div>';
+    h+='<div class="tbl-wrap"><table><thead><tr style="background:#f5f3ff">';
+    h+='<th style="width:36px">#</th><th class="left" style="min-width:90px">Roll No</th><th class="left" style="min-width:110px">Name</th>';
+    s.cos.forEach(co=>{h+='<th style="min-width:62px">'+co.id+'<div style="font-size:9px;color:var(--text3);font-weight:400">Rating</div></th>';});
+    h+='<th>Avg</th></tr></thead><tbody>';
+
+    s.students.forEach((st,si)=>{
+      const rowData=s.indirMarks[aKey][st.roll]||{};
+      const ratings=s.cos.map((_,ci)=>+(rowData['CO'+(ci+1)]||0));
+      const filled=ratings.filter(v=>v>0);
+      const avg=filled.length?(filled.reduce((x,y)=>x+y,0)/filled.length):0;
+      h+='<tr style="background:'+(si%2?'var(--surface2)':'var(--surface)')+'">';
+      h+='<td style="font-size:11px;color:var(--text3);text-align:center">'+(si+1)+'</td>';
+      h+='<td class="left"><code style="font-size:11px">'+st.roll+'</code></td>';
+      h+='<td class="left" style="font-size:12px">'+st.name+'</td>';
+      s.cos.forEach((_,ci)=>{
+        const v=+(rowData['CO'+(ci+1)]||0);
+        const bg=v>=4?'#d1fae5':v>=3?'#fef3c7':v>=1?'#fee2e2':'';
+        h+='<td style="padding:3px 4px;background:'+bg+'">';
+        h+='<input type="number" value="'+v+'" min="0" max="5" step="0.5" style="width:52px;padding:3px;border:1px solid #e2e8f0;border-radius:4px;font-family:monospace;font-size:12px;font-weight:700;text-align:center;background:transparent" data-roll="'+st.roll+'" data-ai="'+a.id+'" data-ci="'+ci+'" onchange="setIndirRating(this);updateCellBg(this.parentElement,+this.value)"></td>';
+      });
+      h+='<td style="text-align:center"><strong style="font-family:monospace;font-size:12px;color:'+(avg>=tgt?'var(--green)':'var(--red)')+'">'+( avg?avg.toFixed(1):'—')+'</strong></td>';
+      h+='</tr>';
+    });
+
+    h+='<tr style="background:#f5f3ff">';
+    h+='<td colspan="3" class="left" style="padding:7px 10px;font-size:12px;font-weight:700;color:var(--purple)">CLASS AVERAGE</td>';
+    coAvgs.forEach(ca=>{
+      const col=ca>=tgt?'var(--green)':ca>=(tgt-0.5)?'var(--gold)':'var(--red)';
+      h+='<td style="text-align:center;font-family:monospace;font-size:12px;font-weight:800;color:'+col+'">'+(ca?ca.toFixed(2):'—')+'</td>';
+    });
+    h+='<td style="text-align:center;font-family:monospace;font-size:12px;color:var(--purple)">'+(overallIndir?overallIndir.toFixed(2):'—')+'</td>';
+    h+='</tr></tbody></table></div>';
+    h+='</div></div>';
+  });
+
+  if(indirAssessments.length===0 && activeTab!=='ces'){
+    h+='<div class="card"><div class="card-body" style="text-align:center;padding:30px;color:var(--text3)">No indirect assessments defined. Go to Section 8 and click <strong>+ Add Indirect</strong>.</div></div>';
+  }
+
   el.innerHTML=h;
 }
-function downloadCESTemplate(){
-  const s=sub();
-  const headers=['Roll No',...s.cos.map((_,i)=>'CO'+(i+1)+'_Rating')];
-  const ws=XLSX.utils.aoa_to_sheet([headers,...s.students.map(st=>[st.roll,...s.cos.map(()=>'')])]);
-  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'CES');XLSX.writeFile(wb,'ces_template.xlsx');
+
+function buildCESManualTable(s){
+  if(!s.cesData||!s.cesData.length){
+    s.cesData=s.students.map(st=>{
+      const row={'Roll No':st.roll};
+      s.cos.forEach((_,ci)=>{row['CO'+(ci+1)+'_Rating']=0;});
+      return row;
+    });
+  }
+  return '<div style="margin-top:4px"><div class="tbl-wrap"><table><thead><tr>'
+    +'<th>#</th><th class="left">Roll No</th><th class="left">Name</th>'
+    +s.cos.map(co=>'<th>'+co.id+'</th>').join('')
+    +'</tr></thead><tbody>'
+    +s.students.map((st,si)=>{
+      const rowIdx=s.cesData.findIndex(r=>r['Roll No']==st.roll);
+      const row=rowIdx>=0?s.cesData[rowIdx]:{'Roll No':st.roll};
+      return '<tr style="background:'+(si%2?'var(--surface2)':'var(--surface)')+'"><td>'+(si+1)+'</td>'
+        +'<td class="left"><code style="font-size:11px">'+st.roll+'</code></td>'
+        +'<td class="left" style="font-size:12px">'+st.name+'</td>'
+        +s.cos.map((_,ci)=>{
+          const v=+(row['CO'+(ci+1)+'_Rating']||0);
+          return '<td><input type="number" value="'+v+'" min="0" max="5" step="0.5" style="width:52px;padding:3px 4px;border:1.5px solid var(--border2);border-radius:4px;font-family:monospace;font-size:12px;text-align:center" onchange="setCESRating('+(rowIdx>=0?rowIdx:si)+','+ci+',+this.value)"></td>';
+        }).join('')
+        +'</tr>';
+    }).join('')
+    +'</tbody></table></div></div>';
 }
+
 function uploadCES(input){
   const f=input.files[0];if(!f)return;
   const reader=new FileReader();
@@ -1544,7 +1732,6 @@ function uploadCES(input){
           }
         }
       });
-      // ensure all CO columns exist
       for(let i=1;i<=coCount;i++){
         const key='CO'+i+'_Rating';
         const v=out[key];
@@ -1553,13 +1740,124 @@ function uploadCES(input){
       if(out['Roll No']===undefined) out['Roll No']=r['Roll No']||r['RollNo']||'';
       return out;
     });
-    showToast(sub().cesData.length+' CES responses loaded','success');renderCES(document.getElementById(PAGES[11].id));
-  };reader.readAsArrayBuffer(f);
+    showToast(sub().cesData.length+' CES responses loaded','success');
+    window._cesTab='ces';
+    renderCES(document.getElementById(PAGES[11].id));
+  };
+  reader.readAsArrayBuffer(f);
 }
 function generateSampleCES(){
   const s=sub();
-  s.cesData=s.students.map(st=>{const row={'Roll No':st.roll};s.cos.forEach((_,ci)=>{row['CO'+(ci+1)+'_Rating']=(3+Math.random()*2).toFixed(1);});return row;});
-  showToast('Sample CES generated','info');renderCES(document.getElementById(PAGES[11].id));
+  s.cesData=s.students.map(st=>{
+    const row={'Roll No':st.roll};
+    s.cos.forEach((_,ci)=>{row['CO'+(ci+1)+'_Rating']=+(3+Math.random()*2).toFixed(1);});
+    return row;
+  });
+  showToast('Sample CES generated — '+s.cesData.length+' responses','info');
+  renderCES(document.getElementById(PAGES[11].id));
+}
+function setCESTab(el){
+  const tabId=(typeof el==='string')?el:(el&&el.getAttribute?el.getAttribute('data-tab'):el);
+  window._cesTab=tabId||'ces';
+  renderCES(document.getElementById(PAGES[11].id));
+}
+function triggerUpload(id){
+  const el=document.getElementById(id);
+  if(el) el.click();
+}
+function updateCellBg(cell,v){
+  cell.style.background=v>=4?'#d1fae5':v>=3?'#fef3c7':v>=1?'#fee2e2':'';
+}
+function setCESRating(rowIdx,ci,val){
+  const s=sub();
+  if(!s.cesData||!s.cesData[rowIdx]) return;
+  s.cesData[rowIdx]['CO'+(ci+1)+'_Rating']=Math.max(0,Math.min(5,val));
+}
+function setIndirRating(el){
+  const roll=el.getAttribute('data-roll');
+  const ai=el.getAttribute('data-ai');
+  const ci=+el.getAttribute('data-ci');
+  const val=Math.max(0,Math.min(5,+el.value));
+  const s=sub();
+  if(!s.indirMarks) s.indirMarks={};
+  const key='indir_'+ai;
+  if(!s.indirMarks[key]) s.indirMarks[key]={};
+  if(!s.indirMarks[key][roll]) s.indirMarks[key][roll]={};
+  s.indirMarks[key][roll]['CO'+(ci+1)]=val;
+}
+function clearCESData(){
+  if(confirm('Clear all CES data?')){
+    sub().cesData=[];
+    renderCES(document.getElementById(PAGES[11].id));
+    showToast('CES data cleared','info');
+  }
+}
+function downloadCESTemplate(){
+  const s=sub();
+  const headers=['Roll No'];
+  s.cos.forEach((_,i)=>{headers.push('CO'+(i+1)+'_Rating');});
+  const rows=[headers];
+  s.students.forEach(st=>{
+    const r=[st.roll];
+    s.cos.forEach(()=>{r.push('');});
+    rows.push(r);
+  });
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'CES');
+  XLSX.writeFile(wb,'ces_template.xlsx');
+}
+function downloadIndirTemplate(aid){
+  const s=sub();
+  const a=s.assessments.find(x=>x.id===aid);
+  const name=(a?a.name:'Indirect').replace(/[^a-z0-9]/gi,'_');
+  const headers=['Roll No'];
+  s.cos.forEach((_,i)=>{headers.push('CO'+(i+1));});
+  const rows=[headers];
+  s.students.forEach(st=>{
+    const r=[st.roll];
+    s.cos.forEach(()=>{r.push('');});
+    rows.push(r);
+  });
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,name);
+  XLSX.writeFile(wb,name+'_template.xlsx');
+}
+function uploadIndirMarks(input,aid){
+  const f=input.files[0];if(!f)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const wb=XLSX.read(e.target.result,{type:'array'});
+    const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:0});
+    const s=sub();
+    if(!s.indirMarks) s.indirMarks={};
+    const key='indir_'+aid;
+    s.indirMarks[key]={};
+    rows.forEach(row=>{
+      const roll=row['Roll No']||row['roll']||row['RollNo']||'';
+      if(roll) s.indirMarks[key][roll]=row;
+    });
+    showToast(rows.length+' indirect responses loaded','success');
+    renderCES(document.getElementById(PAGES[11].id));
+  };
+  reader.readAsArrayBuffer(f);
+}
+function sampleIndirMarks(aid){
+  const s=sub();
+  if(!s.indirMarks) s.indirMarks={};
+  const key='indir_'+aid;
+  s.indirMarks[key]={};
+  s.students.forEach(st=>{
+    const row={'Roll No':st.roll};
+    s.cos.forEach((_,ci)=>{row['CO'+(ci+1)]=+(3+Math.random()*2).toFixed(1);});
+    s.indirMarks[key][st.roll]=row;
+  });
+  showToast('Sample indirect ratings generated','info');
+  renderCES(document.getElementById(PAGES[11].id));
+}
+function saveIndirMarks(){
+  showToast('Indirect marks saved!','success');
 }
 
 // ============================================================
