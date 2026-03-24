@@ -2176,7 +2176,7 @@ function generateFullReport(){
     const indexRows=PAGES.slice(1).map(function(p,i){
       return '<tr>'
         +'<td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;color:#2563eb">'+(i+1)+'</td>'
-        +'<td style="padding:6px 10px;border:1px solid #e2e8f0;font-size:13px">'+p.icon+' '+p.section+'</td>'
+        +'<td style="padding:6px 10px;border:1px solid #e2e8f0;font-size:13px;text-align:left">'+p.icon+' '+p.section+'</td>'
         +'<td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;color:#94a3b8;font-size:12px">'+(i+2)+'</td>'
         +'</tr>';
     }).join('');
