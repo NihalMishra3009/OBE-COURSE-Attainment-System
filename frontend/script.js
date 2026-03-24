@@ -2435,9 +2435,6 @@ function renderCertificate(el){
     <button class="btn btn-sm btn-gold" onclick="generateFullReport()">📄 Full Report</button>
   </div>
   <div id="certPrint" style="background:#fff;border:3px solid #d97706;border-radius:16px;max-width:800px;margin:0 auto;padding:48px;position:relative;overflow:hidden">
-    <div style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0">
-      <span style="font-size:220px;font-weight:800;color:rgba(37,99,235,.03);font-family:'Plus Jakarta Sans',sans-serif">NBA</span>
-    </div>
     <div style="position:absolute;inset:10px;border:1px solid rgba(217,119,6,.2);border-radius:10px;pointer-events:none"></div>
     <div style="position:relative;z-index:1;text-align:center">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
