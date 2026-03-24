@@ -2181,10 +2181,12 @@ function generateFullReport(){
         +'</tr>';
     }).join('');
 
+    const logoSrc=location.origin+'/SIGCE LOGO.jpeg';
     const coverPage=
       '<div style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:linear-gradient(160deg,#0f172a 0%,#1e3a5f 60%,#0f2a4a 100%);padding:60px 40px;text-align:center;page-break-after:always">'
-      +'<div style="width:100px;height:100px;border-radius:24px;background:linear-gradient(135deg,#2563eb,#0ea5e9);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;color:#fff;letter-spacing:-2px;margin-bottom:32px;box-shadow:0 16px 48px rgba(37,99,235,.5)">SIGCE</div>'
-      +'<div style="color:#fff;font-size:30px;font-weight:800;letter-spacing:-1px;margin-bottom:8px">OBE Course File</div>'
+      +'<div style="width:110px;height:110px;border-radius:22px;background:#fff;display:flex;align-items:center;justify-content:center;margin-bottom:28px;box-shadow:0 16px 48px rgba(0,0,0,.35)">'
+      +'<img src="'+logoSrc+'" alt="SIGCE Logo" style="width:90px;height:90px;object-fit:contain"></div>'
+      +'<div style="color:#fff;font-size:26px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px">Smt. Indira Gandhi College of Engineering</div>'
       +'<div style="color:#93c5fd;font-size:16px;font-weight:600;margin-bottom:40px">Outcome Based Education — Attainment Report</div>'
       +'<div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:32px 48px;max-width:560px;width:100%">'
       +'<table style="width:100%;border-collapse:collapse;color:#fff;font-size:14px">'
