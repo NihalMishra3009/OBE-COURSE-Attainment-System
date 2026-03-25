@@ -1119,22 +1119,22 @@ function renderCOPOMatrix(el){
   if(!window._copoTab) window._copoTab='matrix';
   const tab=window._copoTab;
 
-  let h='<div class="instr"><strong>ðŸ“Œ Instructions:</strong> Map each CO to POs/PSOs (1=Low, 2=Medium, 3=High). Then add justification text for each mapping in the Justification tab.</div>';
+  let h='<div class="instr"><strong>Instructions:</strong> Map each CO to POs/PSOs (1=Low, 2=Medium, 3=High). Then add justification text for each mapping in the Justification tab.</div>';
 
   // Tab bar
   h+='<div style="display:flex;gap:6px;margin-bottom:16px;border-bottom:2px solid var(--border);padding-bottom:10px">';
-  h+='<button class="btn btn-sm '+(tab==='matrix'?'btn-primary':'btn-outline')+'" onclick="setCopoTab(\'matrix\')">ðŸ”— Mapping Matrix</button>';
-  h+='<button class="btn btn-sm '+(tab==='justify'?'btn-primary':'btn-outline')+'" onclick="setCopoTab(\'justify\')">âœï¸ Justification</button>';
+  h+='<button class="btn btn-sm '+(tab==='matrix'?'btn-primary':'btn-outline')+'" onclick="setCopoTab(\'matrix\')">Mapping Matrix</button>';
+  h+='<button class="btn btn-sm '+(tab==='justify'?'btn-primary':'btn-outline')+'" onclick="setCopoTab(\'justify\')">Justification</button>';
   h+='</div>';
 
   // â•â• MATRIX TAB â•â•
   if(tab==='matrix'){
-    h+='<div class="card"><div class="card-header"><div class="card-title">ðŸ”— CO-PO / CO-PSO Mapping Matrix</div>';
+    h+='<div class="card"><div class="card-header"><div class="card-title">CO-PO / CO-PSO Mapping Matrix</div>';
     h+='<div style="display:flex;gap:8px;align-items:center">';
     h+='<span class="tag tag-green" style="font-size:11px">3 = High</span>';
     h+='<span class="tag tag-gold" style="font-size:11px">2 = Medium</span>';
     h+='<span class="tag tag-blue" style="font-size:11px">1 = Low</span>';
-    h+='<button class="btn btn-sm btn-success" onclick="showToast(\'Matrix saved!\',\'success\')">ðŸ’¾ Save</button>';
+    h+='<button class="btn btn-sm btn-success" onclick="showToast(\'Matrix saved!\',\'success\')">Save</button>';
     h+='</div></div><div class="card-body">';
     h+='<div class="tbl-wrap"><table>';
     h+='<thead><tr><th style="min-width:60px;position:sticky;left:0;background:var(--surface3);z-index:1">CO</th>';
@@ -1170,14 +1170,14 @@ function renderCOPOMatrix(el){
     h+='</tbody></table></div>';
     // Full print view
     h+='<div style="margin-top:16px;background:var(--surface2);border-radius:8px;padding:14px">';
-    h+='<strong style="color:var(--accent);font-size:13px">ðŸ“„ Full Matrix Report View</strong>';
+    h+='<strong style="color:var(--accent);font-size:13px">Full Matrix Report View</strong>';
     h+='<div id="copoPrintView" style="margin-top:10px;overflow-x:auto"></div></div>';
     h+='</div></div>';
   }
 
   // â•â• JUSTIFICATION TAB â•â•
   if(tab==='justify'){
-    h+='<div class="instr" style="background:#f0fdf4;border-color:#86efac">âœï¸ Enter justification for each CO â†’ PO/PSO mapping. Explain <em>why</em> and <em>how</em> this CO contributes to the PO/PSO. Only mapped (1/2/3) pairs are shown.</div>';
+    h+='<div class="instr" style="background:#f0fdf4;border-color:#86efac">Enter justification for each CO -> PO/PSO mapping. Explain <em>why</em> and <em>how</em> this CO contributes to the PO/PSO. Only mapped (1/2/3) pairs are shown.</div>';
 
     s.cos.forEach(function(co,ci){
       const mapped=[];
@@ -1191,7 +1191,7 @@ function renderCOPOMatrix(el){
       h+='<div class="card" style="margin-bottom:14px;border-left:4px solid '+bColor+'">';
       h+='<div class="card-header" style="background:'+bLight+'44">';
       h+='<div class="card-title"><span class="co-tag">'+co.id+'</span> ';
-      h+='<span style="font-size:12px;color:var(--text2);font-weight:400">'+co.outcome.substring(0,70)+'â€¦</span></div>';
+      h+='<span style="font-size:12px;color:var(--text2);font-weight:400">'+co.outcome.substring(0,70)+'...</span></div>';
       h+='<span style="font-size:11px;font-weight:600;color:'+bColor+'">'+co.bloom+' (L'+(BLOOM_LEVELS.indexOf(co.bloom)+1)+')</span>';
       h+='</div><div class="card-body">';
       h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px">';
@@ -1229,7 +1229,7 @@ function renderCOPOMatrix(el){
 
     // Export justification button
     h+='<div style="margin-top:10px;display:flex;gap:8px">';
-    h+='<button class="btn btn-sm btn-gold" onclick="downloadJustification()">ðŸ“Š Export Justification Excel</button>';
+    h+='<button class="btn btn-sm btn-gold" onclick="downloadJustification()">Export Justification Excel</button>';
     h+='</div>';
   }
 
