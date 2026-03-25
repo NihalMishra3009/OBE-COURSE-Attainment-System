@@ -931,18 +931,14 @@ function renderCOPage(el){
     }
     // Manual text area for syllabus content
     h+='<div class="fg"><label>Syllabus Content (paste or type directly)</label>';
-    h+='<textarea id="syllabusText" rows="18" placeholder="Paste syllabus text here, or upload a file above. This content is stored with the course file.
-
-Unit 1: ...
-Unit 2: ..." style="width:100%;padding:10px;border:1.5px solid var(--border2);border-radius:8px;font-family:inherit;font-size:13px;line-height:1.6;resize:vertical" onchange="sub().syllabusText=this.value">'+( s.syllabusText||'')+'</textarea></div>';
+    h+='<textarea id="syllabusText" rows="18" placeholder="Paste syllabus text here, or upload a file above. This content is stored with the course file.\n\nUnit 1: ...\nUnit 2: ..." style="width:100%;padding:10px;border:1.5px solid var(--border2);border-radius:8px;font-family:inherit;font-size:13px;line-height:1.6;resize:vertical" onchange="sub().syllabusText=this.value">'+( s.syllabusText||'')+'</textarea></div>';
     h+='<div style="display:flex;gap:8px;margin-top:10px">';
     h+='<button class="btn btn-sm btn-success" onclick="saveSyllabus()">💾 Save Syllabus</button>';
     h+='<button class="btn btn-sm btn-purple" onclick="autoMapCOsFromSyllabus()">🤖 Auto-suggest COs from Syllabus</button>';
     h+='</div>';
     // If syllabus text exists, show unit summary
     if(s.syllabusText && s.syllabusText.length>10){
-      const lines=s.syllabusText.split('
-').filter(function(l){return l.trim();});
+      const lines=s.syllabusText.split('\n').filter(function(l){return l.trim();});
       const units=lines.filter(function(l){return /unit|module|chapter|section/i.test(l);});
       if(units.length){
         h+='<div style="margin-top:14px;padding:12px;background:var(--surface2);border-radius:8px">';
@@ -994,9 +990,7 @@ function uploadSyllabus(input){
     if(f.name.endsWith('.txt')){
       sub().syllabusText=e.target.result;
     } else {
-      sub().syllabusText='[Binary file: '+f.name+']
-
-Please paste the syllabus text content in the text area below for analysis.';
+      sub().syllabusText='[Binary file: '+f.name+']\n\nPlease paste the syllabus text content in the text area below for analysis.';
     }
     renderCOPage(document.getElementById(PAGES[2].id));
     showToast('Syllabus uploaded: '+f.name,'success');
