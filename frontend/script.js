@@ -244,30 +244,30 @@ function doLogout(){
 // ============================================================
 let currentPage=0;
 const PAGES=[
-  {id:'pg0',  icon:'🏠',label:'Dashboard',                section:'Dashboard'},
-  {id:'pg1',  icon:'📋',label:'1. Course Info',           section:'Course Info & Setup'},
-  {id:'pg2',  icon:'🎯',label:'2. CO / Objectives',       section:'Course Objectives & Outcomes'},
-  {id:'pg3',  icon:'👥',label:'3. Student List',          section:'Student List'},
-  {id:'pg4',  icon:'🔗',label:'4. CO-PO Matrix',          section:'CO-PO Mapping Matrix'},
-  {id:'pg5',  icon:'📡',label:'5. Content Delivery',      section:'Modes of Content Delivery'},
-  {id:'pg6',  icon:'⏱', label:'6. CO Hours',              section:'CO Teaching Hours'},
-  {id:'pg7',  icon:'🧠',label:'7. Cognition Hrs',         section:'Cognition Learning Hours'},
-  {id:'pg8',  icon:'📝',label:'8. Assessments',           section:'Assessment Instruments'},
-  {id:'pg9',  icon:'🔗',label:'9. CIA Q-Paper',           section:'CIA Question Paper & CO-Q Mapping'},
-  {id:'pg10', icon:'📊',label:'10. Marklist',             section:'Direct Assessment — Marklist'},
-  {id:'pg11', icon:'📋',label:'11. Indirect (CES)',       section:'Indirect Assessment — CES Survey'},
-  {id:'pg12', icon:'👁', label:'12. Learner Analysis',    section:'Student Learner Analysis'},
-  {id:'pg13', icon:'📈',label:'13. Monitoring',           section:'Learner Monitoring'},
-  {id:'pg14', icon:'⏰',label:'14. PO/PSO Hours',         section:'PO-PSO Learning Hours'},
-  {id:'pg15', icon:'🎯',label:'15. CO Attainment',        section:'CO Attainment Calculation'},
-  {id:'pg16', icon:'📉',label:'16. CO Gap Chart',         section:'CO Achievement / Gap Chart'},
-  {id:'pg17', icon:'🔄',label:'17. CO Quality Loop',      section:'CO Quality Loop Closure'},
-  {id:'pg18', icon:'🏆',label:'18. PO Attainment',        section:'Program Outcomes Attainment'},
-  {id:'pg19', icon:'📉',label:'19. PO Gap Chart',         section:'PO Achievement / Gap Chart'},
-  {id:'pg20', icon:'🔄',label:'20. PO Quality Loop',      section:'PO Quality Loop Closure'},
-  {id:'pg21', icon:'🎓',label:'21. PSO Quality Loop',     section:'PSO Quality Loop Closure'},
-  {id:'pg22', icon:'📋',label:'Annex-I: WK Profile',      section:'Annexure-I: Knowledge & Attitude Profile (WK)'},
-  {id:'pg23', icon:'🏅',label:'23. Certificate',          section:'Course File Certificate'},
+  {id:'pg0',  icon:'??',label:'Dashboard',                section:'Dashboard'},
+  {id:'pg1',  icon:'??',label:'1. Course Info',           section:'Course Info & Setup'},
+  {id:'pg2',  icon:'??',label:'2. CO / Objectives',       section:'Course Objectives & Outcomes'},
+  {id:'pg3',  icon:'??',label:'3. Student List',          section:'Student List'},
+  {id:'pg4',  icon:'??',label:'4. CO-PO Matrix',          section:'CO-PO Mapping Matrix'},
+  {id:'pg5',  icon:'??',label:'5. Content Delivery',      section:'Modes of Content Delivery'},
+  {id:'pg6',  icon:'?', label:'6. CO Hours',              section:'CO Teaching Hours'},
+  {id:'pg7',  icon:'??',label:'7. Cognition Hrs',         section:'Cognition Learning Hours'},
+  {id:'pg8',  icon:'??',label:'8. Assessments',           section:'Assessment Instruments'},
+  {id:'pg9',  icon:'??',label:'9. CIA Q-Paper',           section:'CIA Question Paper & CO-Q Mapping'},
+  {id:'pg10', icon:'??',label:'10. Marklist',             section:'Direct Assessment — Marklist'},
+  {id:'pg11', icon:'??',label:'11. Indirect (CES)',       section:'Indirect Assessment — CES Survey'},
+  {id:'pg12', icon:'??', label:'12. Learner Analysis',    section:'Student Learner Analysis'},
+  {id:'pg13', icon:'??',label:'13. Monitoring',           section:'Learner Monitoring'},
+  {id:'pg14', icon:'?',label:'14. PO/PSO Hours',         section:'PO-PSO Learning Hours'},
+  {id:'pg15', icon:'??',label:'15. CO Attainment',        section:'CO Attainment Calculation'},
+  {id:'pg16', icon:'??',label:'16. CO Gap Chart',         section:'CO Achievement / Gap Chart'},
+  {id:'pg17', icon:'??',label:'17. CO Quality Loop',      section:'CO Quality Loop Closure'},
+  {id:'pg18', icon:'??',label:'18. PO Attainment',        section:'Program Outcomes Attainment'},
+  {id:'pg19', icon:'??',label:'19. PO Gap Chart',         section:'PO Achievement / Gap Chart'},
+  {id:'pg20', icon:'??',label:'20. PO Quality Loop',      section:'PO Quality Loop Closure'},
+  {id:'pg21', icon:'??',label:'21. PSO Quality Loop',     section:'PSO Quality Loop Closure'},
+  {id:'pg22', icon:'??',label:'Annex-I: WK Profile',      section:'Annexure-I: Knowledge & Attitude Profile (WK)'},
+  {id:'pg23', icon:'??',label:'23. Certificate',          section:'Course File Certificate'},
 ];
 
 function initApp(){
@@ -368,7 +368,7 @@ function renderDashboard(el){
   html+='<div class="kpi gold"><div class="kpi-val">'+subjects.filter(s=>s.coAttainment[0]!==null).length+'</div><div class="kpi-label">Calculated</div></div>';
   html+='<div class="kpi purple"><div class="kpi-val">'+(APP.user.role==='admin'?Object.keys(USERS).length:1)+'</div><div class="kpi-label">Users</div></div>';
   html+='</div>';
-  html+='<div class="card"><div class="card-header"><div class="card-title">📚 My Subjects</div>';
+  html+='<div class="card"><div class="card-header"><div class="card-title">?? My Subjects</div>';
   html+='<div style="display:flex;gap:8px;align-items:center">';
   html+='<button class="btn btn-sm btn-outline" onclick="deleteCurrentSubject()">Delete Subject</button>';
   html+='<button class="btn btn-sm btn-outline" onclick="openAddSubjectModal()">+ Add Subject</button>';
@@ -382,7 +382,7 @@ function renderDashboard(el){
     html+='<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">';
     html+='<span class="tag tag-blue">'+s.cos.length+' COs</span>';
     html+='<span class="tag tag-gray">'+s.students.length+' Students</span>';
-    html+=(s.coAttainment[0]!==null?'<span class="tag tag-green">✓ Calculated</span>':'<span class="tag tag-gold">Pending</span>');
+    html+=(s.coAttainment[0]!==null?'<span class="tag tag-green">? Calculated</span>':'<span class="tag tag-gold">Pending</span>');
     html+='</div></div>';
   });
   html+='</div></div></div>';
@@ -394,25 +394,25 @@ function switchSubjectAndGo(id,pg){APP.currentSubjectId=id;syncSubjectSelector()
 function renderAdminPanel(){
   let h='<div class="g2" style="margin-top:0">';
   // Users
-  h+='<div class="card"><div class="card-header"><div class="card-title">👤 User Management</div>';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? User Management</div>';
   h+='<button class="btn btn-sm btn-outline" onclick="openAddUserModal()">+ Add User</button></div><div class="card-body">';
   h+='<div class="tbl-wrap"><table><thead><tr><th>Username</th><th>Name</th><th>Role</th><th>Department</th><th>Action</th></tr></thead><tbody>';
   Object.entries(USERS).forEach(([u,d])=>{
     h+='<tr><td><code>'+u+'</code></td><td>'+d.name+'</td>';
     h+='<td><span class="role-badge role-'+d.role+'" style="padding:3px 8px;border-radius:20px;font-size:11px">'+d.role+'</span></td>';
     h+='<td>'+d.dept+'</td>';
-    h+='<td><button class="btn btn-sm btn-danger" onclick="deleteUser(\''+u+'\')">✕ Remove</button></td></tr>';
+    h+='<td><button class="btn btn-sm btn-danger" onclick="deleteUser(\''+u+'\')">? Remove</button></td></tr>';
   });
   h+='</tbody></table></div></div></div>';
   // Departments
-  h+='<div class="card"><div class="card-header"><div class="card-title">🏛 Department Management</div>';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? Department Management</div>';
   h+='<button class="btn btn-sm btn-outline" onclick="openAddDeptModal()">+ Add Department</button></div><div class="card-body">';
   h+='<div class="tbl-wrap"><table><thead><tr><th>#</th><th class="left">Department Name</th><th>Subjects</th><th>Faculty</th><th>Action</th></tr></thead><tbody>';
   DEPARTMENTS.forEach((d,di)=>{
     h+='<tr><td>'+(di+1)+'</td><td class="left"><strong>'+d+'</strong></td>';
     h+='<td><span class="tag tag-blue">'+Object.values(APP.subjects).filter(s=>s.dept===d).length+'</span></td>';
     h+='<td><span class="tag tag-gray">'+Object.values(USERS).filter(u=>u.dept===d).length+'</span></td>';
-    h+='<td><button class="btn btn-sm btn-danger" onclick="removeDept('+di+')">✕</button></td></tr>';
+    h+='<td><button class="btn btn-sm btn-danger" onclick="removeDept('+di+')">?</button></td></tr>';
   });
   h+='</tbody></table></div></div></div></div>';
   return h;
@@ -452,7 +452,7 @@ function renderCourseInfo(el){
   const s=sub();
   let h='<div class="instr"><strong>📌 Instructions:</strong> Fill all course details and attainment targets. Click Save — data reflects across all sections.</div>';
   h+='<div class="g2">';
-  h+='<div class="card"><div class="card-header"><div class="card-title">🏛 Institution Details</div></div><div class="card-body">';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? Institution Details</div></div><div class="card-body">';
   h+=fg('Institution Name','inst_name',s.instName||s.name,'text');
   h+=fg('Department','inst_dept',s.dept,'text');
   h+=fg('Program','inst_prog',s.program||('B.E. '+s.dept),'text');
@@ -460,7 +460,7 @@ function renderCourseInfo(el){
   h+=fgSel('Semester','sem',['I','II','III','IV','V','VI','VII','VIII'],s.sem);
   h+=fg('Faculty Name','faculty_name',s.faculty,'text');
   h+='</div></div>';
-  h+='<div class="card"><div class="card-header"><div class="card-title">📚 Course Details</div></div><div class="card-body">';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? Course Details</div></div><div class="card-body">';
   h+=fg('Course Name','c_name',s.name,'text');
   h+=fg('Course Code','c_code',s.code,'text');
   h+=fg('Credits','c_credits',s.credits,'number');
@@ -469,7 +469,7 @@ function renderCourseInfo(el){
   h+=fg('CIE Weight (%)','c_ciewt',(s.cieWeight*100),'number');
   h+=fg('ESE Weight (%)','c_esewt',(s.eseWeight*100),'number');
   h+='</div></div></div>';
-  h+='<div class="card"><div class="card-header"><div class="card-title">🎯 Attainment Target Configuration</div></div><div class="card-body">';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? Attainment Target Configuration</div></div><div class="card-body">';
   h+='<div class="instr"><strong>Marks Threshold:</strong> Minimum % marks a student must score to be counted as "attained" for that CO.</div>';
   h+='<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">';
   h+='<label style="font-size:12px;font-weight:700;color:var(--text2)">Marks Threshold (%)</label>';
@@ -481,7 +481,7 @@ function renderCourseInfo(el){
   h+='<input type="number" id="co_target" value="'+s.coTargetLevel.toFixed(2)+'" min="0" max="3" step="0.01" style="padding:9px;border:1.5px solid var(--border2);border-radius:6px;font-family:monospace;width:100%"></div>';
   h+='</div>';
   h+='<div class="card" style="margin-bottom:12px;border-left:4px solid var(--accent)">';
-  h+='<div class="card-header"><div class="card-title">🎯 PO Individual Targets (PO1 – PO11)</div>';
+  h+='<div class="card-header"><div class="card-title">?? PO Individual Targets (PO1 – PO11)</div>';
   h+='<button class="btn btn-sm btn-outline" onclick="setAllPOTargets()">Set All</button></div>';
   h+='<div class="card-body">';
   h+='<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">';
@@ -495,7 +495,7 @@ function renderCourseInfo(el){
   });
   h+='</div></div></div>';
   h+='<div class="card" style="margin-bottom:16px;border-left:4px solid var(--purple)">';
-  h+='<div class="card-header"><div class="card-title">🎓 PSO Individual Targets (PSO1 – PSO'+s.psos.length+')</div>';
+  h+='<div class="card-header"><div class="card-title">?? PSO Individual Targets (PSO1 – PSO'+s.psos.length+')</div>';
   h+='<button class="btn btn-sm btn-outline" style="border-color:var(--purple);color:var(--purple)" onclick="setAllPSOTargets()">Set All</button></div>';
   h+='<div class="card-body">';
   h+='<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">';
@@ -593,26 +593,26 @@ function renderCourseInfo(el){
   h+='<div style="position:absolute;left:0;top:0;width:'+l1v2+'%;height:100%;background:#dbeafe"></div>';
   h+='<div style="position:absolute;left:0;top:0;width:'+l2v2+'%;height:100%;background:#fef3c7"></div>';
   h+='<div style="position:absolute;left:0;top:0;width:'+l3v2+'%;height:100%;background:#d1fae5"></div>';
-  h+='<span style="position:absolute;right:4px;top:0;line-height:16px;font-size:9px;font-weight:700;color:#059669">L3≥'+l3v2+'%</span>';
+  h+='<span style="position:absolute;right:4px;top:0;line-height:16px;font-size:9px;font-weight:700;color:#059669">L3='+l3v2+'%</span>';
   h+='</div>';
   h+='<div style="display:flex;gap:10px;font-size:11px">';
-  h+='<span><span style="display:inline-block;width:10px;height:10px;background:#dbeafe;border-radius:2px;vertical-align:middle"></span> L1≥<span id="v_l1">'+l1v2+'</span>%</span>';
-  h+='<span><span style="display:inline-block;width:10px;height:10px;background:#fef3c7;border-radius:2px;vertical-align:middle"></span> L2≥<span id="v_l2">'+l2v2+'</span>%</span>';
-  h+='<span><span style="display:inline-block;width:10px;height:10px;background:#d1fae5;border-radius:2px;vertical-align:middle"></span> L3≥<span id="v_l3">'+l3v2+'</span>%</span>';
+  h+='<span><span style="display:inline-block;width:10px;height:10px;background:#dbeafe;border-radius:2px;vertical-align:middle"></span> L1=<span id="v_l1">'+l1v2+'</span>%</span>';
+  h+='<span><span style="display:inline-block;width:10px;height:10px;background:#fef3c7;border-radius:2px;vertical-align:middle"></span> L2=<span id="v_l2">'+l2v2+'</span>%</span>';
+  h+='<span><span style="display:inline-block;width:10px;height:10px;background:#d1fae5;border-radius:2px;vertical-align:middle"></span> L3=<span id="v_l3">'+l3v2+'</span>%</span>';
   h+='</div></div>';
   h+='<p style="font-size:10px;color:var(--text3);margin-top:6px">* All values are editable. SEE = End Semester Exam, CIE = Continuous Internal Evaluation, CES = Course Exit Survey. Click Save Configuration to persist changes.</p>';
   h+='</div>';
   // Indirect Assessment config
   h+='<div style="margin:16px 0;padding:14px;background:#f0f9ff;border-radius:8px;border:1px solid #bae6fd">';
-  h+='<strong style="font-size:13px;color:var(--accent2)">🔁 Indirect Assessment (CES) Configuration</strong>';
+  h+='<strong style="font-size:13px;color:var(--accent2)">?? Indirect Assessment (CES) Configuration</strong>';
   h+='<p style="font-size:11px;color:var(--text2);margin:6px 0 10px">CES = Course Exit Survey. Ratings on 1–5 scale. Set the target score and weight below.</p>';
   h+='<div class="g4">';
   h+='<div class="fg"><label>CES Target Score (1–5)</label><input type="number" id="ces_target" value="'+(s.cesTarget||3.5)+'" min="1" max="5" step="0.1" style="padding:9px;border:1.5px solid #bae6fd;border-radius:6px;width:100%"></div>';
   h+='<div class="fg"><label>Indirect Weight (%)</label><input type="number" id="indir_wt" value="'+Math.round(s.indirectWeight*100)+'" min="10" max="50" step="5" style="padding:9px;border:1.5px solid #bae6fd;border-radius:6px;width:100%"></div>';
-  h+='<div class="fg"><label>CES → Attainment (Score ≥4 → L3)</label><div style="padding:9px;background:#e0f2fe;border-radius:6px;font-size:12px">≥4.0→L3 | ≥3.5→L2 | ≥2.5→L1 | else→0</div></div>';
+  h+='<div class="fg"><label>CES ? Attainment (Score =4 ? L3)</label><div style="padding:9px;background:#e0f2fe;border-radius:6px;font-size:12px">=4.0?L3 | =3.5?L2 | =2.5?L1 | else?0</div></div>';
   h+='<div class="fg"><label>CES Survey Status</label><div style="padding:9px;background:#d1fae5;border-radius:6px;font-size:12px;color:var(--green)">'+( (s.cesData&&s.cesData.length)?s.cesData.length+' responses loaded':'Upload in Section 11')+'</div></div>';
   h+='</div></div>';
-  h+='<button class="btn btn-primary" style="max-width:200px" onclick="saveCourseInfo()">💾 Save Configuration</button>';
+  h+='<button class="btn btn-primary" style="max-width:200px" onclick="saveCourseInfo()">?? Save Configuration</button>';
   h+='</div></div>';
   el.innerHTML=h;
   // Update threshold displays when pct slider changes
@@ -658,7 +658,7 @@ function updateAttainLvl(lvl,val){
     bar.innerHTML='<div style="position:absolute;left:0;top:0;width:'+l1+'%;height:100%;background:#dbeafe"></div>'
       +'<div style="position:absolute;left:0;top:0;width:'+l2+'%;height:100%;background:#fef3c7"></div>'
       +'<div style="position:absolute;left:0;top:0;width:'+l3+'%;height:100%;background:#d1fae5"></div>'
-      +'<span style="position:absolute;right:4px;top:0;line-height:16px;font-size:9px;font-weight:700;color:#059669">L3≥'+l3+'%</span>';
+      +'<span style="position:absolute;right:4px;top:0;line-height:16px;font-size:9px;font-weight:700;color:#059669">L3='+l3+'%</span>';
   }
 }
 function updateLvlRange(type,lvl,field,val){
@@ -774,18 +774,18 @@ function renderCOPage(el){
 
   // Sub-tab bar
   h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;border-bottom:2px solid var(--border);padding-bottom:10px">';
-  h+='<button class="btn btn-sm '+(tab==='cos'?'btn-primary':'btn-outline')+'" onclick="setCoTab(\'cos\')">🎯 CO / Outcomes</button>';
-  h+='<button class="btn btn-sm '+(tab==='bloom'?'btn-primary':'btn-outline')+'" onclick="setCoTab(\'bloom\')">🧠 Bloom\'s Dictionary</button>';
-  h+='<button class="btn btn-sm '+(tab==='syllabus'?'btn-primary':'btn-outline')+'" onclick="setCoTab(\'syllabus\')">📄 Syllabus</button>';
+  h+='<button class="btn btn-sm '+(tab==='cos'?'btn-primary':'btn-outline')+'" onclick="setCoTab(\'cos\')">?? CO / Outcomes</button>';
+  h+='<button class="btn btn-sm '+(tab==='bloom'?'btn-primary':'btn-outline')+'" onclick="setCoTab(\'bloom\')">?? Bloom\'s Dictionary</button>';
+  h+='<button class="btn btn-sm '+(tab==='syllabus'?'btn-primary':'btn-outline')+'" onclick="setCoTab(\'syllabus\')">?? Syllabus</button>';
   h+='</div>';
 
-  // ══════════ CO / OUTCOMES TAB ══════════
+  // ---------- CO / OUTCOMES TAB ----------
   if(tab==='cos'){
     // Objectives table
-    h+='<div class="card"><div class="card-header"><div class="card-title">🎯 Course Objectives</div>';
+    h+='<div class="card"><div class="card-header"><div class="card-title">?? Course Objectives</div>';
     h+='<div style="display:flex;gap:6px">';
     h+='<button class="btn btn-sm btn-outline" onclick="addCO()">+ Add CO</button>';
-    h+='<button class="btn btn-sm btn-success" onclick="saveCOs()">💾 Save COs</button>';
+    h+='<button class="btn btn-sm btn-success" onclick="saveCOs()">?? Save COs</button>';
     h+='</div></div><div class="card-body">';
     h+='<div class="tbl-wrap"><table><thead><tr>';
     h+='<th style="width:60px">CO</th>';
@@ -833,13 +833,13 @@ function renderCOPage(el){
       // PI textarea
       h+='<td class="left"><textarea rows="3" placeholder="Enter PI code and description..." style="width:100%;padding:5px;border:1.5px solid var(--border2);border-radius:5px;font-family:inherit;font-size:11px;resize:vertical" onchange="sub().cos['+i+'].pi=this.value">'+(co.pi||'')+'</textarea></td>';
       // Delete
-      h+='<td style="padding-top:10px"><button class="btn btn-sm btn-danger" onclick="removeCO('+i+')">✕</button></td>';
+      h+='<td style="padding-top:10px"><button class="btn btn-sm btn-danger" onclick="removeCO('+i+')">?</button></td>';
       h+='</tr>';
     });
     h+='</tbody></table></div></div></div>';
 
     // CO Summary preview
-    h+='<div class="card"><div class="card-header"><div class="card-title">📄 Report Preview — CO Summary</div></div><div class="card-body">';
+    h+='<div class="card"><div class="card-header"><div class="card-title">?? Report Preview — CO Summary</div></div><div class="card-body">';
     h+='<div class="tbl-wrap"><table><thead><tr style="background:var(--surface3)">';
     h+='<th>CO</th><th class="left">Objective</th><th class="left">Outcome</th><th>Bloom</th><th>WK</th><th>PI</th></tr></thead><tbody>';
     s.cos.forEach(function(co){
@@ -857,7 +857,7 @@ function renderCOPage(el){
     h+='</tbody></table></div></div></div>';
   }
 
-  // ══════════ BLOOM'S DICTIONARY TAB ══════════
+  // ---------- BLOOM'S DICTIONARY TAB ----------
   if(tab==='bloom'){
     h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">';
     BLOOM_LEVELS.forEach(function(level,li){
@@ -887,7 +887,7 @@ function renderCOPage(el){
     });
     h+='</div>';
     // Quick reference table
-    h+='<div class="card" style="margin-top:14px"><div class="card-header"><div class="card-title">📊 Quick Reference — All Verb Levels</div></div><div class="card-body">';
+    h+='<div class="card" style="margin-top:14px"><div class="card-header"><div class="card-title">?? Quick Reference — All Verb Levels</div></div><div class="card-body">';
     h+='<div class="tbl-wrap"><table><thead><tr>';
     BLOOM_LEVELS.forEach(function(b,i){
       const d=BLOOM_DICT[b];
@@ -907,24 +907,24 @@ function renderCOPage(el){
     h+='</tbody></table></div></div></div>';
   }
 
-  // ══════════ SYLLABUS TAB ══════════
+  // ---------- SYLLABUS TAB ----------
   if(tab==='syllabus'){
-    h+='<div class="card"><div class="card-header"><div class="card-title">📄 Syllabus Upload</div>';
+    h+='<div class="card"><div class="card-header"><div class="card-title">?? Syllabus Upload</div>';
     h+='<div style="display:flex;gap:6px">';
-    h+='<button class="btn btn-sm btn-outline" onclick="triggerUpload(\'syllabusFile\')">📁 Upload PDF/Doc</button>';
+    h+='<button class="btn btn-sm btn-outline" onclick="triggerUpload(\'syllabusFile\')">?? Upload PDF/Doc</button>';
     h+='<input type="file" id="syllabusFile" accept=".pdf,.doc,.docx,.txt" style="display:none" onchange="uploadSyllabus(this)">';
     if(s.syllabusFileName){
-      h+='<button class="btn btn-sm btn-danger" onclick="sub().syllabusText=\'\';sub().syllabusFileName=\'\';renderCOPage(document.getElementById(PAGES[2].id))">🗑 Clear</button>';
+      h+='<button class="btn btn-sm btn-danger" onclick="sub().syllabusText=\'\';sub().syllabusFileName=\'\';renderCOPage(document.getElementById(PAGES[2].id))">?? Clear</button>';
     }
     h+='</div></div><div class="card-body">';
     if(s.syllabusFileName){
       h+='<div style="display:flex;align-items:center;gap:10px;padding:10px;background:#d1fae5;border-radius:8px;margin-bottom:12px">';
-      h+='<span style="font-size:20px">📎</span>';
+      h+='<span style="font-size:20px">??</span>';
       h+='<div><div style="font-weight:700;color:var(--green)">'+s.syllabusFileName+'</div>';
       h+='<div style="font-size:11px;color:var(--text2)">Uploaded successfully</div></div></div>';
     } else {
       h+='<div class="upload-zone" onclick="triggerUpload(\'syllabusFile\')" style="margin-bottom:14px">';
-      h+='<div class="upload-icon">📄</div>';
+      h+='<div class="upload-icon">??</div>';
       h+='<div class="upload-title">Upload Syllabus Document</div>';
       h+='<div class="upload-sub">Supported: PDF, Word (.docx), Text (.txt) — content will be extracted and shown below</div>';
       h+='</div>';
@@ -933,8 +933,8 @@ function renderCOPage(el){
     h+='<div class="fg"><label>Syllabus Content (paste or type directly)</label>';
     h+='<textarea id="syllabusText" rows="18" placeholder="Paste syllabus text here, or upload a file above. This content is stored with the course file.\n\nUnit 1: ...\nUnit 2: ..." style="width:100%;padding:10px;border:1.5px solid var(--border2);border-radius:8px;font-family:inherit;font-size:13px;line-height:1.6;resize:vertical" onchange="sub().syllabusText=this.value">'+( s.syllabusText||'')+'</textarea></div>';
     h+='<div style="display:flex;gap:8px;margin-top:10px">';
-    h+='<button class="btn btn-sm btn-success" onclick="saveSyllabus()">💾 Save Syllabus</button>';
-    h+='<button class="btn btn-sm btn-purple" onclick="autoMapCOsFromSyllabus()">🤖 Auto-suggest COs from Syllabus</button>';
+    h+='<button class="btn btn-sm btn-success" onclick="saveSyllabus()">?? Save Syllabus</button>';
+    h+='<button class="btn btn-sm btn-purple" onclick="autoMapCOsFromSyllabus()">?? Auto-suggest COs from Syllabus</button>';
     h+='</div>';
     // If syllabus text exists, show unit summary
     if(s.syllabusText && s.syllabusText.length>10){
@@ -1044,22 +1044,22 @@ function renderStudents(el){
   const s=sub();
   let h='<div class="instr"><strong>📌 Instructions:</strong> Upload student list via Excel (Roll No, Name, Gender) or add manually. No attendance needed here.</div>';
   h+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">';
-  h+='<button class="btn btn-sm btn-gold" onclick="downloadStudentTemplate()">⬇ Template</button>';
-  h+='<button class="btn btn-sm btn-outline" onclick="document.getElementById(\'stuUpload\').click()">📁 Upload Excel</button>';
+  h+='<button class="btn btn-sm btn-gold" onclick="downloadStudentTemplate()">? Template</button>';
+  h+='<button class="btn btn-sm btn-outline" onclick="document.getElementById(\'stuUpload\').click()">?? Upload Excel</button>';
   h+='<input type="file" id="stuUpload" accept=".xlsx,.xls" style="display:none" onchange="uploadStudents(this)">';
-  h+='<button class="btn btn-sm btn-success" onclick="genSampleStudents()">🎲 Sample Students</button>';
+  h+='<button class="btn btn-sm btn-success" onclick="genSampleStudents()">?? Sample Students</button>';
   h+='<button class="btn btn-sm btn-outline" onclick="openAddStudentModal()">+ Add Manual</button></div>';
   if(!s.students.length){
-    h+='<div class="card"><div class="card-body" style="text-align:center;padding:40px;color:var(--text3)"><div style="font-size:48px">👥</div><div>No students yet. Upload Excel or add manually.</div></div></div>';
+    h+='<div class="card"><div class="card-body" style="text-align:center;padding:40px;color:var(--text3)"><div style="font-size:48px">??</div><div>No students yet. Upload Excel or add manually.</div></div></div>';
   } else {
-    h+='<div class="card"><div class="card-header"><div class="card-title">👥 Student List</div>';
+    h+='<div class="card"><div class="card-header"><div class="card-title">?? Student List</div>';
     h+='<div class="kpi blue" style="padding:8px"><div class="kpi-val" style="font-size:20px">'+s.students.length+'</div><div class="kpi-label">Students</div></div>';
     h+='</div><div class="card-body"><div class="tbl-wrap"><table>';
     h+='<thead><tr><th>#</th><th class="left">Roll No</th><th class="left">Name</th><th>Gender</th><th>Category</th><th>Action</th></tr></thead><tbody>';
     s.students.forEach((st,i)=>{
       h+='<tr><td>'+(i+1)+'</td><td class="left"><code style="font-size:11px">'+st.roll+'</code></td>';
       h+='<td class="left">'+st.name+'</td><td>'+st.gender+'</td><td>'+(st.category||'General')+'</td>';
-      h+='<td><button class="btn btn-sm btn-danger" onclick="removeStudent('+i+')">✕</button></td></tr>';
+      h+='<td><button class="btn btn-sm btn-danger" onclick="removeStudent('+i+')">?</button></td></tr>';
     });
     h+='</tbody></table></div></div></div>';
   }
@@ -1110,48 +1110,169 @@ function addStudentManual(){
 // ============================================================
 function renderCOPOMatrix(el){
   const s=sub();
-  const allPOs=[...s.pos.map((_,i)=>'PO'+(i+1)),'PSO1','PSO2','PSO3'];
-  let h='<div class="instr"><strong>📌 Instructions:</strong> Click cells to cycle 1→2→3 (strength of mapping). 3=High, 2=Medium, 1=Low, empty=no mapping. Averages shown at bottom.</div>';
-  h+='<div class="card"><div class="card-header"><div class="card-title">🔗 CO-PO / CO-PSO Mapping Matrix</div>';
-  h+='<div style="display:flex;gap:8px;font-size:12px">';
-  h+='<span class="tag tag-green">3 = High</span><span class="tag tag-gold">2 = Medium</span><span class="tag tag-blue">1 = Low</span>';
-  h+='<button class="btn btn-sm btn-success" onclick="showToast(\'Matrix saved!\',\'success\')">Save Matrix</button>';
-  h+='</div></div><div class="card-body">';
-  h+='<div class="tbl-wrap"><table>';
-  h+='<thead><tr><th style="min-width:60px">CO</th>';
-  allPOs.forEach(p=>{ h+='<th style="width:50px">'+p+'</th>'; });
-  h+='<th>Avg</th></tr></thead><tbody>';
-  s.cos.forEach((co,ci)=>{
-    const nz=s.copoPOMatrix[ci].filter(v=>v>0);
-    const avg=nz.length?(nz.reduce((a,b)=>a+b,0)/nz.length).toFixed(2):'-';
-    h+='<tr><td><span class="co-tag">'+co.id+'</span></td>';
-    s.copoPOMatrix[ci].forEach((v,pi)=>{
-      h+='<td><div class="mv mv-'+v+'" onclick="cycleMV('+ci+','+pi+',this)" style="cursor:pointer;user-select:none">'+(v||'')+'</div></td>';
+  if(!s.copoJustification) s.copoJustification={};
+  const allPOs=[...s.pos.map(function(_,i){return 'PO'+(i+1);}),
+                ...s.psos.map(function(_,i){return 'PSO'+(i+1);})];
+  const allPONames=[...s.pos,...s.psos];
+
+  // Sub-tab: 'matrix' | 'justify'
+  if(!window._copoTab) window._copoTab='matrix';
+  const tab=window._copoTab;
+
+  let h='<div class="instr"><strong>ðŸ“Œ Instructions:</strong> Map each CO to POs/PSOs (1=Low, 2=Medium, 3=High). Then add justification text for each mapping in the Justification tab.</div>';
+
+  // Tab bar
+  h+='<div style="display:flex;gap:6px;margin-bottom:16px;border-bottom:2px solid var(--border);padding-bottom:10px">';
+  h+='<button class="btn btn-sm '+(tab==='matrix'?'btn-primary':'btn-outline')+'" onclick="setCopoTab(\'matrix\')">ðŸ”— Mapping Matrix</button>';
+  h+='<button class="btn btn-sm '+(tab==='justify'?'btn-primary':'btn-outline')+'" onclick="setCopoTab(\'justify\')">âœï¸ Justification</button>';
+  h+='</div>';
+
+  // â•â• MATRIX TAB â•â•
+  if(tab==='matrix'){
+    h+='<div class="card"><div class="card-header"><div class="card-title">ðŸ”— CO-PO / CO-PSO Mapping Matrix</div>';
+    h+='<div style="display:flex;gap:8px;align-items:center">';
+    h+='<span class="tag tag-green" style="font-size:11px">3 = High</span>';
+    h+='<span class="tag tag-gold" style="font-size:11px">2 = Medium</span>';
+    h+='<span class="tag tag-blue" style="font-size:11px">1 = Low</span>';
+    h+='<button class="btn btn-sm btn-success" onclick="showToast(\'Matrix saved!\',\'success\')">ðŸ’¾ Save</button>';
+    h+='</div></div><div class="card-body">';
+    h+='<div class="tbl-wrap"><table>';
+    h+='<thead><tr><th style="min-width:60px;position:sticky;left:0;background:var(--surface3);z-index:1">CO</th>';
+    // PO headers
+    s.pos.forEach(function(_,i){
+      h+='<th style="width:46px;font-size:11px;background:#dbeafe;color:#1d4ed8">PO'+(i+1)+'</th>';
     });
-    h+='<td><strong class="tag tag-blue" style="font-family:monospace">'+avg+'</strong></td></tr>';
-  });
-  // PO avg row
-  h+='<tr style="background:var(--surface2)"><td><strong>Avg</strong></td>';
-  allPOs.forEach((_,pi)=>{
-    const vals=s.copoPOMatrix.map(row=>row[pi]).filter(v=>v>0);
-    const avg=vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2):'-';
-    h+='<td><strong style="font-family:monospace">'+avg+'</strong></td>';
-  });
-  h+='<td></td></tr>';
-  h+='</tbody></table></div>';
-  // Full matrix report view
-  h+='<div style="margin-top:16px;background:var(--surface2);border-radius:8px;padding:14px">';
-  h+='<strong style="color:var(--accent);font-size:13px">📄 Full Matrix — All CO×PO Values</strong>';
-  h+='<div id="copoPrintView" style="margin-top:10px;overflow-x:auto"></div></div>';
-  h+='</div></div>';
+    // PSO headers
+    s.psos.forEach(function(_,i){
+      h+='<th style="width:52px;font-size:11px;background:#ede9fe;color:#7c3aed">PSO'+(i+1)+'</th>';
+    });
+    h+='<th style="width:50px">Avg</th></tr></thead><tbody>';
+    s.cos.forEach(function(co,ci){
+      const nz=s.copoPOMatrix[ci].filter(function(v){return v>0;});
+      const avg=nz.length?(nz.reduce(function(a,b){return a+b;},0)/nz.length).toFixed(2):'-';
+      h+='<tr><td style="position:sticky;left:0;background:var(--surface);z-index:1"><span class="co-tag">'+co.id+'</span></td>';
+      s.copoPOMatrix[ci].forEach(function(v,pi){
+        const isPSO=pi>=s.pos.length;
+        const bg=isPSO?'#f5f3ff':'';
+        h+='<td style="background:'+bg+'"><div class="mv mv-'+v+'" onclick="cycleMV('+ci+','+pi+',this)" style="cursor:pointer;user-select:none">'+(v||'')+'</div></td>';
+      });
+      h+='<td><strong class="tag tag-blue" style="font-family:monospace;font-size:11px">'+avg+'</strong></td></tr>';
+    });
+    // Avg row
+    h+='<tr style="background:var(--surface2)"><td style="position:sticky;left:0;background:var(--surface2);font-weight:700;font-size:12px">Avg</td>';
+    allPOs.forEach(function(_,pi){
+      const vals=s.copoPOMatrix.map(function(row){return row[pi];}).filter(function(v){return v>0;});
+      const avg=vals.length?(vals.reduce(function(a,b){return a+b;},0)/vals.length).toFixed(2):'-';
+      const isPSO=pi>=s.pos.length;
+      h+='<td style="background:'+(isPSO?'#f5f3ff':'')+';font-family:monospace;font-size:11px;font-weight:700;text-align:center">'+avg+'</td>';
+    });
+    h+='<td></td></tr>';
+    h+='</tbody></table></div>';
+    // Full print view
+    h+='<div style="margin-top:16px;background:var(--surface2);border-radius:8px;padding:14px">';
+    h+='<strong style="color:var(--accent);font-size:13px">ðŸ“„ Full Matrix Report View</strong>';
+    h+='<div id="copoPrintView" style="margin-top:10px;overflow-x:auto"></div></div>';
+    h+='</div></div>';
+  }
+
+  // â•â• JUSTIFICATION TAB â•â•
+  if(tab==='justify'){
+    h+='<div class="instr" style="background:#f0fdf4;border-color:#86efac">âœï¸ Enter justification for each CO â†’ PO/PSO mapping. Explain <em>why</em> and <em>how</em> this CO contributes to the PO/PSO. Only mapped (1/2/3) pairs are shown.</div>';
+
+    s.cos.forEach(function(co,ci){
+      const mapped=[];
+      s.copoPOMatrix[ci].forEach(function(v,pi){
+        if(v>0) mapped.push({pi:pi,v:v,label:allPOs[pi],name:allPONames[pi]});
+      });
+      if(!mapped.length) return;
+      const bColor=BLOOM_DICT[co.bloom]?BLOOM_DICT[co.bloom].color:'var(--accent)';
+      const bLight=BLOOM_DICT[co.bloom]?BLOOM_DICT[co.bloom].light:'#dbeafe';
+
+      h+='<div class="card" style="margin-bottom:14px;border-left:4px solid '+bColor+'">';
+      h+='<div class="card-header" style="background:'+bLight+'44">';
+      h+='<div class="card-title"><span class="co-tag">'+co.id+'</span> ';
+      h+='<span style="font-size:12px;color:var(--text2);font-weight:400">'+co.outcome.substring(0,70)+'â€¦</span></div>';
+      h+='<span style="font-size:11px;font-weight:600;color:'+bColor+'">'+co.bloom+' (L'+(BLOOM_LEVELS.indexOf(co.bloom)+1)+')</span>';
+      h+='</div><div class="card-body">';
+      h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px">';
+
+      mapped.forEach(function(m){
+        const key=co.id+'_'+m.label;
+        const savedJ=(s.copoJustification&&s.copoJustification[key])||'';
+        const isPSO=m.pi>=s.pos.length;
+        const strength=m.v===3?'High':m.v===2?'Medium':'Low';
+        const sColor=m.v===3?'var(--green)':m.v===2?'var(--gold)':'var(--accent)';
+
+        h+='<div style="padding:10px;border:1.5px solid '+(isPSO?'#c4b5fd':'#bfdbfe')+';border-radius:8px;background:'+(isPSO?'#faf5ff':'#f8faff')+'">';
+        h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">';
+        h+='<span style="font-weight:800;font-size:13px;color:'+(isPSO?'var(--purple)':'var(--accent)')+'">'+m.label+'</span>';
+        h+='<span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:'+sColor+'22;color:'+sColor+'">'+strength+' ('+m.v+')</span>';
+        h+='</div>';
+        h+='<div style="font-size:10px;color:var(--text2);margin-bottom:6px">'+m.name.substring(0,50)+'</div>';
+        h+='<textarea rows="3" data-key="'+key+'" placeholder="Justify how '+co.id+' maps to '+m.label+' ('+strength+' level)...\ne.g. This CO develops skills in '+co.bloom.toLowerCase()+' which directly supports '+m.label+'..." style="width:100%;padding:6px;border:1px solid '+(isPSO?'#c4b5fd':'#bfdbfe')+';border-radius:5px;font-family:inherit;font-size:11px;resize:vertical;background:#fff" onchange="saveJustification(this)">'+savedJ+'</textarea>';
+        h+='</div>';
+      });
+      h+='</div>';
+      // CO-level summary justification
+      const coKey=co.id+'_summary';
+      const coSummary=(s.copoJustification&&s.copoJustification[coKey])||'';
+      h+='<div style="margin-top:10px">';
+      h+='<label style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px">'+co.id+' Overall Justification (optional)</label>';
+      h+='<textarea rows="2" data-key="'+coKey+'" placeholder="Overall rationale for how this CO contributes to the program..." style="width:100%;padding:7px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:12px;margin-top:4px;resize:vertical" onchange="saveJustification(this)">'+coSummary+'</textarea>';
+      h+='</div>';
+      h+='</div></div>';
+    });
+
+    if(!s.cos.some(function(co,ci){return s.copoPOMatrix[ci].some(function(v){return v>0;});})){
+      h+='<div class="card"><div class="card-body" style="text-align:center;padding:30px;color:var(--text3)">No CO-PO mappings yet. Go to the Matrix tab and set mapping values first.</div></div>';
+    }
+
+    // Export justification button
+    h+='<div style="margin-top:10px;display:flex;gap:8px">';
+    h+='<button class="btn btn-sm btn-gold" onclick="downloadJustification()">ðŸ“Š Export Justification Excel</button>';
+    h+='</div>';
+  }
+
   el.innerHTML=h;
-  buildCopoPrintView();
+  if(tab==='matrix') buildCopoPrintView();
+}
+function setCopoTab(t){ window._copoTab=t; renderCOPOMatrix(document.getElementById(PAGES[4].id)); }
+function saveJustification(el){
+  const key=el.getAttribute('data-key');
+  if(!sub().copoJustification) sub().copoJustification={};
+  sub().copoJustification[key]=el.value;
+}
+function downloadJustification(){
+  const s=sub();
+  const rows=[['CO','PO/PSO','Strength','CO Outcome','PO/PSO Name','Justification']];
+  const allPONames=[...s.pos,...s.psos];
+  const allPOLabels=[...s.pos.map(function(_,i){return 'PO'+(i+1);}),
+                     ...s.psos.map(function(_,i){return 'PSO'+(i+1);})];
+  s.cos.forEach(function(co,ci){
+    s.copoPOMatrix[ci].forEach(function(v,pi){
+      if(!v) return;
+      const key=co.id+'_'+allPOLabels[pi];
+      rows.push([
+        co.id, allPOLabels[pi],
+        v===3?'High':v===2?'Medium':'Low',
+        co.outcome.substring(0,80),
+        allPONames[pi],
+        (s.copoJustification&&s.copoJustification[key])||''
+      ]);
+    });
+  });
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:6},{wch:6},{wch:8},{wch:50},{wch:40},{wch:60}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'CO-PO Justification');
+  XLSX.writeFile(wb,s.code+'_CO_PO_Justification.xlsx');
+  showToast('Justification exported!','success');
 }
 function buildCopoPrintView(){
   const s=sub();
   const el=document.getElementById('copoPrintView');
   if(!el||!s)return;
-  const allPOs=[...s.pos.map((_,i)=>'PO'+(i+1)),'PSO1','PSO2','PSO3'];
+  const allPOs=[...s.pos.map((_,i)=>'PO'+(i+1)),...s.psos.map((_,i)=>'PSO'+(i+1))];
   const coAvg=s.copoPOMatrix.map(row=>{const nz=row.filter(v=>v>0);return nz.length?(nz.reduce((a,b)=>a+b,0)/nz.length).toFixed(2):'-';});
   const poAvg=allPOs.map((_,pi)=>{const vals=s.copoPOMatrix.map(row=>row[pi]).filter(v=>v>0);return vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2):'-';});
   let h='<table style="font-size:11px;border-collapse:collapse;width:100%">';
@@ -1202,11 +1323,11 @@ function renderDelivery(el){
       h+='<td><input type="number" value="'+((s.deliveryHrs[mi]||[])[ci]||0)+'" min="0" max="20" onchange="setDeliveryHr('+mi+','+ci+',+this.value)" style="width:50px"></td>';
     });
     h+='<td><strong style="color:var(--accent)">'+rowTotal+'</strong></td>';
-    h+='<td><button class="btn btn-sm btn-danger" onclick="removeDeliveryMode('+mi+')">✕</button></td></tr>';
+    h+='<td><button class="btn btn-sm btn-danger" onclick="removeDeliveryMode('+mi+')">?</button></td></tr>';
   });
   h+='</tbody><tfoot id="delivFoot"></tfoot></table></div></div></div>';
   // Chart: CO-wise total delivery hours
-  h+='<div class="card"><div class="card-header"><div class="card-title">📊 CO Delivery Hours — Bar Chart</div></div><div class="card-body">';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? CO Delivery Hours — Bar Chart</div></div><div class="card-body">';
   h+='<div id="delivChart" style="overflow-x:auto;padding:8px"></div></div></div>';
   el.innerHTML=h;
   updateDeliveryFoot();
@@ -1261,10 +1382,10 @@ function removeDeliveryMode(mi){const s=sub();s.deliveryModes.splice(mi,1);if(s.
 function renderCOHours(el){
   const s=sub();
   let h='<div class="instr"><strong>📌 Instructions:</strong> Enter teaching hours per CO per hour type. Totals auto-computed.</div>';
-  h+='<div class="card"><div class="card-header"><div class="card-title">⏱ CO Teaching Hours</div>';
+  h+='<div class="card"><div class="card-header"><div class="card-title">? CO Teaching Hours</div>';
   h+='<button class="btn btn-sm btn-outline" onclick="addHourCol()">+ Add Column</button></div><div class="card-body">';
   h+='<div class="tbl-wrap"><table><thead><tr><th class="left">CO</th><th class="left">Outcome</th>';
-  s.hourCols.forEach((c,i)=>{ h+='<th>'+c+' <button class="btn btn-sm btn-danger" style="padding:1px 5px;font-size:10px" onclick="removeHourCol('+i+')">✕</button></th>'; });
+  s.hourCols.forEach((c,i)=>{ h+='<th>'+c+' <button class="btn btn-sm btn-danger" style="padding:1px 5px;font-size:10px" onclick="removeHourCol('+i+')">?</button></th>'; });
   h+='<th>Total</th></tr></thead><tbody>';
   s.cos.forEach((co,ci)=>{
     const hrs=s.hourCols.map((_,hi)=>s.coHours[ci][hi]||0);
@@ -1279,7 +1400,7 @@ function renderCOHours(el){
   h+='<td><strong>'+s.cos.reduce((a,_,ci)=>a+s.hourCols.reduce((b,_,hi)=>b+(s.coHours[ci][hi]||0),0),0)+'</strong></td>';
   h+='</tr></tfoot></table></div></div></div>';
   // Grouped bar chart
-  h+='<div class="card"><div class="card-header"><div class="card-title">📊 CO Teaching Hours — Bar Chart</div></div><div class="card-body">';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? CO Teaching Hours — Bar Chart</div></div><div class="card-body">';
   h+='<div id="hoursChart" style="overflow-x:auto;padding:8px"></div></div></div>';
   el.innerHTML=h;
   renderCOHoursChart();
@@ -1313,7 +1434,7 @@ function renderCognition(el){
   const s=sub();
   const blevels=['Remember','Understand','Apply','Analyze','Evaluate','Create'];
   let h='<div class="instr"><strong>📌 Instructions:</strong> Enter hours spent at each cognitive level (Bloom\'s Taxonomy) per CO.</div>';
-  h+='<div class="card"><div class="card-header"><div class="card-title">🧠 Cognition Learning Hours (Bloom\'s Taxonomy)</div></div><div class="card-body">';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? Cognition Learning Hours (Bloom\'s Taxonomy)</div></div><div class="card-body">';
   h+='<div class="tbl-wrap"><table><thead><tr><th>CO</th>';
   blevels.forEach((b,i)=>{ h+='<th>L'+(i+1)+': '+b+'</th>'; });
   h+='<th>Total</th></tr></thead><tbody>';
@@ -1325,7 +1446,7 @@ function renderCognition(el){
   });
   h+='</tbody></table></div></div></div>';
   // Bloom hours stacked chart
-  h+='<div class="card"><div class="card-header"><div class="card-title">📊 Cognition Hours — Bloom\'s Level Distribution Chart</div></div><div class="card-body">';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? Cognition Hours — Bloom\'s Level Distribution Chart</div></div><div class="card-body">';
   h+='<div id="bloomChart" style="overflow-x:auto;padding:8px"></div>';
   // Also overall Bloom distribution donut-style bar
   h+='<div id="bloomOverall" style="margin-top:16px;padding:10px;background:var(--surface2);border-radius:8px"></div>';
@@ -1387,7 +1508,7 @@ function renderAssessments(el){
 
   // ---- DIRECT ASSESSMENT TABLE ----
   h+='<div class="card" style="border-left:4px solid var(--accent)">';
-  h+='<div class="card-header"><div class="card-title">📝 Direct Assessments <span style="font-size:11px;color:var(--text2);font-weight:400">(CIE / ESE / Lab / Assignment)</span></div>';
+  h+='<div class="card-header"><div class="card-title">?? Direct Assessments <span style="font-size:11px;color:var(--text2);font-weight:400">(CIE / ESE / Lab / Assignment)</span></div>';
   h+='<div style="display:flex;gap:8px">';
   h+='<button class="btn btn-sm btn-outline" onclick="addDirectAssessment()">+ Add Direct</button>';
   h+='</div></div><div class="card-body">';
@@ -1408,7 +1529,7 @@ function renderAssessments(el){
     s.cos.forEach((_,ci)=>{
       h+='<td><input type="checkbox"'+(a.coCoverage.includes(ci)?' checked':'')+' onchange="toggleCOCov('+ai+','+ci+',this.checked)" style="width:16px;height:16px;cursor:pointer"></td>';
     });
-    h+='<td><button class="btn btn-sm btn-danger" onclick="removeAssessment('+ai+')">✕</button></td></tr>';
+    h+='<td><button class="btn btn-sm btn-danger" onclick="removeAssessment('+ai+')">?</button></td></tr>';
   });
   if(!directList.length) h+='<tr><td colspan="'+(6+s.cos.length)+'" style="text-align:center;padding:20px;color:var(--text3)">No direct assessments yet. Click + Add Direct.</td></tr>';
   h+='</tbody></table></div>';
@@ -1426,7 +1547,7 @@ function renderAssessments(el){
 
   // ---- INDIRECT ASSESSMENT TABLE ----
   h+='<div class="card" style="border-left:4px solid var(--purple);margin-top:12px">';
-  h+='<div class="card-header"><div class="card-title">🔁 Indirect Assessments <span style="font-size:11px;color:var(--text2);font-weight:400">(CES / Survey / Peer Review)</span></div>';
+  h+='<div class="card-header"><div class="card-title">?? Indirect Assessments <span style="font-size:11px;color:var(--text2);font-weight:400">(CES / Survey / Peer Review)</span></div>';
   h+='<div style="display:flex;gap:8px">';
   h+='<button class="btn btn-sm btn-outline" style="border-color:var(--purple);color:var(--purple)" onclick="addIndirectAssessment()">+ Add Indirect</button>';
   h+='</div></div><div class="card-body">';
@@ -1450,7 +1571,7 @@ function renderAssessments(el){
     s.cos.forEach((_,ci)=>{
       h+='<td><input type="checkbox"'+(a.coCoverage&&a.coCoverage.includes(ci)?' checked':'')+' onchange="toggleCOCov('+ai+','+ci+',this.checked)" style="width:16px;height:16px;cursor:pointer"></td>';
     });
-    h+='<td><button class="btn btn-sm btn-danger" onclick="removeAssessment('+ai+')">✕</button></td></tr>';
+    h+='<td><button class="btn btn-sm btn-danger" onclick="removeAssessment('+ai+')">?</button></td></tr>';
   });
   if(!indirectList.length) h+='<tr><td colspan="'+(7+s.cos.length)+'" style="text-align:center;padding:20px;color:var(--text3)">No indirect assessments yet. CES survey is auto-managed in Section 11.</td></tr>';
   h+='</tbody></table></div></div></div>';
@@ -1491,10 +1612,10 @@ function renderCIAQPaper(el){
   h+='</div>';
   if(!test){el.innerHTML=h;return;}
   h+='<div class="card"><div class="card-header">';
-  h+='<div class="card-title">📝 '+test.name+' — Question Paper Setup</div>';
+  h+='<div class="card-title">?? '+test.name+' — Question Paper Setup</div>';
   h+='<div style="display:flex;gap:8px">';
   h+='<button class="btn btn-sm btn-outline" onclick="addQRow('+tIdx+')">+ Add Question</button>';
-  h+='<button class="btn btn-sm btn-gold" onclick="printCIAQPaper('+tIdx+')">🖨 Print Question Paper</button>';
+  h+='<button class="btn btn-sm btn-gold" onclick="printCIAQPaper('+tIdx+')">?? Print Question Paper</button>';
   h+='</div></div><div class="card-body">';
   // Test meta
   h+='<div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap">';
@@ -1530,7 +1651,7 @@ function renderCIAQPaper(el){
     s.cos.forEach((_,ci)=>{
       h+='<td><input type="checkbox"'+(q.cos&&q.cos.includes(ci)?' checked':'')+' onchange="toggleQCO('+tIdx+','+qi+','+ci+',this.checked)" style="width:16px;height:16px;cursor:pointer"></td>';
     });
-    h+='<td><button class="btn btn-sm btn-danger" onclick="removeQRow('+tIdx+','+qi+')">✕</button></td></tr>';
+    h+='<td><button class="btn btn-sm btn-danger" onclick="removeQRow('+tIdx+','+qi+')">?</button></td></tr>';
   });
   h+='</tbody><tfoot><tr>';
   h+='<td colspan="2" class="left"><strong>Total</strong></td>';
@@ -1539,7 +1660,7 @@ function renderCIAQPaper(el){
   // Bloom distribution summary
   if(qrows.length){
     h+='<div style="margin-top:12px;background:var(--surface2);border-radius:8px;padding:12px">';
-    h+='<strong style="font-size:13px;color:var(--accent)">📊 Bloom\'s Level Distribution in this Test</strong>';
+    h+='<strong style="font-size:13px;color:var(--accent)">?? Bloom\'s Level Distribution in this Test</strong>';
     h+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">';
     BLOOM_LEVELS.forEach((b,bi)=>{
       const qs=qrows.filter(q=>q.bloom===b);
@@ -1628,17 +1749,17 @@ function renderMarklist(el){
   ['cie','ese','lab'].forEach(t=>{
     h+='<button class="btn btn-sm '+(t===viewType?'btn-primary':'btn-outline')+'" onclick="window._markView=\''+t+'\';renderMarklist(document.getElementById(PAGES[10].id))">'+t.toUpperCase()+'</button>';
   });
-  h+='<button class="btn btn-sm btn-gold" onclick="downloadMarksTemplate(\''+viewType+'\')">⬇ Template</button>';
-  h+='<button class="btn btn-sm btn-outline" onclick="document.getElementById(\'mUpload_'+viewType+'\').click()">📁 Upload</button>';
+  h+='<button class="btn btn-sm btn-gold" onclick="downloadMarksTemplate(\''+viewType+'\')">? Template</button>';
+  h+='<button class="btn btn-sm btn-outline" onclick="document.getElementById(\'mUpload_'+viewType+'\').click()">?? Upload</button>';
   h+='<input type="file" id="mUpload_'+viewType+'" accept=".xlsx,.xls" style="display:none" onchange="uploadMarks(this,\''+viewType+'\')">';
-  h+='<button class="btn btn-sm btn-success" onclick="autoFillMarks(\''+viewType+'\')">🎲 Sample</button></div>';
+  h+='<button class="btn btn-sm btn-success" onclick="autoFillMarks(\''+viewType+'\')">?? Sample</button></div>';
   if(viewType==='lab'){h+=renderLabTable(s);el.innerHTML=h;return;}
   if(!s.students.length){h+='<div class="card"><div class="card-body" style="text-align:center;padding:40px;color:var(--text3)">Add students first (Section 3)</div></div>';el.innerHTML=h;return;}
   const colTotals=assessList.map(a=>{
     const vals=s.students.map(st=>s.marks[a.id]?.[st.roll]||0);
     return {avg:(vals.reduce((a,b)=>a+b,0)/Math.max(vals.length,1)).toFixed(1)};
   });
-  h+='<div class="card"><div class="card-header"><div class="card-title">📊 '+viewType.toUpperCase()+' Marks</div>';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? '+viewType.toUpperCase()+' Marks</div>';
   h+='<div class="kpi blue" style="padding:8px"><div class="kpi-val" style="font-size:18px">'+s.students.length+'</div><div class="kpi-label">Students</div></div>';
   h+='</div><div class="card-body"><div class="tbl-wrap"><table>';
   h+='<thead><tr><th>#</th><th class="left">Roll No</th><th class="left">Name</th>';
@@ -1663,7 +1784,7 @@ function renderMarklist(el){
   // ESE CO-wise breakdown
   if(viewType==='ese'){
     h+='<div style="margin-top:16px;background:#f0f9ff;border-radius:8px;padding:14px;border-left:4px solid var(--accent2)">';
-    h+='<strong style="color:var(--accent2)">📊 ESE — CO-wise Contribution Analysis</strong>';
+    h+='<strong style="color:var(--accent2)">?? ESE — CO-wise Contribution Analysis</strong>';
     h+='<div class="tbl-wrap" style="margin-top:10px"><table>';
     h+='<thead><tr><th>#</th><th class="left">Roll No</th><th class="left">Name</th>';
     s.cos.forEach(c=>{ h+='<th>'+c.id+'</th>'; });
@@ -1681,7 +1802,7 @@ function renderMarklist(el){
       coMarks.forEach(m=>{ h+='<td class="pct-cell">'+m+'</td>'; });
       h+='<td><strong>'+tot+'</strong></td><td class="pct-cell" style="color:'+(+pct>=60?'var(--green)':+pct>=40?'var(--gold)':'var(--red)')+'">'+pct+'%</td></tr>';
     });
-    h+='</tbody><tfoot><tr><td colspan="3" class="left"><strong>CO Pass% (≥'+s.coTargetPct+'%)</strong></td>';
+    h+='</tbody><tfoot><tr><td colspan="3" class="left"><strong>CO Pass% (='+s.coTargetPct+'%)</strong></td>';
     s.cos.forEach((_,ci)=>{
       const eseList=s.assessments.filter(a=>a.type==='ESE'&&a.coCoverage&&a.coCoverage.includes(ci));
       const mx=eseList.reduce((a,b)=>a+b.max,0)||1;
@@ -1695,15 +1816,15 @@ function renderMarklist(el){
   el.innerHTML=h;
 }
 function renderLabTable(s){
-  let h='<div class="card"><div class="card-header"><div class="card-title">🔬 Lab Term Work</div>';
+  let h='<div class="card"><div class="card-header"><div class="card-title">?? Lab Term Work</div>';
   h+='<div style="display:flex;gap:8px">';
   h+='<button class="btn btn-sm btn-outline" onclick="addLabCol()">+ Add Column</button>';
-  h+='<button class="btn btn-sm btn-gold" onclick="downloadLabTemplate()">⬇ Template</button>';
-  h+='<button class="btn btn-sm btn-outline" onclick="document.getElementById(\'labUpload\').click()">📁 Upload</button>';
+  h+='<button class="btn btn-sm btn-gold" onclick="downloadLabTemplate()">? Template</button>';
+  h+='<button class="btn btn-sm btn-outline" onclick="document.getElementById(\'labUpload\').click()">?? Upload</button>';
   h+='<input type="file" id="labUpload" accept=".xlsx,.xls" style="display:none" onchange="uploadLabMarks(this)">';
   h+='</div></div><div class="card-body"><div class="tbl-wrap"><table>';
   h+='<thead><tr><th>#</th><th class="left">Roll No</th><th class="left">Name</th>';
-  s.labTWCols.forEach((c,i)=>{ h+='<th>'+c+' <button class="btn btn-sm btn-danger" style="padding:1px 4px;font-size:9px" onclick="removeLabCol('+i+')">✕</button></th>'; });
+  s.labTWCols.forEach((c,i)=>{ h+='<th>'+c+' <button class="btn btn-sm btn-danger" style="padding:1px 4px;font-size:9px" onclick="removeLabCol('+i+')">?</button></th>'; });
   h+='<th>Total</th><th>%</th></tr></thead><tbody>';
   const colMax=10;
   s.students.forEach((st,i)=>{
@@ -1781,27 +1902,27 @@ function renderCES(el){
   let h='<div class="instr"><strong>📌 Instructions:</strong> Manage all Indirect Assessments — upload or enter ratings manually (1–5 scale per CO). Each tab shows a full student-wise table with CO averages.</div>';
 
   const tabBtns=[];
-  tabBtns.push('<button class="btn btn-sm '+(activeTab==='ces'?'btn-primary':'btn-outline')+'" onclick="setCESTab(this)" data-tab="ces">📊 CES Survey</button>');
+  tabBtns.push('<button class="btn btn-sm '+(activeTab==='ces'?'btn-primary':'btn-outline')+'" onclick="setCESTab(this)" data-tab="ces">?? CES Survey</button>');
   indirAssessments.forEach((a,i)=>{
-    tabBtns.push('<button class="btn btn-sm '+(activeTab==='indir_'+i?'btn-purple':'btn-outline')+'" onclick="setCESTab(this)" data-tab="indir_'+i+'">🔁 '+a.name+'</button>');
+    tabBtns.push('<button class="btn btn-sm '+(activeTab==='indir_'+i?'btn-purple':'btn-outline')+'" onclick="setCESTab(this)" data-tab="indir_'+i+'">?? '+a.name+'</button>');
   });
   h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;border-bottom:2px solid var(--border);padding-bottom:10px">'+tabBtns.join('')+'</div>';
 
   if(activeTab==='ces'){
-    h+='<div class="card"><div class="card-header"><div class="card-title">📊 Course Exit Survey (CES)</div>';
+    h+='<div class="card"><div class="card-header"><div class="card-title">?? Course Exit Survey (CES)</div>';
     h+='<div style="display:flex;gap:6px;flex-wrap:wrap">';
-    h+='<button class="btn btn-sm btn-gold" onclick="downloadCESTemplate()">⬇ Template</button>';
-    h+='<button class="btn btn-sm btn-outline" onclick="triggerUpload(\"cesUpload\")">📁 Upload Excel</button>';
+    h+='<button class="btn btn-sm btn-gold" onclick="downloadCESTemplate()">? Template</button>';
+    h+='<button class="btn btn-sm btn-outline" onclick="triggerUpload(\"cesUpload\")">?? Upload Excel</button>';
     h+='<input type="file" id="cesUpload" accept=".xlsx,.xls" style="display:none" onchange="uploadCES(this)">';
-    h+='<button class="btn btn-sm btn-success" onclick="generateSampleCES()">🎲 Sample</button>';
-    h+='<button class="btn btn-sm btn-danger" style="background:var(--red-light);color:var(--red)" onclick="clearCESData()">🗑 Clear</button>';
+    h+='<button class="btn btn-sm btn-success" onclick="generateSampleCES()">?? Sample</button>';
+    h+='<button class="btn btn-sm btn-danger" style="background:var(--red-light);color:var(--red)" onclick="clearCESData()">?? Clear</button>';
     h+='</div></div><div class="card-body">';
 
     if(!s.cesData||!s.cesData.length){
       h+='<div class="upload-zone" onclick="triggerUpload(\"cesUpload\")" style="margin-bottom:16px">';
-      h+='<div class="upload-icon">📊</div>';
+      h+='<div class="upload-icon">??</div>';
       h+='<div class="upload-title">Upload CES Survey Excel</div>';
-      h+='<div class="upload-sub">Columns: Roll No, CO1_Rating … CO'+s.cos.length+'_Rating (1–5 scale). Or click 🎲 Sample to auto-generate.</div></div>';
+      h+='<div class="upload-sub">Columns: Roll No, CO1_Rating … CO'+s.cos.length+'_Rating (1–5 scale). Or click ?? Sample to auto-generate.</div></div>';
       if(s.students.length){
         h+='<div style="text-align:center;color:var(--text3);font-size:12px;margin-bottom:10px">— or enter ratings manually —</div>';
         h+=buildCESManualTable(s);
@@ -1841,8 +1962,8 @@ function renderCES(el){
       h+='</div></div>';
 
       h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
-      h+='<strong style="font-size:13px">📋 Student-wise Ratings Table</strong>';
-      h+='<span style="font-size:11px;color:var(--text2)">Edit any cell directly | Color: 🟢 ≥4 🟡 ≥3 🔴 <3</span>';
+      h+='<strong style="font-size:13px">?? Student-wise Ratings Table</strong>';
+      h+='<span style="font-size:11px;color:var(--text2)">Edit any cell directly | Color: ?? =4 ?? =3 ?? <3</span>';
       h+='</div>';
       h+='<div class="tbl-wrap"><table><thead><tr style="background:#f1f5f9">';
       h+='<th style="width:36px">#</th><th class="left" style="min-width:90px">Roll No</th><th class="left" style="min-width:110px">Name</th>';
@@ -1886,13 +2007,13 @@ function renderCES(el){
         const sc=coScores[ci];const t=target;
         const att=sc>=4?3:sc>=t?2:sc>=2.5?1:0;
         const met=sc>=t;
-        const stars='★'.repeat(Math.min(5,Math.round(sc)))+'☆'.repeat(Math.max(0,5-Math.round(sc)));
+        const stars='?'.repeat(Math.min(5,Math.round(sc)))+'?'.repeat(Math.max(0,5-Math.round(sc)));
         h+='<tr><td><span class="co-tag">'+co.id+'</span></td>';
         h+='<td class="left" style="font-size:11px">'+co.outcome.substring(0,55)+'...</td>';
         h+='<td><strong style="font-family:monospace;color:'+(met?'var(--green)':'var(--red)')+'">'+sc.toFixed(2)+'</strong></td>';
         h+='<td style="color:#f59e0b">'+stars+'</td>';
         h+='<td><div style="width:26px;height:26px;border-radius:50%;background:'+(att===3?'var(--green)':att===2?'var(--gold)':att===1?'var(--accent)':'var(--red)')+';color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;margin:auto">'+att+'</div></td>';
-        h+='<td><span class="tag '+(met?'tag-green':'tag-red')+'">'+(met?'✓ Achieved':'✗ Gap')+'</span></td></tr>';
+        h+='<td><span class="tag '+(met?'tag-green':'tag-red')+'">'+(met?'? Achieved':'? Gap')+'</span></td></tr>';
       });
       h+='</tbody></table></div></div>';
     }
@@ -1913,12 +2034,12 @@ function renderCES(el){
 
     h+='<div class="card" style="border-left:4px solid var(--purple)">';
     h+='<div class="card-header">';
-    h+='<div class="card-title">🔁 '+a.name+' <span style="font-size:11px;color:var(--text2);font-weight:400">('+a.type+' · '+(a.method||'Survey')+' · Target: '+tgt+')</span></div>';
+    h+='<div class="card-title">?? '+a.name+' <span style="font-size:11px;color:var(--text2);font-weight:400">('+a.type+' · '+(a.method||'Survey')+' · Target: '+tgt+')</span></div>';
     h+='<div style="display:flex;gap:6px">';
-    h+='<button class="btn btn-sm btn-gold" onclick="downloadIndirTemplate(\"'+a.id+'\")">⬇ Template</button>';
-    h+='<button class="btn btn-sm btn-outline" onclick="triggerUpload(\"iu_'+a.id+'\")">📁 Upload</button>';
+    h+='<button class="btn btn-sm btn-gold" onclick="downloadIndirTemplate(\"'+a.id+'\")">? Template</button>';
+    h+='<button class="btn btn-sm btn-outline" onclick="triggerUpload(\"iu_'+a.id+'\")">?? Upload</button>';
     h+='<input type="file" id="iu_'+a.id+'" accept=".xlsx,.xls" style="display:none" onchange="uploadIndirMarks(this,\"'+a.id+'\")">';
-    h+='<button class="btn btn-sm btn-success" onclick="sampleIndirMarks(\"'+a.id+'\")">🎲 Sample</button>';
+    h+='<button class="btn btn-sm btn-success" onclick="sampleIndirMarks(\"'+a.id+'\")">?? Sample</button>';
     h+='</div></div><div class="card-body">';
 
     h+='<div class="g4" style="margin-bottom:14px">';
@@ -1930,7 +2051,7 @@ function renderCES(el){
     h+='</div>';
 
     h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
-    h+='<strong style="font-size:13px">📋 Student-wise Rating Entry Table (1–5 per CO)</strong>';
+    h+='<strong style="font-size:13px">?? Student-wise Rating Entry Table (1–5 per CO)</strong>';
     h+='<span style="font-size:11px;color:var(--text2)">Enter or upload ratings. Auto-saved.</span>';
     h+='</div>';
     h+='<div class="tbl-wrap"><table><thead><tr style="background:#f5f3ff">';
@@ -2195,12 +2316,12 @@ function renderLearnerAnalysis(el){
     chartSvg+='<text x="'+(x+barW/2)+'" y="'+(chartH+30)+'" font-size="10" fill="#94a3b8" text-anchor="middle">'+(n?((n/rows.length)*100).toFixed(0)+'%':'')+'</text>';
   });
   chartSvg+='</svg>';
-  h+='<div class="card"><div class="card-header"><div class="card-title">📊 Performance Distribution</div></div><div class="card-body" style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? Performance Distribution</div></div><div class="card-body" style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">';
   h+=chartSvg;
   h+='<div style="flex:1;min-width:200px">';
   catCounts.forEach((n,i)=>{const pct=rows.length?((n/rows.length)*100).toFixed(1):0;h+='<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span style="font-weight:700;color:'+catColors2[i]+'">'+cats2[i]+'</span><span>'+n+' students ('+pct+'%)</span></div><div style="height:8px;background:#f1f5f9;border-radius:4px"><div style="height:8px;width:'+pct+'%;background:'+catColors2[i]+';border-radius:4px"></div></div></div>';});
   h+='</div></div></div>';
-  h+='<div class="card"><div class="card-header"><div class="card-title">👁 Student Classification</div></div><div class="card-body"><div class="tbl-wrap"><table>';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? Student Classification</div></div><div class="card-body"><div class="tbl-wrap"><table>';
   h+='<thead><tr><th>#</th><th class="left">Roll No</th><th class="left">Name</th><th>CIE%</th><th>ESE%</th><th>Overall%</th><th>Category</th><th>Remedial?</th></tr></thead><tbody>';
   rows.forEach((r,i)=>{
     h+='<tr><td>'+(i+1)+'</td><td class="left"><code style="font-size:11px">'+r.roll+'</code></td>';
@@ -2220,7 +2341,7 @@ function renderLearnerAnalysis(el){
 function renderMonitoring(el){
   const s=sub();
   let h='<div class="instr"><strong>📌 Instructions:</strong> Record remedial and advanced activities per CO. Update status as actions are implemented.</div>';
-  h+='<div class="card"><div class="card-header"><div class="card-title">📈 Monitoring Actions per CO</div></div><div class="card-body"><div class="tbl-wrap"><table>';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? Monitoring Actions per CO</div></div><div class="card-body"><div class="tbl-wrap"><table>';
   h+='<thead><tr><th>CO</th><th>Bloom</th><th>PI</th><th>Slow</th><th>Avg</th><th>Fast</th><th class="left">Remedial Action</th><th class="left">Advanced Activity</th><th>Status</th></tr></thead><tbody>';
   s.cos.forEach((co,ci)=>{
     const rows=s.students.map(st=>{const total=s.assessments.reduce((a,b)=>a+(s.marks[b.id]?.[st.roll]||0),0);const mx=s.assessments.reduce((a,b)=>a+b.max,0)||1;return(total/mx)*100;});
@@ -2245,7 +2366,7 @@ function renderMonitoring(el){
 // ============================================================
 function renderPOHours(el){
   const s=sub();
-  const allPOs=[...s.pos.map((_,i)=>'PO'+(i+1)),'PSO1','PSO2','PSO3'];
+  const allPOs=[...s.pos.map((_,i)=>'PO'+(i+1)),...s.psos.map((_,i)=>'PSO'+(i+1))];
   const coCount=s.cos.length;
   const coTotals=s.cos.map((_,ci)=>s.hourCols.reduce((a,_,hi)=>a+(s.coHours[ci][hi]||0),0));
   const getAuto=(ci,pi)=>{
@@ -2259,8 +2380,8 @@ function renderPOHours(el){
     return getAuto(ci,pi);
   };
   let h='<div class="instr"><strong>📌 Instructions:</strong> Enter learning hours attributable to each PO/PSO via each CO. Pre-filled from CO-PO matrix. Avg Hrs/CO calculated automatically.</div>';
-  h+='<div class="card"><div class="card-header"><div class="card-title">⏰ PO/PSO Learning Hours</div>';
-  h+='<button class="btn btn-sm btn-success" onclick="showToast(\'PO Hours saved!\',\'success\')">💾 Save</button>';
+  h+='<div class="card"><div class="card-header"><div class="card-title">? PO/PSO Learning Hours</div>';
+  h+='<button class="btn btn-sm btn-success" onclick="showToast(\'PO Hours saved!\',\'success\')">?? Save</button>';
   h+='</div><div class="card-body"><div class="tbl-wrap"><table>';
   h+='<thead><tr><th>CO</th>';
   allPOs.forEach(p=>{ h+='<th>'+p+'</th>'; });
@@ -2336,11 +2457,11 @@ function updatePOHourTotals(){
 function renderCOAttainment(el){
   const s=sub();
   let h='<div class="instr"><strong>📌 Instructions:</strong> Click Calculate to compute CO attainment from CIE, ESE, and CES data. Target: '+s.coTargetLevel.toFixed(2)+'</div>';
-  h+='<div class="card"><div class="card-header"><div class="card-title">🎯 CO Attainment</div>';
-  h+='<button class="btn btn-sm btn-purple" onclick="calculateAll()">⚡ Calculate All</button>';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? CO Attainment</div>';
+  h+='<button class="btn btn-sm btn-purple" onclick="calculateAll()">? Calculate All</button>';
   h+='</div><div class="card-body">';
   if(!s.coAttainment[0]){
-    h+='<div style="text-align:center;padding:40px;color:var(--text3)"><div style="font-size:48px">⚡</div>Click Calculate to compute attainment</div>';
+    h+='<div style="text-align:center;padding:40px;color:var(--text3)"><div style="font-size:48px">?</div>Click Calculate to compute attainment</div>';
   } else {
     h+='<div class="g4" style="margin-bottom:20px">';
     s.coAttainment.forEach((ca,ci)=>{
@@ -2349,7 +2470,7 @@ function renderCOAttainment(el){
       h+='<div class="kpi-val">'+s.cos[ci].id+'</div>';
       h+='<div style="display:flex;align-items:center;gap:8px;margin-top:4px">';
       h+='<div class="attain-level attain-'+( ca.level||0)+'">'+( ca.level||0)+'</div>';
-      h+='<div><div class="kpi-label">'+(ca.achieved?'✓ Achieved':'✗ Gap')+'</div>';
+      h+='<div><div class="kpi-label">'+(ca.achieved?'? Achieved':'? Gap')+'</div>';
       h+='<div class="kpi-sub">'+ca.final.toFixed(2)+'</div></div></div></div>';
     });
     h+='</div>';
@@ -2370,7 +2491,7 @@ function renderCOAttainment(el){
       h+='<td><strong style="font-size:16px;color:'+(ca.achieved?'var(--green)':'var(--red)')+'">'+ca.final.toFixed(2)+'</strong></td>';
       h+='<td style="font-family:monospace">'+s.coTargetLevel.toFixed(2)+'</td>';
       h+='<td><div class="attain-level attain-'+(ca.level||0)+'">'+(ca.level||0)+'</div></td>';
-      h+='<td><span class="tag '+(ca.achieved?'tag-green':'tag-red')+'">'+(ca.achieved?'✓ Met':'✗ Gap')+'</span></td>';
+      h+='<td><span class="tag '+(ca.achieved?'tag-green':'tag-red')+'">'+(ca.achieved?'? Met':'? Gap')+'</span></td>';
       h+='</tr>';
     });
     h+='</tbody></table></div>';
@@ -2423,7 +2544,7 @@ function renderCOChart(el){
   const s=sub();
   if(!s.coAttainment[0]){el.innerHTML='<div class="card"><div class="card-body" style="text-align:center;padding:40px;color:var(--text3)">Run calculation first (Section 15)</div></div>';return;}
   const maxH=160;
-  let h='<div class="card"><div class="card-header"><div class="card-title">📉 CO Achievement vs Target</div></div><div class="card-body">';
+  let h='<div class="card"><div class="card-header"><div class="card-title">?? CO Achievement vs Target</div></div><div class="card-body">';
   h+='<div class="bar-chart">';
   s.cos.forEach((co,ci)=>{
     const ca=s.coAttainment[ci];const v=ca?.final||0;
@@ -2432,7 +2553,7 @@ function renderCOChart(el){
     h+='<div class="bc-bar bc-achieved" style="height:'+achH+'px" title="'+co.id+': '+v.toFixed(2)+'"></div>';
     h+='<div class="bc-bar bc-target" style="height:'+tgtH+'px" title="Target: '+s.coTargetLevel.toFixed(2)+'"></div>';
     h+='</div><div class="bc-label">'+co.id+'</div>';
-    h+='<span class="tag '+(ca?.achieved?'tag-green':'tag-red')+'" style="font-size:9px;margin-top:3px">'+(ca?.achieved?'✓':'✗')+'</span></div>';
+    h+='<span class="tag '+(ca?.achieved?'tag-green':'tag-red')+'" style="font-size:9px;margin-top:3px">'+(ca?.achieved?'?':'?')+'</span></div>';
   });
   h+='</div>';
   h+='<div class="tbl-wrap" style="margin-top:16px"><table>';
@@ -2462,12 +2583,12 @@ function renderCOQuality(el){
     const ca=s.coAttainment[ci];
     if(!ca){h+='<div class="card"><div class="card-body">Run calculation first</div></div>';return;}
     h+='<div class="card"><div class="card-header">';
-    h+='<div class="card-title">🔄 '+co.id+' — Quality Loop</div>';
+    h+='<div class="card-title">?? '+co.id+' — Quality Loop</div>';
     h+='<div style="display:flex;gap:8px"><span class="tag tag-purple" style="font-size:10px">'+co.bloom+'</span>';
-    h+='<span class="tag '+(ca.achieved?'tag-green':'tag-red')+'">'+(ca.achieved?'✓ Closed':'✗ Action Needed')+'</span></div>';
+    h+='<span class="tag '+(ca.achieved?'tag-green':'tag-red')+'">'+(ca.achieved?'? Closed':'? Action Needed')+'</span></div>';
     h+='</div><div class="card-body">';
     h+='<div class="ql-flow">';
-    h+='<div class="ql-box achieved"><div class="ql-label">CO Defined</div><div class="ql-val">✓</div></div>';
+    h+='<div class="ql-box achieved"><div class="ql-label">CO Defined</div><div class="ql-val">?</div></div>';
     h+='<div class="ql-box"><div class="ql-label">CIA%</div><div class="ql-val" style="font-size:14px">'+ca.cia_pct.toFixed(1)+'%</div></div>';
     h+='<div class="ql-box"><div class="ql-label">ESE%</div><div class="ql-val" style="font-size:14px">'+ca.ese_pct.toFixed(1)+'%</div></div>';
     h+='<div class="ql-box"><div class="ql-label">CES</div><div class="ql-val">'+ca.ces.toFixed(2)+'</div></div>';
@@ -2487,8 +2608,8 @@ function renderCOQuality(el){
 function renderPOAttainment(el){
   const s=sub();
   let h='<div class="instr"><strong>📌 Instructions:</strong> PO/PSO attainment is computed from CO attainment weighted by CO-PO mapping values.</div>';
-  h+='<div class="card"><div class="card-header"><div class="card-title">🏆 PO & PSO Attainment</div>';
-  h+='<button class="btn btn-sm btn-purple" onclick="calculateAll()">⚡ Calculate</button>';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? PO & PSO Attainment</div>';
+  h+='<button class="btn btn-sm btn-purple" onclick="calculateAll()">? Calculate</button>';
   h+='</div><div class="card-body">';
   if(!s.poAttainment[0]){
     h+='<div style="text-align:center;padding:40px;color:var(--text3)">Run calculation (Section 15) first</div>';
@@ -2503,7 +2624,7 @@ function renderPOAttainment(el){
       if(a) h+='<div class="prog-wrap"><div class="prog-bar bc-achieved" style="width:'+Math.min(100,(a.att/3)*100)+'%"></div></div>';
       h+='</td><td style="font-family:monospace">'+s.poTarget.toFixed(2)+'</td>';
       h+='<td>'+(a?'<div class="attain-level attain-'+(a.level||0)+'">'+(a.level||0)+'</div>':'—')+'</td>';
-      h+='<td>'+(a?'<span class="tag '+(a.achieved?'tag-green':'tag-red')+'">'+(a.achieved?'✓ Met':'✗ Gap')+'</span>':'—')+'</td></tr>';
+      h+='<td>'+(a?'<span class="tag '+(a.achieved?'tag-green':'tag-red')+'">'+(a.achieved?'? Met':'? Gap')+'</span>':'—')+'</td></tr>';
     });
     s.psos.forEach((p,pi)=>{
       const a=s.psoAttainment[pi];
@@ -2512,7 +2633,7 @@ function renderPOAttainment(el){
       h+='<td><strong style="font-family:monospace;font-size:15px;color:'+(a&&a.achieved?'var(--green)':'var(--red)')+'">'+(a?a.att.toFixed(2):'—')+'</strong></td>';
       h+='<td style="font-family:monospace">'+s.psoTarget.toFixed(2)+'</td>';
       h+='<td>'+(a?'<div class="attain-level attain-'+(a.level||0)+'">'+(a.level||0)+'</div>':'—')+'</td>';
-      h+='<td>'+(a?'<span class="tag '+(a.achieved?'tag-green':'tag-red')+'">'+(a.achieved?'✓ Met':'✗ Gap')+'</span>':'—')+'</td></tr>';
+      h+='<td>'+(a?'<span class="tag '+(a.achieved?'tag-green':'tag-red')+'">'+(a.achieved?'? Met':'? Gap')+'</span>':'—')+'</td></tr>';
     });
     h+='</tbody></table></div>';
   }
@@ -2527,17 +2648,17 @@ function renderPOChart(el){
   const s=sub();
   if(!s.poAttainment[0]){el.innerHTML='<div class="card"><div class="card-body" style="text-align:center;padding:40px;color:var(--text3)">Run calculation first</div></div>';return;}
   const maxH=130;
-  let h='<div class="card"><div class="card-header"><div class="card-title">📉 PO/PSO Gap Chart</div></div><div class="card-body">';
+  let h='<div class="card"><div class="card-header"><div class="card-title">?? PO/PSO Gap Chart</div></div><div class="card-body">';
   h+='<div class="bar-chart">';
   s.pos.forEach((p,pi)=>{
     const a=s.poAttainment[pi];const v=a?.att||0;
     const achH=Math.round((v/3)*maxH);const tgtH=Math.round((s.poTarget/3)*maxH);
-    h+='<div class="bc-group"><div class="bc-bars"><div class="bc-bar bc-achieved" style="height:'+achH+'px" title="PO'+(pi+1)+': '+v.toFixed(2)+'"></div><div class="bc-bar bc-target" style="height:'+tgtH+'px"></div></div><div class="bc-label">PO'+(pi+1)+'</div><span class="tag '+(a?.achieved?'tag-green':'tag-red')+'" style="font-size:9px">'+(a?.achieved?'✓':'✗')+'</span></div>';
+    h+='<div class="bc-group"><div class="bc-bars"><div class="bc-bar bc-achieved" style="height:'+achH+'px" title="PO'+(pi+1)+': '+v.toFixed(2)+'"></div><div class="bc-bar bc-target" style="height:'+tgtH+'px"></div></div><div class="bc-label">PO'+(pi+1)+'</div><span class="tag '+(a?.achieved?'tag-green':'tag-red')+'" style="font-size:9px">'+(a?.achieved?'?':'?')+'</span></div>';
   });
   s.psos.forEach((_,pi)=>{
     const a=s.psoAttainment[pi];const v=a?.att||0;
     const achH=Math.round((v/3)*maxH);const tgtH=Math.round((s.psoTarget/3)*maxH);
-    h+='<div class="bc-group"><div class="bc-bars"><div class="bc-bar" style="height:'+achH+'px;background:var(--purple)" title="PSO'+(pi+1)+': '+v.toFixed(2)+'"></div><div class="bc-bar bc-target" style="height:'+tgtH+'px"></div></div><div class="bc-label">PSO'+(pi+1)+'</div><span class="tag '+(a?.achieved?'tag-green':'tag-red')+'" style="font-size:9px">'+(a?.achieved?'✓':'✗')+'</span></div>';
+    h+='<div class="bc-group"><div class="bc-bars"><div class="bc-bar" style="height:'+achH+'px;background:var(--purple)" title="PSO'+(pi+1)+': '+v.toFixed(2)+'"></div><div class="bc-bar bc-target" style="height:'+tgtH+'px"></div></div><div class="bc-label">PSO'+(pi+1)+'</div><span class="tag '+(a?.achieved?'tag-green':'tag-red')+'" style="font-size:9px">'+(a?.achieved?'?':'?')+'</span></div>';
   });
   h+='</div></div></div>';
   el.innerHTML=h;
@@ -2549,7 +2670,7 @@ function renderPOChart(el){
 function renderPOQuality(el){
   const s=sub();
   let h='<div class="instr"><strong>📌 Instructions:</strong> Document corrective actions for POs that did not achieve target.</div>';
-  h+='<div class="card"><div class="card-header"><div class="card-title">🔄 PO Quality Loop</div></div><div class="card-body"><div class="tbl-wrap"><table>';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? PO Quality Loop</div></div><div class="card-body"><div class="tbl-wrap"><table>';
   h+='<thead><tr><th>PO</th><th class="left">Name</th><th>Attainment</th><th>Target</th><th>Gap</th><th class="left">Corrective Action</th></tr></thead><tbody>';
   s.pos.forEach((p,pi)=>{
     const a=s.poAttainment[pi];const att=a?.att||0;const gap=s.poTarget-att;
@@ -2572,13 +2693,13 @@ function renderPSOQuality(el){
   let h='<div class="instr"><strong>📌 Instructions:</strong> Document corrective actions for PSOs.</div>';
   s.psos.forEach((pso,pi)=>{
     const a=s.psoAttainment[pi];
-    h+='<div class="card"><div class="card-header"><div class="card-title">🎓 PSO'+(pi+1)+' Quality Loop</div>';
-    h+='<span class="tag '+(a&&a.achieved?'tag-green':'tag-red')+'">'+(a&&a.achieved?'✓ Achieved':'✗ Gap')+'</span>';
+    h+='<div class="card"><div class="card-header"><div class="card-title">?? PSO'+(pi+1)+' Quality Loop</div>';
+    h+='<span class="tag '+(a&&a.achieved?'tag-green':'tag-red')+'">'+(a&&a.achieved?'? Achieved':'? Gap')+'</span>';
     h+='</div><div class="card-body">';
     h+='<div class="ql-flow"><div class="ql-box"><div class="ql-label">PSO</div><div class="ql-val" style="font-size:12px">PSO'+(pi+1)+'</div></div>';
     h+='<div class="ql-box"><div class="ql-label">Attainment</div><div class="ql-val" style="color:'+(a&&a.achieved?'var(--green)':'var(--red)')+'">'+(a?a.att.toFixed(2):'—')+'</div></div>';
     h+='<div class="ql-box"><div class="ql-label">Target</div><div class="ql-val">'+s.psoTarget.toFixed(2)+'</div></div>';
-    h+='<div class="ql-box '+(a&&a.achieved?'achieved':'')+'"><div class="ql-label">Status</div><div class="ql-val">'+(a&&a.achieved?'✓':'✗')+'</div></div></div>';
+    h+='<div class="ql-box '+(a&&a.achieved?'achieved':'')+'"><div class="ql-label">Status</div><div class="ql-val">'+(a&&a.achieved?'?':'?')+'</div></div></div>';
     h+='<div class="fg" style="margin-top:12px"><label>Remarks / Corrective Action for PSO'+(pi+1)+'</label>';
     h+='<textarea rows="2" style="width:100%;padding:8px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:12px" onchange="sub().psoRemarks['+pi+']=this.value">'+(s.psoRemarks[pi]||'')+'</textarea></div>';
     h+='</div></div>';
@@ -2616,9 +2737,9 @@ const PO_WK_MAP=[
 
 function renderAnnexureWK(el){
   const s=sub();
-  let h='<div class="instr"><strong>📌 Annexure-I:</strong> Knowledge Base (WK) profile maps each PO to knowledge domains per NBA framework. WK level for each CO is set in Section 2.</div>';
+  let h='<div class="instr"><strong>?? Annexure-I:</strong> Knowledge Base (WK) profile maps each PO to knowledge domains per NBA framework. WK level for each CO is set in Section 2.</div>';
   // WK profile table
-  h+='<div class="card"><div class="card-header"><div class="card-title">📋 Knowledge Base (WK) Profile — NBA Annexure-I</div></div><div class="card-body">';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? Knowledge Base (WK) Profile — NBA Annexure-I</div></div><div class="card-body">';
   h+='<div class="tbl-wrap"><table><thead><tr><th style="width:60px">WK</th><th class="left" style="width:160px">Domain</th><th class="left">Description</th><th>CO Mapping</th><th>PO Mapping</th></tr></thead><tbody>';
   WK_PROFILE.forEach(wk=>{
     const mappedCOs=s.cos.filter(co=>{const wks=Array.isArray(co.wk)?co.wk:(co.wk?[co.wk]:['WK1']);return wks.includes(wk.wk);}).map(co=>co.id);
@@ -2631,7 +2752,7 @@ function renderAnnexureWK(el){
   });
   h+='</tbody></table></div></div></div>';
   // PO-WK mapping
-  h+='<div class="card"><div class="card-header"><div class="card-title">🔗 Program Outcomes — WK Knowledge Base Mapping</div></div><div class="card-body">';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? Program Outcomes — WK Knowledge Base Mapping</div></div><div class="card-body">';
   h+='<div class="tbl-wrap"><table><thead><tr><th>PO</th><th class="left">PO Name</th><th>WK Levels</th><th>Attainment</th></tr></thead><tbody>';
   PO_WK_MAP.forEach((p,pi)=>{
     const att=s.poAttainment[pi];
@@ -2642,7 +2763,7 @@ function renderAnnexureWK(el){
   });
   h+='</tbody></table></div></div></div>';
   // CO-WK matrix
-  h+='<div class="card"><div class="card-header"><div class="card-title">🧩 CO — WK Knowledge Profile Matrix</div></div><div class="card-body">';
+  h+='<div class="card"><div class="card-header"><div class="card-title">?? CO — WK Knowledge Profile Matrix</div></div><div class="card-body">';
   h+='<div class="tbl-wrap"><table><thead><tr><th>CO</th><th class="left">Outcome</th><th>WK</th>';
   WK_PROFILE.forEach(wk=>{ h+='<th>'+wk.wk+'</th>'; });
   h+='</tr></thead><tbody>';
@@ -2654,12 +2775,12 @@ function renderAnnexureWK(el){
     h+='<td>'+coWks.map(w=>'<span class="tag tag-blue" style="font-size:10px;margin:1px">'+w+'</span>').join('')+'</td>';
     WK_PROFILE.forEach(function(wk){
       const hit=coWks.includes(wk.wk);
-      h+='<td style="text-align:center;background:'+(hit?'#d1fae5':'#f8fafc')+';cursor:default">'+(hit?'<strong style="color:var(--green);font-size:14px">●</strong>':'<span style="color:#e2e8f0">○</span>')+'</td>';
+      h+='<td style="text-align:center;background:'+(hit?'#d1fae5':'#f8fafc')+';cursor:default">'+(hit?'<strong style="color:var(--green);font-size:14px">?</strong>':'<span style="color:#e2e8f0">?</span>')+'</td>';
     });
     h+='</tr>';
   });
     h+='</tbody></table></div>';
-  h+='<div style="margin-top:10px;font-size:12px;color:var(--text2)">WK levels (WK1–WK9) are set in Section 2. Each CO can map to multiple WK domains. ● indicates mapping per NBA Annexure-I framework. NBA requires all POs have COs mapped to required WK levels.</div>';
+  h+='<div style="margin-top:10px;font-size:12px;color:var(--text2)">WK levels (WK1–WK9) are set in Section 2. Each CO can map to multiple WK domains. ? indicates mapping per NBA Annexure-I framework. NBA requires all POs have COs mapped to required WK levels.</div>';
   h+='</div></div>';
   el.innerHTML=h;
 }
@@ -2672,8 +2793,8 @@ function renderCertificate(el){
   const achieved=s.coAttainment.filter(c=>c?.achieved).length;
   el.innerHTML=`
   <div style="text-align:center;margin-bottom:16px">
-    <button class="btn btn-primary" style="margin-right:8px" onclick="printCertificate()">🖨 Print Certificate</button>
-    <button class="btn btn-sm btn-gold" onclick="generateFullReport()">📄 Full Report</button>
+    <button class="btn btn-primary" style="margin-right:8px" onclick="printCertificate()">?? Print Certificate</button>
+    <button class="btn btn-sm btn-gold" onclick="generateFullReport()">?? Full Report</button>
   </div>
   <div id="certPrint" style="background:#fff;border:3px solid #d97706;border-radius:16px;max-width:800px;margin:0 auto;padding:48px;position:relative;overflow:hidden">
     <div style="position:absolute;inset:10px;border:1px solid rgba(217,119,6,.2);border-radius:10px;pointer-events:none"></div>
@@ -2890,7 +3011,7 @@ function exportAllExcel(){
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['NBA OBE — '+s.name],[''],['Code',s.code],['Dept',s.dept],['Faculty',s.faculty],['AY',s.ay],['Sem',s.sem],['Target',s.coTargetLevel.toFixed(2)]]),'1_CourseInfo');
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['CO','Objective','Outcome','Bloom','WK','PI'],...s.cos.map(c=>[c.id,c.objective,c.outcome,c.bloom,c.wk||'WK1',c.pi||''])]),'2_COs');
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Roll No','Name','Gender','Category'],...s.students.map(st=>[st.roll,st.name,st.gender,st.category||'General'])]),'3_Students');
-  const allPOs=[...s.pos.map((_,i)=>'PO'+(i+1)),'PSO1','PSO2','PSO3'];
+  const allPOs=[...s.pos.map((_,i)=>'PO'+(i+1)),...s.psos.map((_,i)=>'PSO'+(i+1))];
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['CO',...allPOs],...s.cos.map((co,ci)=>[co.id,...s.copoPOMatrix[ci]])]),'4_CO-PO Matrix');
   const cieTests=s.assessments.filter(a=>a.type==='CIE');
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['Roll No','Name',...cieTests.map(a=>a.name)],...s.students.map(st=>[st.roll,st.name,...cieTests.map(a=>s.marks[a.id]?.[st.roll]||'')])]),'10_CIE Marks');
@@ -2976,7 +3097,7 @@ function fgSel(label,id,opts,selected){return '<div class="fg"><label>'+label+'<
 let toastTimer;
 function showToast(msg,type){
   const t=document.getElementById('toast');
-  t.textContent=(type==='success'?'✓ ':type==='error'?'✗ ':'ℹ ')+msg;
+  t.textContent=(type==='success'?'? ':type==='error'?'? ':'? ')+msg;
   t.className='show '+(type||'success');
   clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>t.className='',2800);
