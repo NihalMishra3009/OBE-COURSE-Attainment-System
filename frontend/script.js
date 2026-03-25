@@ -1119,22 +1119,22 @@ function renderCOPOMatrix(el){
   if(!window._copoTab) window._copoTab='matrix';
   const tab=window._copoTab;
 
-  let h='<div class="instr"><strong>Instructions:</strong> Map each CO to POs/PSOs (1=Low, 2=Medium, 3=High). Then add justification text for each mapping in the Justification tab.</div>';
+  let h='<div class="instr"><strong>&#128204; Instructions:</strong> Map each CO to POs/PSOs (1=Low, 2=Medium, 3=High). Then add justification text for each mapping in the Justification tab.</div>';
 
   // Tab bar
   h+='<div style="display:flex;gap:6px;margin-bottom:16px;border-bottom:2px solid var(--border);padding-bottom:10px">';
-  h+='<button class="btn btn-sm '+(tab==='matrix'?'btn-primary':'btn-outline')+'" onclick="setCopoTab(\'matrix\')">Mapping Matrix</button>';
-  h+='<button class="btn btn-sm '+(tab==='justify'?'btn-primary':'btn-outline')+'" onclick="setCopoTab(\'justify\')">Justification</button>';
+  h+='<button class="btn btn-sm '+(tab==='matrix'?'btn-primary':'btn-outline')+'" onclick="setCopoTab(\'matrix\')">&#128279; Mapping Matrix</button>';
+  h+='<button class="btn btn-sm '+(tab==='justify'?'btn-primary':'btn-outline')+'" onclick="setCopoTab(\'justify\')">&#9997;&#65039; Justification</button>';
   h+='</div>';
 
   // â•â• MATRIX TAB â•â•
   if(tab==='matrix'){
-    h+='<div class="card"><div class="card-header"><div class="card-title">CO-PO / CO-PSO Mapping Matrix</div>';
+    h+='<div class="card"><div class="card-header"><div class="card-title">&#128279; CO-PO / CO-PSO Mapping Matrix</div>';
     h+='<div style="display:flex;gap:8px;align-items:center">';
     h+='<span class="tag tag-green" style="font-size:11px">3 = High</span>';
     h+='<span class="tag tag-gold" style="font-size:11px">2 = Medium</span>';
     h+='<span class="tag tag-blue" style="font-size:11px">1 = Low</span>';
-    h+='<button class="btn btn-sm btn-success" onclick="showToast(\'Matrix saved!\',\'success\')">Save</button>';
+    h+='<button class="btn btn-sm btn-success" onclick="showToast(\'Matrix saved!\',\'success\')">&#128190; Save</button>';
     h+='</div></div><div class="card-body">';
     h+='<div class="tbl-wrap"><table>';
     h+='<thead><tr><th style="min-width:60px;position:sticky;left:0;background:var(--surface3);z-index:1">CO</th>';
@@ -1170,14 +1170,14 @@ function renderCOPOMatrix(el){
     h+='</tbody></table></div>';
     // Full print view
     h+='<div style="margin-top:16px;background:var(--surface2);border-radius:8px;padding:14px">';
-    h+='<strong style="color:var(--accent);font-size:13px">Full Matrix Report View</strong>';
+    h+='<strong style="color:var(--accent);font-size:13px">&#128196; Full Matrix Report View</strong>';
     h+='<div id="copoPrintView" style="margin-top:10px;overflow-x:auto"></div></div>';
     h+='</div></div>';
   }
 
   // â•â• JUSTIFICATION TAB â•â•
   if(tab==='justify'){
-    h+='<div class="instr" style="background:#f0fdf4;border-color:#86efac">Enter justification for each CO -> PO/PSO mapping. Explain <em>why</em> and <em>how</em> this CO contributes to the PO/PSO. Only mapped (1/2/3) pairs are shown.</div>';
+    h+='<div class="instr" style="background:#f0fdf4;border-color:#86efac">&#9997;&#65039; Enter justification for each CO &#8594; PO/PSO mapping. Explain <em>why</em> and <em>how</em> this CO contributes to the PO/PSO. Only mapped (1/2/3) pairs are shown.</div>';
 
     s.cos.forEach(function(co,ci){
       const mapped=[];
@@ -1229,7 +1229,7 @@ function renderCOPOMatrix(el){
 
     // Export justification button
     h+='<div style="margin-top:10px;display:flex;gap:8px">';
-    h+='<button class="btn btn-sm btn-gold" onclick="downloadJustification()">Export Justification Excel</button>';
+    h+='<button class="btn btn-sm btn-gold" onclick="downloadJustification()">&#128202; Export Justification Excel</button>';
     h+='</div>';
   }
 
@@ -1708,7 +1708,7 @@ function printCIAQPaper(tIdx){
   html+='<div style="text-align:center;font-size:14px;margin-bottom:6px"><strong>'+s.name+' ('+s.code+')</strong> | Sem '+s.sem+' | AY '+s.ay+'</div>';
   html+='<h2 style="font-size:18px;margin:8px 0">'+test.name+' — Question Paper</h2>';
   html+='<div class="meta"><span>Department: '+s.dept+'</span><span>Faculty: '+s.faculty+'</span><span>Max Marks: '+maxMarks+'</span><span>Time: 1 Hour</span></div><hr>';
-  html+='<div style="font-size:13px;margin:8px 0"><strong>Instructions:</strong> Attempt all questions. Marks are indicated against each question.</div><hr>';
+  html+='<div style="font-size:13px;margin:8px 0"><strong>&#128204; Instructions:</strong> Attempt all questions. Marks are indicated against each question.</div><hr>';
   qs.forEach((q,qi)=>{
     const bloom=q.bloom||'Apply';
     const cos=(q.cos||[]).map(ci=>s.cos[ci]?.id||'').filter(Boolean).join(', ');
