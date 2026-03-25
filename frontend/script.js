@@ -713,6 +713,45 @@ function saveCourseInfo(){
 const BLOOM_LEVELS=['Remember','Understand','Apply','Analyze','Evaluate','Create'];
 const WK_LEVELS=['WK1','WK2','WK3','WK4','WK5','WK6','WK7','WK8','WK9'];
 
+const BLOOM_DICT={
+  Remember:{
+    color:'#7c3aed',light:'#ede9fe',
+    desc:'Recall facts, names, definitions — lowest cognitive level.',
+    verbs:['Define','List','Name','Recall','Identify','State','Recognize','Memorize',
+           'Reproduce','Label','Enumerate','Match','Select','Outline']
+  },
+  Understand:{
+    color:'#2563eb',light:'#dbeafe',
+    desc:'Explain ideas or concepts in own words — interpret and classify.',
+    verbs:['Explain','Describe','Summarize','Interpret','Classify','Compare',
+           'Paraphrase','Discuss','Illustrate','Translate','Extend','Infer','Predict']
+  },
+  Apply:{
+    color:'#0ea5e9',light:'#e0f2fe',
+    desc:'Use knowledge in new situations — solve, demonstrate, implement.',
+    verbs:['Solve','Calculate','Use','Demonstrate','Apply','Execute','Implement',
+           'Operate','Show','Sketch','Construct','Compute','Perform','Practice']
+  },
+  Analyze:{
+    color:'#059669',light:'#d1fae5',
+    desc:'Break information into parts, find patterns and relationships.',
+    verbs:['Analyze','Differentiate','Compare','Contrast','Examine','Distinguish',
+           'Organize','Relate','Investigate','Deconstruct','Categorize','Infer','Attribute']
+  },
+  Evaluate:{
+    color:'#d97706',light:'#fef3c7',
+    desc:'Make judgements, critique, justify decisions based on criteria.',
+    verbs:['Evaluate','Judge','Justify','Critique','Assess','Defend','Argue',
+           'Recommend','Appraise','Prioritize','Select','Rate','Support','Validate']
+  },
+  Create:{
+    color:'#dc2626',light:'#fee2e2',
+    desc:'Produce new or original work — design, construct, plan.',
+    verbs:['Design','Create','Formulate','Develop','Plan','Build','Produce',
+           'Construct','Compose','Generate','Devise','Invent','Prototype','Synthesize']
+  }
+};
+
 // Performance Indicators per Bloom Level
 const BLOOM_PI={
   Remember:['PI-1.1: Recall facts and basic concepts','PI-1.2: Identify key terms and definitions','PI-1.3: List components or steps'],
@@ -725,62 +764,270 @@ const BLOOM_PI={
 
 function renderCOPage(el){
   const s=sub();
-  let h='<div class="instr"><strong>📌 Instructions:</strong> Define Course Objectives (intent) and Course Outcomes (measurable). Select Bloom\'s level, WK knowledge base, and Performance Indicator for each CO.</div>';
-  // Objectives table
-  h+='<div class="card"><div class="card-header"><div class="card-title">🎯 Course Objectives</div><span class="tag tag-purple">What the course aims to teach</span></div><div class="card-body">';
-  h+='<div class="tbl-wrap"><table><thead><tr><th style="width:70px">OBJ#</th><th class="left">Objective Statement</th></tr></thead><tbody>';
-  s.cos.forEach((co,i)=>{
-    h+='<tr><td><span class="co-tag" style="background:#ede9fe;color:#7c3aed">OBJ'+(i+1)+'</span></td>';
-    h+='<td class="left"><textarea rows="2" style="width:100%;padding:8px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:13px;resize:vertical" onchange="sub().cos['+i+'].objective=this.value">'+co.objective+'</textarea></td></tr>';
-  });
-  h+='</tbody></table></div></div></div>';
-  // Outcomes table with Bloom + WK + PI
-  h+='<div class="card"><div class="card-header"><div class="card-title">✅ Course Outcomes — with Bloom\'s Level & Performance Indicators</div>';
-  h+='<button class="btn btn-sm btn-success" onclick="saveCOs()">💾 Save COs</button></div><div class="card-body">';
-  h+='<div class="tbl-wrap"><table><thead><tr>';
-  h+='<th style="width:55px">CO</th><th class="left" style="min-width:200px">Outcome Statement</th>';
-  h+='<th style="width:120px">Bloom\'s Level</th><th style="width:80px">WK Level</th>';
-  h+='<th class="left" style="min-width:180px">Performance Indicator (PI)</th>';
-  h+='</tr></thead><tbody>';
-  s.cos.forEach((co,i)=>{
-    const piOptions=(BLOOM_PI[co.bloom]||BLOOM_PI['Remember']);
-    h+='<tr style="background:'+(i%2?'var(--surface2)':'var(--surface)')+'">';
-    h+='<td><span class="co-tag">'+co.id+'</span></td>';
-    h+='<td class="left"><textarea rows="2" style="width:100%;padding:7px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:12px;resize:vertical" onchange="sub().cos['+i+'].outcome=this.value">'+co.outcome+'</textarea></td>';
-    h+='<td><select style="padding:6px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:12px;width:100%" onchange="sub().cos['+i+'].bloom=this.value;renderCOPage(document.getElementById(PAGES[2].id))">';
-    BLOOM_LEVELS.forEach(b=>{ h+='<option'+(co.bloom===b?' selected':'')+'>'+b+'</option>'; });
-    h+='</select>';
-    h+='<div class="tag tag-blue" style="margin-top:4px;font-size:10px;text-align:center">L'+(BLOOM_LEVELS.indexOf(co.bloom)+1)+'</div></td>';
-    // WK multi-select checkboxes
-    const coWks=Array.isArray(co.wk)?co.wk:(co.wk?[co.wk]:[]);
-    h+='<td style="min-width:160px"><div style="display:flex;flex-wrap:wrap;gap:3px;max-height:90px;overflow-y:auto;padding:4px;border:1.5px solid var(--border2);border-radius:6px;background:#fff">';
-    WK_LEVELS.forEach(function(w){
-      const sel=coWks.includes(w);
-      h+='<label style="display:flex;align-items:center;gap:3px;font-size:10px;font-weight:600;cursor:pointer;padding:2px 4px;border-radius:4px;background:'+(sel?'#dbeafe':'#f1f5f9')+';color:'+(sel?'#2563eb':'#64748b')+'">';
-      h+='<input type="checkbox" data-ci="'+i+'" data-wk="'+w+'"'+(sel?' checked':'')+' onchange="handleWKToggle(this)" style="width:11px;height:11px">'+w+'</label>';
+  if(!s.syllabusText) s.syllabusText='';
+  if(!s.syllabusFileName) s.syllabusFileName='';
+  // Active sub-tab: 'cos' | 'bloom' | 'syllabus'
+  if(!window._coTab) window._coTab='cos';
+  const tab=window._coTab;
+
+  let h='<div class="instr"><strong>📌 Instructions:</strong> Define Course Objectives &amp; Outcomes, select Bloom\'s level, upload syllabus, and refer to the Bloom\'s dictionary for action verbs.</div>';
+
+  // Sub-tab bar
+  h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;border-bottom:2px solid var(--border);padding-bottom:10px">';
+  h+='<button class="btn btn-sm '+(tab==='cos'?'btn-primary':'btn-outline')+'" onclick="setCoTab(\'cos\')">🎯 CO / Outcomes</button>';
+  h+='<button class="btn btn-sm '+(tab==='bloom'?'btn-primary':'btn-outline')+'" onclick="setCoTab(\'bloom\')">🧠 Bloom\'s Dictionary</button>';
+  h+='<button class="btn btn-sm '+(tab==='syllabus'?'btn-primary':'btn-outline')+'" onclick="setCoTab(\'syllabus\')">📄 Syllabus</button>';
+  h+='</div>';
+
+  // ══════════ CO / OUTCOMES TAB ══════════
+  if(tab==='cos'){
+    // Objectives table
+    h+='<div class="card"><div class="card-header"><div class="card-title">🎯 Course Objectives</div>';
+    h+='<div style="display:flex;gap:6px">';
+    h+='<button class="btn btn-sm btn-outline" onclick="addCO()">+ Add CO</button>';
+    h+='<button class="btn btn-sm btn-success" onclick="saveCOs()">💾 Save COs</button>';
+    h+='</div></div><div class="card-body">';
+    h+='<div class="tbl-wrap"><table><thead><tr>';
+    h+='<th style="width:60px">CO</th>';
+    h+='<th class="left" style="min-width:220px">Objective Statement</th>';
+    h+='<th class="left" style="min-width:220px">Outcome Statement</th>';
+    h+='<th style="width:130px">Bloom\'s Level</th>';
+    h+='<th style="width:170px">WK Level(s)</th>';
+    h+='<th class="left" style="min-width:160px">Performance Indicator</th>';
+    h+='<th style="width:40px"></th>';
+    h+='</tr></thead><tbody>';
+    s.cos.forEach(function(co,i){
+      const coWks=Array.isArray(co.wk)?co.wk:(co.wk?[co.wk]:[]);
+      const bColor=BLOOM_DICT[co.bloom]?BLOOM_DICT[co.bloom].color:'var(--accent)';
+      const bLight=BLOOM_DICT[co.bloom]?BLOOM_DICT[co.bloom].light:'#dbeafe';
+      h+='<tr style="background:'+(i%2?'var(--surface2)':'var(--surface)')+';vertical-align:top">';
+      // CO id
+      h+='<td style="padding-top:10px"><span class="co-tag">'+co.id+'</span></td>';
+      // Objective
+      h+='<td class="left"><textarea rows="3" style="width:100%;padding:7px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:12px;resize:vertical" onchange="sub().cos['+i+'].objective=this.value">'+co.objective+'</textarea></td>';
+      // Outcome
+      h+='<td class="left"><textarea rows="3" style="width:100%;padding:7px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:12px;resize:vertical" onchange="sub().cos['+i+'].outcome=this.value">'+co.outcome+'</textarea></td>';
+      // Bloom level
+      h+='<td>';
+      h+='<select style="padding:6px;border:1.5px solid '+bColor+';border-radius:6px;font-family:inherit;font-size:12px;width:100%;color:'+bColor+';font-weight:700;background:'+bLight+'" onchange="sub().cos['+i+'].bloom=this.value;renderCOPage(document.getElementById(PAGES[2].id))">';
+      BLOOM_LEVELS.forEach(function(b){ h+='<option'+(co.bloom===b?' selected':'')+'>'+b+'</option>'; });
+      h+='</select>';
+      h+='<div style="margin-top:4px;font-size:10px;color:'+bColor+';font-weight:700;text-align:center">L'+(BLOOM_LEVELS.indexOf(co.bloom)+1)+' — '+co.bloom+'</div>';
+      // Show 3 verbs from dictionary as hint
+      if(BLOOM_DICT[co.bloom]){
+        h+='<div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:2px">';
+        BLOOM_DICT[co.bloom].verbs.slice(0,4).forEach(function(v){
+          h+='<span style="font-size:9px;background:'+bLight+';color:'+bColor+';padding:1px 5px;border-radius:10px;font-weight:600">'+v+'</span>';
+        });
+        h+='</div>';
+      }
+      h+='</td>';
+      // WK multi-checkboxes
+      h+='<td><div style="display:flex;flex-wrap:wrap;gap:2px;padding:4px;border:1.5px solid var(--border2);border-radius:6px;background:#fff;max-height:100px;overflow-y:auto">';
+      WK_LEVELS.forEach(function(w){
+        const sel=coWks.includes(w);
+        h+='<label style="display:flex;align-items:center;gap:2px;font-size:9px;font-weight:700;cursor:pointer;padding:2px 4px;border-radius:3px;background:'+(sel?'#dbeafe':'#f1f5f9')+';color:'+(sel?'#2563eb':'#64748b')+'">';
+        h+='<input type="checkbox" data-ci="'+i+'" data-wk="'+w+'"'+(sel?' checked':'')+' onchange="handleWKToggle(this)" style="width:10px;height:10px">'+w+'</label>';
+      });
+      h+='</div></td>';
+      // PI textarea
+      h+='<td class="left"><textarea rows="3" placeholder="Enter PI code and description..." style="width:100%;padding:5px;border:1.5px solid var(--border2);border-radius:5px;font-family:inherit;font-size:11px;resize:vertical" onchange="sub().cos['+i+'].pi=this.value">'+(co.pi||'')+'</textarea></td>';
+      // Delete
+      h+='<td style="padding-top:10px"><button class="btn btn-sm btn-danger" onclick="removeCO('+i+')">✕</button></td>';
+      h+='</tr>';
     });
-    h+='</div></td>';
-    // PI — blank editable textarea
-    h+='<td class="left"><textarea rows="2" placeholder="Enter Performance Indicator..." style="width:100%;padding:5px;border:1.5px solid var(--border2);border-radius:5px;font-family:inherit;font-size:11px;resize:vertical" onchange="sub().cos['+i+'].pi=this.value">'+(co.pi||'')+'</textarea></td>';
-    h+='</tr>';
-  });
-  h+='</tbody></table></div>';
-  // Summary preview
-  h+='<div style="margin-top:16px;background:var(--surface2);border-radius:8px;padding:14px;border-left:4px solid var(--accent)">';
-  h+='<strong style="color:var(--accent);font-size:13px">📄 Report Preview — CO Summary Table</strong>';
-  h+='<div class="tbl-wrap" style="margin-top:10px"><table>';
-  h+='<thead><tr style="background:var(--surface3)"><th>CO</th><th class="left">Objective</th><th class="left">Outcome</th><th>Bloom</th><th>WK</th><th>PI</th></tr></thead><tbody>';
-  s.cos.forEach(co=>{
-    h+='<tr><td><strong>'+co.id+'</strong></td>';
-    h+='<td class="left" style="font-size:11px">'+co.objective.substring(0,50)+'...</td>';
-    h+='<td class="left" style="font-size:11px">'+co.outcome.substring(0,60)+'...</td>';
-    h+='<td><span class="tag tag-purple" style="font-size:10px">'+co.bloom+'</span></td>';
-    const wkArr=Array.isArray(co.wk)?co.wk:(co.wk?[co.wk]:[]);h+='<td>'+wkArr.map(w=>'<span class="tag tag-blue" style="font-size:10px;margin:1px">'+w+'</span>').join('')+'</td>';
-    h+='<td style="font-size:10px;color:var(--text2)">'+(co.pi||'—')+'</td></tr>';
-  });
-  h+='</tbody></table></div></div>';
-  h+='</div></div>';
+    h+='</tbody></table></div></div></div>';
+
+    // CO Summary preview
+    h+='<div class="card"><div class="card-header"><div class="card-title">📄 Report Preview — CO Summary</div></div><div class="card-body">';
+    h+='<div class="tbl-wrap"><table><thead><tr style="background:var(--surface3)">';
+    h+='<th>CO</th><th class="left">Objective</th><th class="left">Outcome</th><th>Bloom</th><th>WK</th><th>PI</th></tr></thead><tbody>';
+    s.cos.forEach(function(co){
+      const wkArr=Array.isArray(co.wk)?co.wk:(co.wk?[co.wk]:[]);
+      const bColor=BLOOM_DICT[co.bloom]?BLOOM_DICT[co.bloom].color:'var(--accent)';
+      h+='<tr>';
+      h+='<td><strong>'+co.id+'</strong></td>';
+      h+='<td class="left" style="font-size:11px">'+co.objective.substring(0,55)+'…</td>';
+      h+='<td class="left" style="font-size:11px">'+co.outcome.substring(0,65)+'…</td>';
+      h+='<td><span style="padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;background:'+(BLOOM_DICT[co.bloom]?BLOOM_DICT[co.bloom].light:'#dbeafe')+';color:'+bColor+'">'+co.bloom+'</span></td>';
+      h+='<td>'+wkArr.map(function(w){return '<span class="tag tag-blue" style="font-size:9px;margin:1px">'+w+'</span>';}).join('')+'</td>';
+      h+='<td style="font-size:10px;color:var(--text2);max-width:140px">'+(co.pi||'—')+'</td>';
+      h+='</tr>';
+    });
+    h+='</tbody></table></div></div></div>';
+  }
+
+  // ══════════ BLOOM'S DICTIONARY TAB ══════════
+  if(tab==='bloom'){
+    h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">';
+    BLOOM_LEVELS.forEach(function(level,li){
+      const d=BLOOM_DICT[level];
+      h+='<div class="card" style="border-left:5px solid '+d.color+'">';
+      h+='<div class="card-header" style="background:'+d.light+';border-radius:8px 8px 0 0">';
+      h+='<div class="card-title" style="color:'+d.color+'">L'+(li+1)+' — '+level+'</div>';
+      h+='<span style="font-size:11px;color:'+d.color+';font-weight:600">Bloom\'s Level '+(li+1)+'</span>';
+      h+='</div><div class="card-body">';
+      h+='<p style="font-size:12px;color:var(--text2);margin-bottom:10px">'+d.desc+'</p>';
+      h+='<strong style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px">Action Verbs</strong>';
+      h+='<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">';
+      d.verbs.forEach(function(v){
+        h+='<span style="padding:3px 9px;border-radius:20px;background:'+d.light+';color:'+d.color+';font-size:11px;font-weight:700;border:1px solid '+d.color+'22">'+v+'</span>';
+      });
+      h+='</div>';
+      // Show BLOOM_PI hints
+      if(BLOOM_PI[level]){
+        h+='<div style="margin-top:10px">';
+        h+='<strong style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px">Performance Indicators</strong>';
+        BLOOM_PI[level].forEach(function(pi){
+          h+='<div style="font-size:11px;color:var(--text2);padding:3px 0;border-bottom:1px dashed var(--border)">'+pi+'</div>';
+        });
+        h+='</div>';
+      }
+      h+='</div></div>';
+    });
+    h+='</div>';
+    // Quick reference table
+    h+='<div class="card" style="margin-top:14px"><div class="card-header"><div class="card-title">📊 Quick Reference — All Verb Levels</div></div><div class="card-body">';
+    h+='<div class="tbl-wrap"><table><thead><tr>';
+    BLOOM_LEVELS.forEach(function(b,i){
+      const d=BLOOM_DICT[b];
+      h+='<th style="background:'+d.color+';color:#fff;min-width:110px">L'+(i+1)+': '+b+'</th>';
+    });
+    h+='</tr></thead><tbody>';
+    // max 14 verbs rows
+    for(let r=0;r<14;r++){
+      h+='<tr>';
+      BLOOM_LEVELS.forEach(function(b){
+        const v=BLOOM_DICT[b].verbs[r]||'';
+        const d=BLOOM_DICT[b];
+        h+='<td style="font-size:11px;font-weight:600;color:'+d.color+';background:'+(r%2?d.light+'88':d.light+'44')+';padding:5px 8px">'+v+'</td>';
+      });
+      h+='</tr>';
+    }
+    h+='</tbody></table></div></div></div>';
+  }
+
+  // ══════════ SYLLABUS TAB ══════════
+  if(tab==='syllabus'){
+    h+='<div class="card"><div class="card-header"><div class="card-title">📄 Syllabus Upload</div>';
+    h+='<div style="display:flex;gap:6px">';
+    h+='<button class="btn btn-sm btn-outline" onclick="triggerUpload(\'syllabusFile\')">📁 Upload PDF/Doc</button>';
+    h+='<input type="file" id="syllabusFile" accept=".pdf,.doc,.docx,.txt" style="display:none" onchange="uploadSyllabus(this)">';
+    if(s.syllabusFileName){
+      h+='<button class="btn btn-sm btn-danger" onclick="sub().syllabusText=\'\';sub().syllabusFileName=\'\';renderCOPage(document.getElementById(PAGES[2].id))">🗑 Clear</button>';
+    }
+    h+='</div></div><div class="card-body">';
+    if(s.syllabusFileName){
+      h+='<div style="display:flex;align-items:center;gap:10px;padding:10px;background:#d1fae5;border-radius:8px;margin-bottom:12px">';
+      h+='<span style="font-size:20px">📎</span>';
+      h+='<div><div style="font-weight:700;color:var(--green)">'+s.syllabusFileName+'</div>';
+      h+='<div style="font-size:11px;color:var(--text2)">Uploaded successfully</div></div></div>';
+    } else {
+      h+='<div class="upload-zone" onclick="triggerUpload(\'syllabusFile\')" style="margin-bottom:14px">';
+      h+='<div class="upload-icon">📄</div>';
+      h+='<div class="upload-title">Upload Syllabus Document</div>';
+      h+='<div class="upload-sub">Supported: PDF, Word (.docx), Text (.txt) — content will be extracted and shown below</div>';
+      h+='</div>';
+    }
+    // Manual text area for syllabus content
+    h+='<div class="fg"><label>Syllabus Content (paste or type directly)</label>';
+    h+='<textarea id="syllabusText" rows="18" placeholder="Paste syllabus text here, or upload a file above. This content is stored with the course file.
+
+Unit 1: ...
+Unit 2: ..." style="width:100%;padding:10px;border:1.5px solid var(--border2);border-radius:8px;font-family:inherit;font-size:13px;line-height:1.6;resize:vertical" onchange="sub().syllabusText=this.value">'+( s.syllabusText||'')+'</textarea></div>';
+    h+='<div style="display:flex;gap:8px;margin-top:10px">';
+    h+='<button class="btn btn-sm btn-success" onclick="saveSyllabus()">💾 Save Syllabus</button>';
+    h+='<button class="btn btn-sm btn-purple" onclick="autoMapCOsFromSyllabus()">🤖 Auto-suggest COs from Syllabus</button>';
+    h+='</div>';
+    // If syllabus text exists, show unit summary
+    if(s.syllabusText && s.syllabusText.length>10){
+      const lines=s.syllabusText.split('
+').filter(function(l){return l.trim();});
+      const units=lines.filter(function(l){return /unit|module|chapter|section/i.test(l);});
+      if(units.length){
+        h+='<div style="margin-top:14px;padding:12px;background:var(--surface2);border-radius:8px">';
+        h+='<strong style="font-size:12px">Detected Units/Modules ('+units.length+')</strong>';
+        h+='<div style="margin-top:8px;display:flex;flex-direction:column;gap:4px">';
+        units.slice(0,10).forEach(function(u){
+          h+='<div style="font-size:12px;padding:4px 8px;background:#fff;border-radius:4px;border-left:3px solid var(--accent)">'+u.substring(0,100)+'</div>';
+        });
+        h+='</div></div>';
+      }
+    }
+    h+='</div></div>';
+  }
+
   el.innerHTML=h;
+}
+function setCoTab(t){ window._coTab=t; renderCOPage(document.getElementById(PAGES[2].id)); }
+function addCO(){
+  const s=sub();
+  const n=s.cos.length+1;
+  s.cos.push({id:'CO'+n,objective:'Objective for CO'+n,outcome:'Students will be able to ...',bloom:'Apply',wk:['WK1'],pi:''});
+  if(!s.copoPOMatrix) s.copoPOMatrix=[];
+  s.copoPOMatrix.push(Array(14).fill(0));
+  if(!s.bloomHrs) s.bloomHrs=[];
+  s.bloomHrs.push(Array(6).fill(0));
+  if(!s.coHours) s.coHours=[];
+  s.coHours.push(Array((s.hourCols||[]).length).fill(0));
+  s.coAttainment=s.cos.map(function(){return null;});
+  renderCOPage(document.getElementById(PAGES[2].id));
+  showToast('CO'+n+' added','success');
+}
+function removeCO(i){
+  const s=sub();
+  if(s.cos.length<=1){showToast('At least 1 CO required','error');return;}
+  s.cos.splice(i,1);
+  if(s.copoPOMatrix) s.copoPOMatrix.splice(i,1);
+  if(s.bloomHrs) s.bloomHrs.splice(i,1);
+  if(s.coHours) s.coHours.splice(i,1);
+  s.cos.forEach(function(co,idx){co.id='CO'+(idx+1);});
+  s.coAttainment=s.cos.map(function(){return null;});
+  renderCOPage(document.getElementById(PAGES[2].id));
+  showToast('CO removed','info');
+}
+function uploadSyllabus(input){
+  const f=input.files[0]; if(!f)return;
+  sub().syllabusFileName=f.name;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    if(f.name.endsWith('.txt')){
+      sub().syllabusText=e.target.result;
+    } else {
+      sub().syllabusText='[Binary file: '+f.name+']
+
+Please paste the syllabus text content in the text area below for analysis.';
+    }
+    renderCOPage(document.getElementById(PAGES[2].id));
+    showToast('Syllabus uploaded: '+f.name,'success');
+  };
+  if(f.name.endsWith('.txt')) reader.readAsText(f);
+  else reader.readAsArrayBuffer(f);
+}
+function saveSyllabus(){
+  const el=document.getElementById('syllabusText');
+  if(el) sub().syllabusText=el.value;
+  showToast('Syllabus saved!','success');
+}
+function autoMapCOsFromSyllabus(){
+  const s=sub();
+  const el=document.getElementById('syllabusText');
+  if(el) s.syllabusText=el.value;
+  if(!s.syllabusText){showToast('Paste syllabus text first','error');return;}
+  const text=s.syllabusText.toLowerCase();
+  const hints=[];
+  if(/data struct|tree|graph|sort|search/i.test(text)) hints.push('Understand and implement fundamental data structures');
+  if(/algorithm|complex|efficient/i.test(text)) hints.push('Analyze algorithm complexity and efficiency');
+  if(/design|pattern|architect/i.test(text)) hints.push('Design solutions using appropriate patterns');
+  if(/implement|program|code|software/i.test(text)) hints.push('Implement programs using appropriate techniques');
+  if(/network|protocol|communicate/i.test(text)) hints.push('Apply networking protocols in system design');
+  if(hints.length){
+    showToast(hints.length+' outcome suggestions — check CO outcomes!','info');
+    s.cos.forEach(function(co,i){if(hints[i]) co.outcome='Students will be able to '+hints[i];});
+    renderCOPage(document.getElementById(PAGES[2].id));
+  } else {
+    showToast('Could not auto-detect — edit COs manually','info');
+  }
 }
 function saveCOs(){showToast('Course Objectives & Outcomes saved!','success');}
 function toggleCOWK(ci,wk,checked){
