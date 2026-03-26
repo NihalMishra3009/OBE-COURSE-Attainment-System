@@ -110,7 +110,9 @@ async function deleteCurrentSubject(){
   try{
     await deleteSubject(id);
     delete APP.subjects[id];
-    APP.currentSubjectId=Object.keys(APP.subjects)[0];
+    const visibleSubs=getVisibleSubjects();
+  if(visibleSubs.length) APP.currentSubjectId=visibleSubs[0].id;
+  else APP.currentSubjectId=Object.keys(APP.subjects)[0];
     buildSubjectSelector();
     syncSubjectSelector();
     buildContentPages();
@@ -280,7 +282,9 @@ function initApp(){
   document.getElementById('sideAvatar').style.background=colors[u.role]||'#2563eb';
   buildSideNav();
   buildSubjectSelector();
-  APP.currentSubjectId=Object.keys(APP.subjects)[0];
+  const visibleSubs=getVisibleSubjects();
+  if(visibleSubs.length) APP.currentSubjectId=visibleSubs[0].id;
+  else APP.currentSubjectId=Object.keys(APP.subjects)[0];
   syncSubjectSelector();
   buildContentPages();
   navigateTo(0);
@@ -303,10 +307,20 @@ function buildSideNav(){
   });
 }
 
+function getVisibleSubjects(){
+  const u=APP.user;
+  return Object.values(APP.subjects).filter(function(s){
+    if(u.role==='admin') return true;             // admin sees all
+    if(u.role==='head') return s.dept===u.dept;   // head sees own dept
+    // faculty sees own subjects (by username) or untagged ones
+    return (!s.ownerUsername) || (s.ownerUsername===u.username);
+  });
+}
+
 function buildSubjectSelector(){
   const sel=document.getElementById('globalSubjectSel');
   sel.innerHTML='';
-  Object.values(APP.subjects).forEach(s=>{
+  getVisibleSubjects().forEach(s=>{
     const opt=document.createElement('option');
     opt.value=s.id;
     opt.textContent=s.code+' &#8212; '+s.name.substring(0,22);
@@ -361,7 +375,7 @@ function renderPage(idx){
 //  PAGE 0: DASHBOARD
 // ============================================================
 function renderDashboard(el){
-  const subjects=Object.values(APP.subjects);
+  const subjects=getVisibleSubjects();
   let html='<div class="g4" style="margin-bottom:20px">';
   html+='<div class="kpi blue"><div class="kpi-val">'+subjects.length+'</div><div class="kpi-label">Total Subjects</div><div class="kpi-sub">'+APP.user.role+' view</div></div>';
   html+='<div class="kpi green"><div class="kpi-val">'+subjects.reduce((a,s)=>a+s.students.length,0)+'</div><div class="kpi-label">Total Students</div></div>';
@@ -3044,10 +3058,13 @@ async function addSubject(){
   if(!name||!code){showToast('Name and Code required','error');return;}
   const id='sub'+Date.now();
   const s=createDefaultSubject(name,code,document.getElementById('ns_dept').value,document.getElementById('ns_ay').value,document.getElementById('ns_sem').value,document.getElementById('ns_fac').value);
-  s.id=id;APP.subjects[id]=s;APP.currentSubjectId=id;
+  s.id=id;
+  s.ownerUsername=APP.user.username;
+  s.ownerRole=APP.user.role;
+  APP.subjects[id]=s;APP.currentSubjectId=id;
   try{
     await createSubject(s);
-    buildSubjectSelector();syncSubjectSelector();closeModal();buildContentPages();navigateTo(0);showToast('Subject added!','success');
+    buildSubjectSelector();syncSubjectSelector();closeModal();buildContentPages();navigateTo(0);showToast('Subject added! Visible only to your login.','success');
   }catch(e){
     showToast(e.message||'Failed to add subject','error');
   }
