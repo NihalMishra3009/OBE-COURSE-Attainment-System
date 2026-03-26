@@ -793,7 +793,7 @@ function renderCOPage(el){
   h+='<button class="btn btn-sm '+(tab==='syllabus'?'btn-primary':'btn-outline')+'" onclick="setCoTab(\'syllabus\')">&#128196; Syllabus</button>';
   h+='</div>';
 
-  // ---------- CO / OUTCOMES TAB ----------
+  // &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; CO / OUTCOMES TAB &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
   if(tab==='cos'){
     // Objectives table
     h+='<div class="card"><div class="card-header"><div class="card-title">&#127919; Course Objectives</div>';
@@ -847,7 +847,7 @@ function renderCOPage(el){
       // PI textarea
       h+='<td class="left"><textarea rows="3" placeholder="Enter PI code and description..." style="width:100%;padding:5px;border:1.5px solid var(--border2);border-radius:5px;font-family:inherit;font-size:11px;resize:vertical" onchange="sub().cos['+i+'].pi=this.value">'+(co.pi||'')+'</textarea></td>';
       // Delete
-      h+='<td style="padding-top:10px"><button class="btn btn-sm btn-danger" onclick="removeCO('+i+')">&times;</button></td>';
+      h+='<td style="padding-top:10px"><button class="btn btn-sm btn-danger" onclick="removeCO('+i+')">&#10005;</button></td>';
       h+='</tr>';
     });
     h+='</tbody></table></div></div></div>';
@@ -871,7 +871,7 @@ function renderCOPage(el){
     h+='</tbody></table></div></div></div>';
   }
 
-  // ---------- BLOOM'S DICTIONARY TAB ----------
+  // &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; BLOOM'S DICTIONARY TAB &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
   if(tab==='bloom'){
     h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">';
     BLOOM_LEVELS.forEach(function(level,li){
@@ -921,55 +921,278 @@ function renderCOPage(el){
     h+='</tbody></table></div></div></div>';
   }
 
-  // ---------- SYLLABUS TAB ----------
+  // &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; SYLLABUS TAB &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
   if(tab==='syllabus'){
-    h+='<div class="card"><div class="card-header"><div class="card-title">&#128196; Syllabus Upload</div>';
-    h+='<div style="display:flex;gap:6px">';
-    h+='<button class="btn btn-sm btn-outline" onclick="triggerUpload(\'syllabusFile\')">&#128193; Upload PDF/Doc</button>';
-    h+='<input type="file" id="syllabusFile" accept=".pdf,.doc,.docx,.txt" style="display:none" onchange="uploadSyllabus(this)">';
-    if(s.syllabusFileName){
-      h+='<button class="btn btn-sm btn-danger" onclick="sub().syllabusText=\'\';sub().syllabusFileName=\'\';renderCOPage(document.getElementById(PAGES[2].id))">&#128465; Clear</button>';
+    if(!s.syllabusModules||!s.syllabusModules.length){
+      s.syllabusModules=s.cos.map(function(co,i){
+        const coWks=Array.isArray(co.wk)?co.wk:(co.wk?[co.wk]:[]);
+        return {no:i+1,title:'Module '+(i+1)+': [Title]',topics:'Topic 1\nTopic 2\nTopic 3',
+                cos:[co.id],blooms:[co.bloom||'Apply'],wks:coWks.length?coWks:['WK1'],
+                hours:Math.round((s.totalHours||48)/s.cos.length)};
+      });
     }
-    h+='</div></div><div class="card-body">';
-    if(s.syllabusFileName){
-      h+='<div style="display:flex;align-items:center;gap:10px;padding:10px;background:#d1fae5;border-radius:8px;margin-bottom:12px">';
-      h+='<span style="font-size:20px">&#128206;</span>';
-      h+='<div><div style="font-weight:700;color:var(--green)">'+s.syllabusFileName+'</div>';
-      h+='<div style="font-size:11px;color:var(--text2)">Uploaded successfully</div></div></div>';
-    } else {
-      h+='<div class="upload-zone" onclick="triggerUpload(\'syllabusFile\')" style="margin-bottom:14px">';
-      h+='<div class="upload-icon">&#128196;</div>';
-      h+='<div class="upload-title">Upload Syllabus Document</div>';
-      h+='<div class="upload-sub">Supported: PDF, Word (.docx), Text (.txt) &#8212; content will be extracted and shown below</div>';
-      h+='</div>';
-    }
-    // Manual text area for syllabus content
-    h+='<div class="fg"><label>Syllabus Content (paste or type directly)</label>';
-    h+='<textarea id="syllabusText" rows="18" placeholder="Paste syllabus text here, or upload a file above. This content is stored with the course file.\n\nUnit 1: ...\nUnit 2: ..." style="width:100%;padding:10px;border:1.5px solid var(--border2);border-radius:8px;font-family:inherit;font-size:13px;line-height:1.6;resize:vertical" onchange="sub().syllabusText=this.value">'+( s.syllabusText||'')+'</textarea></div>';
-    h+='<div style="display:flex;gap:8px;margin-top:10px">';
-    h+='<button class="btn btn-sm btn-success" onclick="saveSyllabus()">&#128190; Save Syllabus</button>';
-    h+='<button class="btn btn-sm btn-purple" onclick="autoMapCOsFromSyllabus()">&#129302; Auto-suggest COs from Syllabus</button>';
+    if(!s.syllabusTextBooks)  s.syllabusTextBooks=[{title:'',author:'',pub:'',ed:'',year:''}];
+    if(!s.syllabusRefBooks)   s.syllabusRefBooks=[{title:'',author:'',pub:'',ed:'',year:''}];
+    if(!s.syllabusAssessment) s.syllabusAssessment={cie:Math.round((s.cieWeight||0.4)*100),ese:Math.round((s.eseWeight||0.6)*100),ciePattern:'',esePattern:'',other:''};
+
+    const BL=['Remember','Understand','Apply','Analyze','Evaluate','Create'];
+    const BLC={'Remember':'#7c3aed','Understand':'#2563eb','Apply':'#0ea5e9','Analyze':'#059669','Evaluate':'#d97706','Create':'#dc2626'};
+    const BLBg={'Remember':'#ede9fe','Understand':'#dbeafe','Apply':'#e0f2fe','Analyze':'#d1fae5','Evaluate':'#fef3c7','Create':'#fee2e2'};
+    const WKL=['WK1','WK2','WK3','WK4','WK5','WK6','WK7','WK8','WK9'];
+
+    h+='<div class="card">';
+    h+='<div class="card-header">';
+    h+='<div class="card-title">&#128196; Syllabus &#8212; '+s.name+' ('+s.code+')</div>';
+    h+='<div style="display:flex;gap:6px;flex-wrap:wrap">';
+    h+='<button class="btn btn-sm btn-outline" onclick="triggerUpload(\'syllabusFile\')">&#128193; Upload TXT/DOCX</button>';
+    h+='<input type="file" id="syllabusFile" accept=".txt,.text,.docx" style="display:none" onchange="uploadSyllabus(this)">';
+    h+='<button class="btn btn-sm btn-success" onclick="saveSyllabusTable()">&#128190; Save</button>';
+    h+='<button class="btn btn-sm btn-purple" onclick="exportSyllabusExcel()">&#128202; Export Excel</button>';
+    h+='</div></div>';
+    h+='<div class="card-body">';
+
+    // &#9472;&#9472; MODULE TABLE &#9472;&#9472;
+    h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">';
+    h+='<strong style="font-size:13px;color:var(--accent)">&#128203; Module-wise Syllabus</strong>';
+    h+='<button class="btn btn-sm btn-outline" onclick="addSyllabusModule()">+ Add Module</button>';
     h+='</div>';
-    // If syllabus text exists, show unit summary
-    if(s.syllabusText && s.syllabusText.length>10){
-      const lines=s.syllabusText.split('\n').filter(function(l){return l.trim();});
-      const units=lines.filter(function(l){return /unit|module|chapter|section/i.test(l);});
-      if(units.length){
-        h+='<div style="margin-top:14px;padding:12px;background:var(--surface2);border-radius:8px">';
-        h+='<strong style="font-size:12px">Detected Units/Modules ('+units.length+')</strong>';
-        h+='<div style="margin-top:8px;display:flex;flex-direction:column;gap:4px">';
-        units.slice(0,10).forEach(function(u){
-          h+='<div style="font-size:12px;padding:4px 8px;background:#fff;border-radius:4px;border-left:3px solid var(--accent)">'+u.substring(0,100)+'</div>';
-        });
-        h+='</div></div>';
-      }
-    }
+
+    h+='<div class="tbl-wrap"><table style="font-size:12px;border-collapse:collapse;width:100%">';
+    h+='<thead><tr style="background:#1e40af;color:#fff;text-align:center">';
+    h+='<th style="padding:8px 6px;border:1px solid #93c5fd;width:54px">Module<br>No</th>';
+    h+='<th style="padding:8px 6px;border:1px solid #93c5fd;min-width:130px;text-align:left">Module Title</th>';
+    h+='<th style="padding:8px 6px;border:1px solid #93c5fd;min-width:200px;text-align:left">Detailed Syllabus<br><small style="font-weight:400;font-size:10px">(one topic per line)</small></th>';
+    h+='<th style="padding:8px 6px;border:1px solid #93c5fd;min-width:70px">CO(s)</th>';
+    h+='<th style="padding:8px 6px;border:1px solid #93c5fd;min-width:160px">Bloom\'s Level(s)</th>';
+    h+='<th style="padding:8px 6px;border:1px solid #93c5fd;min-width:130px">WK(s)</th>';
+    h+='<th style="padding:8px 6px;border:1px solid #93c5fd;width:56px">Hours</th>';
+    h+='<th style="padding:8px 6px;border:1px solid #93c5fd;width:32px"></th>';
+    h+='</tr></thead><tbody>';
+
+    s.syllabusModules.forEach(function(mod,mi){
+      const modCOs=Array.isArray(mod.cos)?mod.cos:(mod.cos?[mod.cos]:[]);
+      const modBlooms=Array.isArray(mod.blooms)?mod.blooms:(mod.blooms?[mod.blooms]:[]);
+      const modWKs=Array.isArray(mod.wks)?mod.wks:(mod.wks?[mod.wks]:[]);
+      const topics=mod.topics||'';
+
+      h+='<tr style="background:'+(mi%2?'#f0f7ff':'#fff')+';vertical-align:top">';
+
+      // Module No
+      h+='<td style="padding:5px;border:1px solid #bfdbfe;text-align:center">';
+      h+='<input type="number" value="'+mod.no+'" min="1" style="width:42px;padding:4px;border:1px solid #bfdbfe;border-radius:4px;font-family:monospace;font-size:12px;font-weight:700;text-align:center" onchange="sub().syllabusModules['+mi+'].no=+this.value">';
+      h+='</td>';
+
+      // Title
+      h+='<td style="padding:5px;border:1px solid #bfdbfe">';
+      h+='<input type="text" value="'+mod.title.replace(/"/g,'&quot;')+'" style="width:100%;padding:5px;border:1px solid #bfdbfe;border-radius:4px;font-family:inherit;font-size:12px" onchange="sub().syllabusModules['+mi+'].title=this.value">';
+      h+='</td>';
+
+      // Topics
+      h+='<td style="padding:5px;border:1px solid #bfdbfe">';
+      h+='<textarea rows="4" style="width:100%;padding:5px;border:1px solid #bfdbfe;border-radius:4px;font-family:inherit;font-size:11px;resize:vertical;line-height:1.5" onchange="sub().syllabusModules['+mi+'].topics=this.value">'+topics+'</textarea>';
+      h+='</td>';
+
+      // CO multi-checkboxes
+      h+='<td style="padding:5px;border:1px solid #bfdbfe">';
+      h+='<div style="display:flex;flex-direction:column;gap:3px">';
+      s.cos.forEach(function(co){
+        const chk=modCOs.includes(co.id);
+        h+='<label style="display:flex;align-items:center;gap:4px;cursor:pointer;padding:2px 4px;border-radius:4px;background:'+(chk?'#dbeafe':'#f8fafc')+';font-size:11px;font-weight:700;color:'+(chk?'#2563eb':'#94a3b8')+'">';
+        h+='<input type="checkbox" data-mi="'+mi+'" data-co="'+co.id+'"'+(chk?' checked':'')+' onchange="toggleSylMod(this,\'cos\')" style="width:11px;height:11px">'+co.id+'</label>';
+      });
+      h+='</div></td>';
+
+      // Bloom's multi-checkboxes
+      h+='<td style="padding:5px;border:1px solid #bfdbfe">';
+      h+='<div style="display:flex;flex-direction:column;gap:2px">';
+      BL.forEach(function(bl,li){
+        const chk=modBlooms.includes(bl);
+        const col=BLC[bl];const bg=BLBg[bl];
+        h+='<label style="display:flex;align-items:center;gap:3px;cursor:pointer;padding:2px 5px;border-radius:4px;background:'+(chk?bg:'#f8fafc')+';border:1px solid '+(chk?col+'55':'#e2e8f0')+';font-size:10px;font-weight:700;color:'+(chk?col:'#94a3b8')+'">';
+        h+='<input type="checkbox" data-mi="'+mi+'" data-bl="'+bl+'"'+(chk?' checked':'')+' onchange="toggleSylMod(this,\'blooms\')" style="width:10px;height:10px">L'+(li+1)+' '+bl+'</label>';
+      });
+      h+='</div></td>';
+
+      // WK multi-checkboxes
+      h+='<td style="padding:5px;border:1px solid #bfdbfe">';
+      h+='<div style="display:flex;flex-wrap:wrap;gap:3px">';
+      WKL.forEach(function(wk){
+        const chk=modWKs.includes(wk);
+        h+='<label style="display:flex;align-items:center;gap:2px;cursor:pointer;padding:2px 5px;border-radius:4px;background:'+(chk?'#dbeafe':'#f1f5f9')+';font-size:10px;font-weight:700;color:'+(chk?'#2563eb':'#64748b')+';border:1px solid '+(chk?'#93c5fd':'#e2e8f0')+'">';
+        h+='<input type="checkbox" data-mi="'+mi+'" data-wk="'+wk+'"'+(chk?' checked':'')+' onchange="toggleSylMod(this,\'wks\')" style="width:10px;height:10px">'+wk+'</label>';
+      });
+      h+='</div></td>';
+
+      // Hours
+      h+='<td style="padding:5px;border:1px solid #bfdbfe;text-align:center">';
+      h+='<input type="number" value="'+(mod.hours||8)+'" min="1" max="60" style="width:46px;padding:4px;border:1px solid #bfdbfe;border-radius:4px;font-family:monospace;font-size:12px;font-weight:700;text-align:center" onchange="sub().syllabusModules['+mi+'].hours=+this.value">';
+      h+='</td>';
+
+      // Delete
+      h+='<td style="padding:5px;border:1px solid #bfdbfe;text-align:center">';
+      h+='<button class="btn btn-sm btn-danger" style="padding:3px 6px" onclick="removeSyllabusModule('+mi+')">&#10005;</button>';
+      h+='</td>';
+      h+='</tr>';
+    });
+
+    // Total row
+    const totHrs=s.syllabusModules.reduce(function(a,m){return a+(m.hours||0);},0);
+    const tgt=s.totalHours||48;
+    h+='<tr style="background:#dbeafe">';
+    h+='<td colspan="6" style="padding:7px 12px;border:1px solid #bfdbfe;font-weight:700;font-size:12px;color:#1d4ed8;text-align:right">Total Hours</td>';
+    h+='<td style="padding:7px;border:1px solid #bfdbfe;text-align:center;font-family:monospace;font-size:13px;font-weight:800;color:'+(totHrs===tgt?'var(--green)':totHrs>tgt?'var(--red)':'var(--gold)')+'">'+totHrs+' / '+tgt+'</td>';
+    h+='<td style="border:1px solid #bfdbfe"></td></tr>';
+    h+='</tbody></table></div>';
+
+    // &#9472;&#9472; TEXT BOOKS &#9472;&#9472;
+    h+='<div style="margin-top:20px">';
+    h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">';
+    h+='<strong style="font-size:13px;color:#1d4ed8">&#128215; Text Books</strong>';
+    h+='<button class="btn btn-sm btn-outline" onclick="addSyllabusBook(\'text\')">+ Add</button>';
+    h+='</div>';
+    h+='<div class="tbl-wrap"><table style="font-size:12px;border-collapse:collapse;width:100%">';
+    h+='<thead><tr style="background:#1e40af;color:#fff">';
+    h+='<th style="padding:7px;border:1px solid #93c5fd;width:32px;text-align:center">#</th>';
+    h+='<th style="padding:7px;border:1px solid #93c5fd">Title</th>';
+    h+='<th style="padding:7px;border:1px solid #93c5fd">Author(s)</th>';
+    h+='<th style="padding:7px;border:1px solid #93c5fd">Publisher</th>';
+    h+='<th style="padding:7px;border:1px solid #93c5fd;width:60px">Edition</th>';
+    h+='<th style="padding:7px;border:1px solid #93c5fd;width:58px">Year</th>';
+    h+='<th style="padding:7px;border:1px solid #93c5fd;width:32px"></th>';
+    h+='</tr></thead><tbody>';
+    s.syllabusTextBooks.forEach(function(bk,bi){
+      h+='<tr style="background:'+(bi%2?'#f0f7ff':'#fff')+'">';
+      h+='<td style="padding:5px;border:1px solid #bfdbfe;text-align:center;font-weight:700;color:#1d4ed8">'+(bi+1)+'</td>';
+      ['title','author','pub'].forEach(function(fld){
+        h+='<td style="padding:4px;border:1px solid #bfdbfe">';
+        h+='<input type="text" value="'+(bk[fld]||'').replace(/"/g,'&quot;')+'" placeholder="'+fld+'" onchange="sub().syllabusTextBooks['+bi+'][\''+fld+'\']=this.value" style="width:100%;padding:4px;border:1px solid #bfdbfe;border-radius:3px;font-family:inherit;font-size:11px">';
+        h+='</td>';
+      });
+      h+='<td style="padding:4px;border:1px solid #bfdbfe"><input type="text" value="'+(bk.ed||'')+'" placeholder="3rd" onchange="sub().syllabusTextBooks['+bi+'].ed=this.value" style="width:56px;padding:4px;border:1px solid #bfdbfe;border-radius:3px;font-family:inherit;font-size:11px"></td>';
+      h+='<td style="padding:4px;border:1px solid #bfdbfe"><input type="number" value="'+(bk.year||2020)+'" min="1900" max="2099" onchange="sub().syllabusTextBooks['+bi+'].year=+this.value" style="width:54px;padding:4px;border:1px solid #bfdbfe;border-radius:3px;font-family:monospace;font-size:11px"></td>';
+      h+='<td style="padding:4px;border:1px solid #bfdbfe;text-align:center"><button class="btn btn-sm btn-danger" style="padding:2px 6px;font-size:10px" onclick="removeSyllabusBook(\'text\','+bi+')">&#10005;</button></td>';
+      h+='</tr>';
+    });
+    h+='</tbody></table></div></div>';
+
+    // &#9472;&#9472; REFERENCE BOOKS &#9472;&#9472;
+    h+='<div style="margin-top:16px">';
+    h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">';
+    h+='<strong style="font-size:13px;color:#7c3aed">&#128216; Reference Books</strong>';
+    h+='<button class="btn btn-sm btn-outline" style="border-color:var(--purple);color:var(--purple)" onclick="addSyllabusBook(\'ref\')">+ Add</button>';
+    h+='</div>';
+    h+='<div class="tbl-wrap"><table style="font-size:12px;border-collapse:collapse;width:100%">';
+    h+='<thead><tr style="background:#6d28d9;color:#fff">';
+    h+='<th style="padding:7px;border:1px solid #c4b5fd;width:32px;text-align:center">#</th>';
+    h+='<th style="padding:7px;border:1px solid #c4b5fd">Title</th>';
+    h+='<th style="padding:7px;border:1px solid #c4b5fd">Author(s)</th>';
+    h+='<th style="padding:7px;border:1px solid #c4b5fd">Publisher</th>';
+    h+='<th style="padding:7px;border:1px solid #c4b5fd;width:60px">Edition</th>';
+    h+='<th style="padding:7px;border:1px solid #c4b5fd;width:58px">Year</th>';
+    h+='<th style="padding:7px;border:1px solid #c4b5fd;width:32px"></th>';
+    h+='</tr></thead><tbody>';
+    s.syllabusRefBooks.forEach(function(bk,bi){
+      h+='<tr style="background:'+(bi%2?'#faf5ff':'#fff')+'">';
+      h+='<td style="padding:5px;border:1px solid #c4b5fd;text-align:center;font-weight:700;color:#7c3aed">'+(bi+1)+'</td>';
+      ['title','author','pub'].forEach(function(fld){
+        h+='<td style="padding:4px;border:1px solid #c4b5fd">';
+        h+='<input type="text" value="'+(bk[fld]||'').replace(/"/g,'&quot;')+'" placeholder="'+fld+'" onchange="sub().syllabusRefBooks['+bi+'][\''+fld+'\']=this.value" style="width:100%;padding:4px;border:1px solid #c4b5fd;border-radius:3px;font-family:inherit;font-size:11px">';
+        h+='</td>';
+      });
+      h+='<td style="padding:4px;border:1px solid #c4b5fd"><input type="text" value="'+(bk.ed||'')+'" placeholder="3rd" onchange="sub().syllabusRefBooks['+bi+'].ed=this.value" style="width:56px;padding:4px;border:1px solid #c4b5fd;border-radius:3px;font-family:inherit;font-size:11px"></td>';
+      h+='<td style="padding:4px;border:1px solid #c4b5fd"><input type="number" value="'+(bk.year||2020)+'" min="1900" max="2099" onchange="sub().syllabusRefBooks['+bi+'].year=+this.value" style="width:54px;padding:4px;border:1px solid #c4b5fd;border-radius:3px;font-family:monospace;font-size:11px"></td>';
+      h+='<td style="padding:4px;border:1px solid #c4b5fd;text-align:center"><button class="btn btn-sm btn-danger" style="padding:2px 6px;font-size:10px" onclick="removeSyllabusBook(\'ref\','+bi+')">&#10005;</button></td>';
+      h+='</tr>';
+    });
+    h+='</tbody></table></div></div>';
+
+    // &#9472;&#9472; ASSESSMENT PATTERN &#9472;&#9472;
+    const asp=s.syllabusAssessment;
+    h+='<div style="margin-top:16px;padding:14px;background:#f0fdf4;border-radius:10px;border:1.5px solid #86efac">';
+    h+='<strong style="font-size:13px;color:var(--green);display:block;margin-bottom:12px">&#128202; Assessment Pattern</strong>';
+    h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px">';
+    h+='<div class="fg"><label style="font-size:11px">CIE Weight (%)</label>';
+    h+='<input type="number" value="'+asp.cie+'" min="0" max="100" onchange="sub().syllabusAssessment.cie=+this.value" style="padding:7px;border:1.5px solid #86efac;border-radius:5px;width:100%;font-family:monospace;font-size:14px;font-weight:700"></div>';
+    h+='<div class="fg"><label style="font-size:11px">ESE Weight (%)</label>';
+    h+='<input type="number" value="'+asp.ese+'" min="0" max="100" onchange="sub().syllabusAssessment.ese=+this.value" style="padding:7px;border:1.5px solid #86efac;border-radius:5px;width:100%;font-family:monospace;font-size:14px;font-weight:700"></div>';
+    h+='<div class="fg"><label style="font-size:11px">CIE Pattern / Components</label>';
+    h+='<input type="text" value="'+(asp.ciePattern||'').replace(/"/g,'&quot;')+'" placeholder="e.g. 2 tests &#215; 30 marks" onchange="sub().syllabusAssessment.ciePattern=this.value" style="padding:7px;border:1.5px solid #86efac;border-radius:5px;width:100%;font-family:inherit;font-size:12px"></div>';
+    h+='<div class="fg"><label style="font-size:11px">ESE Pattern / Duration</label>';
+    h+='<input type="text" value="'+(asp.esePattern||'').replace(/"/g,'&quot;')+'" placeholder="e.g. 3-hour exam, 100 marks" onchange="sub().syllabusAssessment.esePattern=this.value" style="padding:7px;border:1.5px solid #86efac;border-radius:5px;width:100%;font-family:inherit;font-size:12px"></div>';
+    h+='<div class="fg" style="grid-column:1/-1"><label style="font-size:11px">Other (Lab, Mini-project, Seminar&#8230;)</label>';
+    h+='<textarea rows="2" onchange="sub().syllabusAssessment.other=this.value" style="width:100%;padding:7px;border:1.5px solid #86efac;border-radius:5px;font-family:inherit;font-size:12px;resize:vertical" placeholder="e.g. Lab: 25 marks, Mini-project: 25 marks">'+(asp.other||'')+'</textarea></div>';
+    h+='</div></div>';
+
     h+='</div></div>';
   }
-
   el.innerHTML=h;
 }
 function setCoTab(t){ window._coTab=t; renderCOPage(document.getElementById(PAGES[2].id)); }
+function toggleSylMod(el,field){
+  const mi=+el.getAttribute('data-mi');
+  const s=sub();
+  const mod=s.syllabusModules[mi];
+  if(!Array.isArray(mod[field])) mod[field]=[];
+  const val=el.getAttribute('data-co')||el.getAttribute('data-bl')||el.getAttribute('data-wk');
+  if(el.checked){if(!mod[field].includes(val)) mod[field].push(val);}
+  else mod[field]=mod[field].filter(function(x){return x!==val;});
+}
+function addSyllabusModule(){
+  const s=sub();
+  if(!s.syllabusModules) s.syllabusModules=[];
+  const n=s.syllabusModules.length+1;
+  s.syllabusModules.push({no:n,title:'Module '+n+': [Title]',topics:'Topic 1\nTopic 2\nTopic 3',
+    cos:[(s.cos[0]||{id:'CO1'}).id],blooms:['Apply'],wks:['WK1'],hours:8});
+  renderCOPage(document.getElementById(PAGES[2].id));
+}
+function removeSyllabusModule(mi){
+  sub().syllabusModules.splice(mi,1);
+  renderCOPage(document.getElementById(PAGES[2].id));
+}
+function addSyllabusBook(type){
+  const key=type==='text'?'syllabusTextBooks':'syllabusRefBooks';
+  if(!sub()[key]) sub()[key]=[];
+  sub()[key].push({title:'',author:'',pub:'',ed:'',year:2020});
+  renderCOPage(document.getElementById(PAGES[2].id));
+}
+function removeSyllabusBook(type,bi){
+  const key=type==='text'?'syllabusTextBooks':'syllabusRefBooks';
+  sub()[key].splice(bi,1);
+  renderCOPage(document.getElementById(PAGES[2].id));
+}
+function saveSyllabusTable(){
+  showToast('Syllabus saved!','success');
+}
+function openSyllabusTemplateModal(){ renderCOPage(document.getElementById(PAGES[2].id)); }
+function generateSyllabusTemplate(){ renderCOPage(document.getElementById(PAGES[2].id)); }
+function applySyllabusTemplate(){ showToast('Syllabus saved','success'); }
+function exportSyllabusExcel(){
+  const s=sub();
+  const rows=[['Module No','Module Title','Topics','CO(s)','Bloom\'s Level(s)','WK(s)','Hours']];
+  (s.syllabusModules||[]).forEach(function(m){
+    rows.push([m.no,m.title,(m.topics||'').replace(/\n/g,'; '),
+      (m.cos||[]).join(', '),(m.blooms||[]).join(', '),(m.wks||[]).join(', '),m.hours||0]);
+  });
+  rows.push([],['\ud83d\udcd7 TEXT BOOKS'],['#','Title','Author','Publisher','Edition','Year']);
+  (s.syllabusTextBooks||[]).forEach(function(bk,i){
+    rows.push([i+1,bk.title||'',bk.author||'',bk.pub||'',bk.ed||'',bk.year||'']);
+  });
+  rows.push([],['\ud83d\udcd8 REFERENCE BOOKS'],['#','Title','Author','Publisher','Edition','Year']);
+  (s.syllabusRefBooks||[]).forEach(function(bk,i){
+    rows.push([i+1,bk.title||'',bk.author||'',bk.pub||'',bk.ed||'',bk.year||'']);
+  });
+  const asp=s.syllabusAssessment||{};
+  rows.push([],['\ud83d\udcca ASSESSMENT PATTERN'],['Component','Weight %','Pattern/Details']);
+  rows.push(['CIE',asp.cie||40,asp.ciePattern||'']);
+  rows.push(['ESE',asp.ese||60,asp.esePattern||'']);
+  if(asp.other) rows.push(['Other','',asp.other]);
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:10},{wch:28},{wch:50},{wch:12},{wch:22},{wch:18},{wch:7}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Syllabus');
+  XLSX.writeFile(wb,(s.code||'Course')+'_Syllabus.xlsx');
+  showToast('Exported!','success');
+}
 function addCO(){
   const s=sub();
   const n=s.cos.length+1;
@@ -997,26 +1220,29 @@ function removeCO(i){
   showToast('CO removed','info');
 }
 function uploadSyllabus(input){
-  const f=input.files[0]; if(!f)return;
+  const f=input.files[0];if(!f)return;
   sub().syllabusFileName=f.name;
+  const name=f.name.toLowerCase();
   const reader=new FileReader();
-  reader.onload=function(e){
-    if(f.name.endsWith('.txt')){
-      sub().syllabusText=e.target.result;
-    } else {
-      sub().syllabusText='[Binary file: '+f.name+']\n\nPlease paste the syllabus text content in the text area below for analysis.';
-    }
-    renderCOPage(document.getElementById(PAGES[2].id));
-    showToast('Syllabus uploaded: '+f.name,'success');
-  };
-  if(f.name.endsWith('.txt')) reader.readAsText(f);
-  else reader.readAsArrayBuffer(f);
+  if(name.endsWith('.txt')||name.endsWith('.text')){
+    reader.onload=function(e){sub().syllabusText=e.target.result;showToast('Loaded: '+f.name,'success');renderCOPage(document.getElementById(PAGES[2].id));};
+    reader.readAsText(f);
+  } else if(name.endsWith('.docx')){
+    reader.onload=function(e){
+      if(typeof mammoth!=='undefined'){
+        mammoth.extractRawText({arrayBuffer:e.target.result}).then(function(r){
+          sub().syllabusText=r.value||'';showToast('DOCX extracted: '+f.name,'success');renderCOPage(document.getElementById(PAGES[2].id));
+        }).catch(function(){showToast('Could not extract DOCX','error');});
+      } else {showToast('mammoth library not loaded','error');}
+    };
+    reader.readAsArrayBuffer(f);
+  } else {showToast('Supports TXT and DOCX only','info');}
 }
-function saveSyllabus(){
-  const el=document.getElementById('syllabusText');
-  if(el) sub().syllabusText=el.value;
-  showToast('Syllabus saved!','success');
-}
+function buildSyllabusPreview(t){return '';}
+function livePreviewSyllabus(t){sub().syllabusText=t;}
+function clearSyllabus(){sub().syllabusText='';sub().syllabusFileName='';renderCOPage(document.getElementById(PAGES[2].id));showToast('Cleared','info');}
+function saveSyllabus(){const el=document.getElementById('syllabusText');if(el)sub().syllabusText=el.value;showToast('Saved!','success');}
+
 function autoMapCOsFromSyllabus(){
   const s=sub();
   const el=document.getElementById('syllabusText');
