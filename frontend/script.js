@@ -3643,7 +3643,9 @@ function fgSel(label,id,opts,selected){return '<div class="fg"><label>'+label+'<
 let toastTimer;
 function showToast(msg,type){
   const t=document.getElementById('toast');
-  t.textContent=(type==='success'?'&#9989; ':type==='error'?'&#10060; ':'&#8505; ')+msg;
+  const icon=type==='success'?String.fromCharCode(9989):type==='error'?String.fromCharCode(10060):String.fromCharCode(8505);
+  const cleanMsg=String(msg||'').replace(/&#(\d+);/g,function(_,n){return String.fromCharCode(parseInt(n,10));});
+  t.textContent=icon+' '+cleanMsg;
   t.className='show '+(type||'success');
   clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>t.className='',2800);
