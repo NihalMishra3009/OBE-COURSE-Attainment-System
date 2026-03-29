@@ -3095,7 +3095,31 @@ function generateFullReport(){
   calculateAll();
   setTimeout(function(){
     const s=sub();
-    PAGES.forEach(function(_,i){renderPage(i);});
+
+    // Force-render every sub-tab for all pages with sub-tabs
+    const savedCoTab=window._coTab;
+    const savedCopoTab=window._copoTab;
+    const savedMarkView=window._markView;
+    const savedCoqIdx=window._coqTestIdx;
+
+    // Tab 2: render all 3 sub-tabs
+    window._coTab='cos'; renderPage(2);
+    window._coTab='bloom'; renderPage(2);
+    window._coTab='syllabus'; renderPage(2);
+    // Tab 4: render both sub-tabs
+    window._copoTab='matrix'; renderPage(4);
+    window._copoTab='justify'; renderPage(4);
+    // Tab 9: render all CIE tests
+    const cieTests=s.assessments.filter(function(a){return a.type==='CIE';});
+    cieTests.forEach(function(_,ti){ window._coqTestIdx=ti; renderPage(9); });
+    // Tab 10: render all marklist types
+    ['cie','ese','lab'].forEach(function(t){ window._markView=t; renderPage(10); });
+    // Render remaining pages normally
+    PAGES.forEach(function(_,i){ if(![2,4,9,10].includes(i)) renderPage(i); });
+
+    // Restore
+    window._coTab=savedCoTab; window._copoTab=savedCopoTab;
+    window._markView=savedMarkView; window._coqTestIdx=savedCoqIdx;
 
     const sanitizePage=(p)=>{
       const clone=p.cloneNode(true);
@@ -3185,21 +3209,301 @@ function generateFullReport(){
       +'</table>'
       +'</div>';
 
-    const sectionPages=Array.from(document.querySelectorAll('.page')).map(function(p,i){
-      if(i===0) return '';
-      const secNum=PAGES[i].label;
-      const secTitle=PAGES[i].section;
-      return '<div style="page-break-before:always;padding:32px 40px">'
-        +'<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:2.5px solid #2563eb;padding-bottom:10px;margin-bottom:20px">'
-        +'<div>'
-        +'<div style="font-size:10px;font-weight:700;color:#2563eb;text-transform:uppercase;letter-spacing:2px;margin-bottom:2px">'+secNum+'</div>'
-        +'<h2 style="font-size:18px;font-weight:800;color:#0f172a;margin:0">'+secTitle+'</h2>'
-        +'</div>'
-        +'<div style="text-align:right;font-size:10px;color:#94a3b8"><div>'+s.code+' &#8212; '+s.name+'</div><div>'+s.ay+'</div></div>'
-        +'</div>'
-        +sanitizePage(p)
-        +'</div>';
-    }).join('');
+    function secHeader(label,title,code,name,ay){
+          return '<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:2.5px solid #2563eb;padding-bottom:10px;margin-bottom:20px">'
+            +'<div><div style="font-size:10px;font-weight:700;color:#2563eb;text-transform:uppercase;letter-spacing:2px;margin-bottom:2px">'+label+'</div>'
+            +'<h2 style="font-size:18px;font-weight:800;color:#0f172a;margin:0">'+title+'</h2></div>'
+            +'<div style="text-align:right;font-size:10px;color:#94a3b8"><div>'+code+' &#8212; '+name+'</div><div>'+ay+'</div></div>'
+            +'</div>';
+        }
+
+        // &#9472;&#9472; Generate Tab 2 content: COs + Bloom Dict + Syllabus &#9472;&#9472;
+        function buildTab2(){
+          const BL=['Remember','Understand','Apply','Analyze','Evaluate','Create'];
+          const BLC={'Remember':'#7c3aed','Understand':'#2563eb','Apply':'#0ea5e9','Analyze':'#059669','Evaluate':'#d97706','Create':'#dc2626'};
+          const BLBg={'Remember':'#ede9fe','Understand':'#dbeafe','Apply':'#e0f2fe','Analyze':'#d1fae5','Evaluate':'#fef3c7','Create':'#fee2e2'};
+          let h='';
+
+          // 2A &#8212; Course Objectives & Outcomes
+          h+='<h3 style="color:#2563eb;font-size:14px;margin:0 0 10px;border-bottom:1px solid #e2e8f0;padding-bottom:6px">A. Course Objectives</h3>';
+          h+='<table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px">';
+          h+='<thead><tr style="background:#f1f5f9"><th style="padding:7px 10px;border:1px solid #e2e8f0;width:60px">OBJ#</th><th style="padding:7px 10px;border:1px solid #e2e8f0;text-align:left">Objective Statement</th></tr></thead><tbody>';
+          s.cos.forEach(function(co,i){
+            h+='<tr style="background:'+(i%2?'#f8fafc':'#fff')+'"><td style="padding:6px 10px;border:1px solid #e2e8f0;text-align:center;font-weight:700;color:#7c3aed">OBJ'+(i+1)+'</td>';
+            h+='<td style="padding:6px 10px;border:1px solid #e2e8f0">'+co.objective+'</td></tr>';
+          });
+          h+='</tbody></table>';
+
+          h+='<h3 style="color:#2563eb;font-size:14px;margin:0 0 10px;border-bottom:1px solid #e2e8f0;padding-bottom:6px">B. Course Outcomes with Bloom\'s Level, WK &amp; Performance Indicators</h3>';
+          h+='<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:16px">';
+          h+='<thead><tr style="background:#1e40af;color:#fff">';
+          h+='<th style="padding:7px;border:1px solid #93c5fd;width:40px">CO</th>';
+          h+='<th style="padding:7px;border:1px solid #93c5fd;text-align:left;min-width:160px">Outcome Statement</th>';
+          h+='<th style="padding:7px;border:1px solid #93c5fd;width:90px">Bloom\'s Level</th>';
+          h+='<th style="padding:7px;border:1px solid #93c5fd;width:100px">WK Level(s)</th>';
+          h+='<th style="padding:7px;border:1px solid #93c5fd;text-align:left">Performance Indicator</th>';
+          h+='</tr></thead><tbody>';
+          s.cos.forEach(function(co,i){
+            const wkArr=Array.isArray(co.wk)?co.wk:(co.wk?[co.wk]:[]);
+            const bCol=BLC[co.bloom]||'#2563eb';
+            const bBg=BLBg[co.bloom]||'#dbeafe';
+            h+='<tr style="background:'+(i%2?'#f8fafc':'#fff')+'">';
+            h+='<td style="padding:6px;border:1px solid #e2e8f0;text-align:center;font-weight:800;color:#2563eb">'+co.id+'</td>';
+            h+='<td style="padding:6px;border:1px solid #e2e8f0">'+co.outcome+'</td>';
+            h+='<td style="padding:6px;border:1px solid #e2e8f0;text-align:center"><span style="padding:3px 8px;border-radius:20px;background:'+bBg+';color:'+bCol+';font-weight:700;font-size:10px">'+co.bloom+'</span><div style="font-size:9px;color:'+bCol+';margin-top:2px">L'+(BL.indexOf(co.bloom)+1)+'</div></td>';
+            h+='<td style="padding:6px;border:1px solid #e2e8f0;text-align:center">'+wkArr.map(function(w){return '<span style="display:inline-block;padding:2px 5px;background:#dbeafe;color:#2563eb;border-radius:4px;font-size:9px;font-weight:700;margin:1px">'+w+'</span>';}).join('')+'</td>';
+            h+='<td style="padding:6px;border:1px solid #e2e8f0;font-size:10px;color:#475569">'+(co.pi||'&#8212;')+'</td>';
+            h+='</tr>';
+          });
+          h+='</tbody></table>';
+
+          // 2C &#8212; Bloom's Dictionary reference table
+          h+='<h3 style="color:#2563eb;font-size:14px;margin:16px 0 10px;border-bottom:1px solid #e2e8f0;padding-bottom:6px">C. Bloom\'s Taxonomy &#8212; Action Verb Reference</h3>';
+          h+='<table style="width:100%;border-collapse:collapse;font-size:10px;margin-bottom:16px">';
+          h+='<thead><tr>';
+          BL.forEach(function(b,i){ h+='<th style="padding:6px 8px;border:1px solid #e2e8f0;background:'+BLC[b]+';color:#fff;text-align:center">L'+(i+1)+': '+b+'</th>'; });
+          h+='</tr></thead><tbody>';
+          const BD=typeof BLOOM_DICT!=='undefined'?BLOOM_DICT:{};
+          const maxV=Math.max.apply(null,BL.map(function(b){return BD[b]?BD[b].verbs.length:0;}));
+          for(let r=0;r<Math.min(maxV,14);r++){
+            h+='<tr>';
+            BL.forEach(function(b){
+              const v=BD[b]&&BD[b].verbs[r]?BD[b].verbs[r]:'';
+              h+='<td style="padding:5px 7px;border:1px solid #e2e8f0;background:'+(r%2?BLBg[b]+'66':BLBg[b]+'33')+';color:'+BLC[b]+';font-weight:600;text-align:center">'+v+'</td>';
+            });
+            h+='</tr>';
+          }
+          h+='</tbody></table>';
+
+          // 2D &#8212; Syllabus
+          if(s.syllabusModules&&s.syllabusModules.length){
+            h+='<h3 style="color:#2563eb;font-size:14px;margin:16px 0 10px;border-bottom:1px solid #e2e8f0;padding-bottom:6px">D. Module-wise Syllabus</h3>';
+            h+='<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:10px">';
+            h+='<thead><tr style="background:#1e40af;color:#fff">';
+            h+='<th style="padding:7px;border:1px solid #93c5fd;width:50px;text-align:center">Mod No</th>';
+            h+='<th style="padding:7px;border:1px solid #93c5fd;min-width:110px">Module Title</th>';
+            h+='<th style="padding:7px;border:1px solid #93c5fd;text-align:left;min-width:180px">Detailed Syllabus</th>';
+            h+='<th style="padding:7px;border:1px solid #93c5fd;width:50px">CO(s)</th>';
+            h+='<th style="padding:7px;border:1px solid #93c5fd;width:80px">Bloom\'s</th>';
+            h+='<th style="padding:7px;border:1px solid #93c5fd;width:70px">WK(s)</th>';
+            h+='<th style="padding:7px;border:1px solid #93c5fd;width:48px">Hours</th>';
+            h+='</tr></thead><tbody>';
+            s.syllabusModules.forEach(function(mod,mi){
+              const topicLines=(mod.topics||'').split('
+').filter(function(l){return l.trim();});
+              h+='<tr style="background:'+(mi%2?'#f0f7ff':'#fff')+';vertical-align:top">';
+              h+='<td style="padding:6px;border:1px solid #bfdbfe;text-align:center;font-weight:800;color:#1d4ed8">'+mod.no+'</td>';
+              h+='<td style="padding:6px;border:1px solid #bfdbfe;font-weight:600">'+mod.title+'</td>';
+              h+='<td style="padding:6px;border:1px solid #bfdbfe"><ul style="margin:0;padding-left:14px">';
+              topicLines.forEach(function(t){ h+='<li style="margin-bottom:2px">'+t+'</li>'; });
+              h+='</ul></td>';
+              h+='<td style="padding:6px;border:1px solid #bfdbfe;text-align:center">'+((mod.cos||[]).join('<br>'))+'</td>';
+              h+='<td style="padding:6px;border:1px solid #bfdbfe;font-size:10px">'+((mod.blooms||[]).join(', '))+'</td>';
+              h+='<td style="padding:6px;border:1px solid #bfdbfe;font-size:10px">'+((mod.wks||[]).join(', '))+'</td>';
+              h+='<td style="padding:6px;border:1px solid #bfdbfe;text-align:center;font-weight:700">'+(mod.hours||'&#8212;')+'</td>';
+              h+='</tr>';
+            });
+            const totH=s.syllabusModules.reduce(function(a,m){return a+(m.hours||0);},0);
+            h+='<tr style="background:#dbeafe;font-weight:700"><td colspan="6" style="padding:6px 10px;border:1px solid #bfdbfe;text-align:right;color:#1d4ed8">Total Hours</td><td style="padding:6px;border:1px solid #bfdbfe;text-align:center;color:#059669">'+totH+' / '+(s.totalHours||48)+'</td></tr>';
+            h+='</tbody></table>';
+            // Text books
+            if(s.syllabusTextBooks&&s.syllabusTextBooks.some(function(b){return b.title;})){
+              h+='<p style="font-weight:700;color:#1d4ed8;margin:10px 0 4px">Text Books</p>';
+              h+='<ol style="margin:0;padding-left:20px;font-size:11px">';
+              s.syllabusTextBooks.forEach(function(bk){if(bk.title) h+='<li style="margin-bottom:3px">'+bk.title+' &#8212; '+bk.author+', '+bk.pub+(bk.ed?', '+bk.ed+' ed.':'')+( bk.year?', '+bk.year:'')+'</li>';});
+              h+='</ol>';
+            }
+            if(s.syllabusRefBooks&&s.syllabusRefBooks.some(function(b){return b.title;})){
+              h+='<p style="font-weight:700;color:#7c3aed;margin:10px 0 4px">Reference Books</p>';
+              h+='<ol style="margin:0;padding-left:20px;font-size:11px">';
+              s.syllabusRefBooks.forEach(function(bk){if(bk.title) h+='<li style="margin-bottom:3px">'+bk.title+' &#8212; '+bk.author+', '+bk.pub+(bk.ed?', '+bk.ed+' ed.':'')+( bk.year?', '+bk.year:'')+'</li>';});
+              h+='</ol>';
+            }
+            const asp=s.syllabusAssessment||{};
+            if(asp.cie||asp.ese){
+              h+='<p style="font-weight:700;color:#059669;margin:10px 0 4px">Assessment Pattern</p>';
+              h+='<table style="border-collapse:collapse;font-size:11px"><thead><tr style="background:#d1fae5"><th style="padding:5px 10px;border:1px solid #86efac">Component</th><th style="padding:5px 10px;border:1px solid #86efac">Weight%</th><th style="padding:5px 10px;border:1px solid #86efac">Pattern/Details</th></tr></thead><tbody>';
+              h+='<tr><td style="padding:5px 10px;border:1px solid #86efac">CIE</td><td style="padding:5px 10px;border:1px solid #86efac;text-align:center">'+(asp.cie||40)+'%</td><td style="padding:5px 10px;border:1px solid #86efac">'+(asp.ciePattern||'&#8212;')+'</td></tr>';
+              h+='<tr><td style="padding:5px 10px;border:1px solid #86efac">ESE</td><td style="padding:5px 10px;border:1px solid #86efac;text-align:center">'+(asp.ese||60)+'%</td><td style="padding:5px 10px;border:1px solid #86efac">'+(asp.esePattern||'&#8212;')+'</td></tr>';
+              if(asp.other) h+='<tr><td style="padding:5px 10px;border:1px solid #86efac">Other</td><td style="padding:5px 10px;border:1px solid #86efac">&#8212;</td><td style="padding:5px 10px;border:1px solid #86efac">'+asp.other+'</td></tr>';
+              h+='</tbody></table>';
+            }
+          }
+          return h;
+        }
+
+        // &#9472;&#9472; Generate Tab 4 content: Matrix + Justification &#9472;&#9472;
+        function buildTab4(){
+          const allPOs=[...s.pos.map(function(_,i){return 'PO'+(i+1);}), ...s.psos.map(function(_,i){return 'PSO'+(i+1);})];
+          const allPONames=[...s.pos,...s.psos];
+          let h='';
+          h+='<h3 style="color:#2563eb;font-size:14px;margin:0 0 10px;border-bottom:1px solid #e2e8f0;padding-bottom:6px">A. CO-PO / CO-PSO Mapping Matrix</h3>';
+          h+='<table style="width:100%;border-collapse:collapse;font-size:10px;margin-bottom:16px">';
+          h+='<thead><tr style="background:#1e40af;color:#fff"><th style="padding:6px;border:1px solid #93c5fd">CO</th>';
+          s.pos.forEach(function(_,i){ h+='<th style="padding:5px 4px;border:1px solid #93c5fd;background:#1e40af;min-width:28px;text-align:center">PO'+(i+1)+'</th>'; });
+          s.psos.forEach(function(_,i){ h+='<th style="padding:5px 4px;border:1px solid #93c5fd;background:#5b21b6;min-width:34px;text-align:center">PSO'+(i+1)+'</th>'; });
+          h+='<th style="padding:5px;border:1px solid #93c5fd">Avg</th></tr></thead><tbody>';
+          s.cos.forEach(function(co,ci){
+            const row=s.copoPOMatrix[ci]||[];
+            const nz=row.filter(function(v){return v>0;});
+            const avg=nz.length?(nz.reduce(function(a,b){return a+b;},0)/nz.length).toFixed(2):'-';
+            h+='<tr style="background:'+(ci%2?'#f0f7ff':'#fff')+'">';
+            h+='<td style="padding:5px 8px;border:1px solid #e2e8f0;font-weight:800;color:#2563eb">'+co.id+'</td>';
+            row.forEach(function(v,pi){
+              const bg=v===3?'#d1fae5':v===2?'#fef3c7':v===1?'#dbeafe':'';
+              const col=v===3?'#059669':v===2?'#d97706':v===1?'#2563eb':'#94a3b8';
+              h+='<td style="padding:5px;border:1px solid #e2e8f0;text-align:center;background:'+bg+';font-weight:700;color:'+col+'">'+(v||'')+'</td>';
+            });
+            h+='<td style="padding:5px 8px;border:1px solid #e2e8f0;text-align:center;font-weight:700">'+avg+'</td>';
+            h+='</tr>';
+          });
+          // PO avg row
+          h+='<tr style="background:#dbeafe;font-weight:700"><td style="padding:5px 8px;border:1px solid #bfdbfe;color:#1d4ed8">Avg</td>';
+          allPOs.forEach(function(_,pi){
+            const vals=s.copoPOMatrix.map(function(row){return row[pi]||0;}).filter(function(v){return v>0;});
+            const avg=vals.length?(vals.reduce(function(a,b){return a+b;},0)/vals.length).toFixed(2):'-';
+            h+='<td style="padding:5px;border:1px solid #bfdbfe;text-align:center">'+avg+'</td>';
+          });
+          h+='<td style="border:1px solid #bfdbfe"></td></tr>';
+          h+='</tbody></table>';
+
+          // Justification
+          if(s.copoJustification&&Object.keys(s.copoJustification).length){
+            h+='<h3 style="color:#2563eb;font-size:14px;margin:16px 0 10px;border-bottom:1px solid #e2e8f0;padding-bottom:6px">B. CO-PO Mapping Justification</h3>';
+            h+='<table style="width:100%;border-collapse:collapse;font-size:11px">';
+            h+='<thead><tr style="background:#0f172a;color:#fff"><th style="padding:7px;border:1px solid #334155;width:40px">CO</th><th style="padding:7px;border:1px solid #334155;width:50px">PO/PSO</th><th style="padding:7px;border:1px solid #334155;width:50px">Level</th><th style="padding:7px;border:1px solid #334155;text-align:left">Justification</th></tr></thead><tbody>';
+            s.cos.forEach(function(co,ci){
+              s.copoPOMatrix[ci].forEach(function(v,pi){
+                if(!v) return;
+                const key=co.id+'_'+allPOs[pi];
+                const just=(s.copoJustification&&s.copoJustification[key])||'';
+                const str=v===3?'High':v===2?'Medium':'Low';
+                h+='<tr style="background:'+(ci%2?'#f8fafc':'#fff')+'">';
+                h+='<td style="padding:5px 8px;border:1px solid #e2e8f0;font-weight:700;color:#2563eb">'+co.id+'</td>';
+                h+='<td style="padding:5px 8px;border:1px solid #e2e8f0;font-weight:700">'+allPOs[pi]+'</td>';
+                h+='<td style="padding:5px 8px;border:1px solid #e2e8f0;color:'+(v===3?'#059669':v===2?'#d97706':'#2563eb')+'">'+str+'</td>';
+                h+='<td style="padding:5px 8px;border:1px solid #e2e8f0">'+(just||'<em style="color:#94a3b8">Not provided</em>')+'</td>';
+                h+='</tr>';
+              });
+            });
+            h+='</tbody></table>';
+          }
+          return h;
+        }
+
+        // &#9472;&#9472; Generate Tab 6 content: CO Hours with chart summary &#9472;&#9472;
+        function buildTab6(){
+          let h='';
+          h+='<h3 style="color:#2563eb;font-size:14px;margin:0 0 10px;border-bottom:1px solid #e2e8f0;padding-bottom:6px">CO Teaching Hours</h3>';
+          h+='<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:12px">';
+          h+='<thead><tr style="background:#1e40af;color:#fff"><th style="padding:7px;border:1px solid #93c5fd">CO</th><th style="padding:7px;border:1px solid #93c5fd;text-align:left">Outcome</th>';
+          (s.hourCols||[]).forEach(function(c){ h+='<th style="padding:7px;border:1px solid #93c5fd;text-align:center">'+c+'</th>'; });
+          h+='<th style="padding:7px;border:1px solid #93c5fd;text-align:center">Total</th></tr></thead><tbody>';
+          s.cos.forEach(function(co,ci){
+            const hrs=(s.coHours||[[]])[ci]||[];
+            const total=hrs.reduce(function(a,b){return a+b;},0);
+            h+='<tr style="background:'+(ci%2?'#f0f7ff':'#fff')+'">';
+            h+='<td style="padding:6px 8px;border:1px solid #e2e8f0;font-weight:800;color:#2563eb">'+co.id+'</td>';
+            h+='<td style="padding:6px 8px;border:1px solid #e2e8f0;font-size:10px">'+co.outcome.substring(0,60)+'...</td>';
+            hrs.forEach(function(v){ h+='<td style="padding:6px;border:1px solid #e2e8f0;text-align:center;font-weight:600">'+v+'</td>'; });
+            h+='<td style="padding:6px;border:1px solid #e2e8f0;text-align:center;font-weight:800;color:#059669">'+total+'</td>';
+            h+='</tr>';
+          });
+          // Total row
+          h+='<tr style="background:#dbeafe;font-weight:700"><td colspan="2" style="padding:6px 8px;border:1px solid #bfdbfe;text-align:right;color:#1d4ed8">Total</td>';
+          (s.hourCols||[]).forEach(function(_,hi){
+            const t=s.cos.reduce(function(a,_,ci){return a+((s.coHours||[[]])[ci]||[])[hi]||0;},0);
+            h+='<td style="padding:6px;border:1px solid #bfdbfe;text-align:center">'+t+'</td>';
+          });
+          const grand=s.cos.reduce(function(a,_,ci){return a+((s.coHours||[[]])[ci]||[]).reduce(function(x,y){return x+y;},0);},0);
+          h+='<td style="padding:6px;border:1px solid #bfdbfe;text-align:center;font-weight:800">'+grand+'</td></tr>';
+          h+='</tbody></table>';
+          return h;
+        }
+
+        // &#9472;&#9472; Generate Tab 9: CIA Q-Papers &#9472;&#9472;
+        function buildTab9(){
+          const cieTests=s.assessments.filter(function(a){return a.type==='CIE';});
+          if(!cieTests.length) return '<p style="color:#94a3b8;font-size:12px">No CIE assessments defined.</p>';
+          let h='';
+          cieTests.forEach(function(test){
+            const tIdx=s.assessments.indexOf(test);
+            const qmap=s.coqMaps&&s.coqMaps[tIdx]?s.coqMaps[tIdx]:[];
+            h+='<h3 style="color:#2563eb;font-size:13px;margin:0 0 8px;padding:6px 10px;background:#dbeafe;border-radius:6px">'+test.name+' &#8212; Q-Paper (Max: '+test.max+')</h3>';
+            if(!qmap.length){h+='<p style="font-size:11px;color:#94a3b8;margin-bottom:12px">No questions mapped.</p>';return;}
+            h+='<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:14px">';
+            h+='<thead><tr style="background:#1e40af;color:#fff"><th style="padding:6px;border:1px solid #93c5fd;width:30px">Q</th><th style="padding:6px;border:1px solid #93c5fd;text-align:left">Description</th><th style="padding:6px;border:1px solid #93c5fd;width:40px">Marks</th><th style="padding:6px;border:1px solid #93c5fd;width:50px">CO(s)</th><th style="padding:6px;border:1px solid #93c5fd;width:80px">Bloom\'s</th><th style="padding:6px;border:1px solid #93c5fd;text-align:left">PI</th></tr></thead><tbody>';
+            qmap.forEach(function(q,qi){
+              if(!q) return;
+              h+='<tr style="background:'+(qi%2?'#f0f7ff':'#fff')+'">';
+              h+='<td style="padding:5px;border:1px solid #e2e8f0;text-align:center;font-weight:700">Q'+(qi+1)+'</td>';
+              h+='<td style="padding:5px;border:1px solid #e2e8f0">'+(q.desc||'&#8212;')+'</td>';
+              h+='<td style="padding:5px;border:1px solid #e2e8f0;text-align:center;font-weight:700">'+( q.marks||'&#8212;')+'</td>';
+              h+='<td style="padding:5px;border:1px solid #e2e8f0;text-align:center">'+((q.cos||[]).map(function(ci){return s.cos[ci]?s.cos[ci].id:'CO'+(ci+1);}).join(', '))+'</td>';
+              h+='<td style="padding:5px;border:1px solid #e2e8f0;text-align:center">'+(q.bloom||'&#8212;')+'</td>';
+              h+='<td style="padding:5px;border:1px solid #e2e8f0;font-size:10px;color:#475569">'+(q.pi||'&#8212;')+'</td>';
+              h+='</tr>';
+            });
+            h+='</tbody></table>';
+          });
+          return h;
+        }
+
+        // &#9472;&#9472; Generate Tab 10: Marklist (CIE + ESE + Lab) &#9472;&#9472;
+        function buildTab10(){
+          let h='';
+          const types=[{key:'CIE',label:'CIE (Continuous Internal Evaluation)'},
+                       {key:'ESE',label:'ESE (End Semester Exam)'},
+                       {key:'Lab',label:'Lab Assessment'}];
+          types.forEach(function(t){
+            const assessList=s.assessments.filter(function(a){return a.type===t.key;});
+            if(!assessList.length) return;
+            h+='<h3 style="color:#2563eb;font-size:13px;margin:0 0 8px;padding:6px 10px;background:#dbeafe;border-radius:6px">'+t.label+'</h3>';
+            if(!s.students.length){h+='<p style="font-size:11px;color:#94a3b8;margin-bottom:12px">No students added.</p>';return;}
+            h+='<div style="overflow-x:auto;margin-bottom:16px"><table style="width:100%;border-collapse:collapse;font-size:10px">';
+            h+='<thead><tr style="background:#1e40af;color:#fff">';
+            h+='<th style="padding:5px;border:1px solid #93c5fd;width:30px">#</th>';
+            h+='<th style="padding:5px;border:1px solid #93c5fd;text-align:left;min-width:80px">Roll No</th>';
+            h+='<th style="padding:5px;border:1px solid #93c5fd;text-align:left;min-width:100px">Name</th>';
+            assessList.forEach(function(a){ h+='<th style="padding:5px;border:1px solid #93c5fd;min-width:45px">'+a.name+'<div style="font-size:9px;font-weight:400">/'+a.max+'</div></th>'; });
+            h+='<th style="padding:5px;border:1px solid #93c5fd;min-width:45px">Total</th>';
+            h+='<th style="padding:5px;border:1px solid #93c5fd;min-width:45px">%</th>';
+            h+='</tr></thead><tbody>';
+            s.students.forEach(function(st,si){
+              const mks=assessList.map(function(a){return s.marks&&s.marks[a.id]?( s.marks[a.id][st.roll]||0):0;});
+              const maxT=assessList.reduce(function(a,b){return a+b.max;},0);
+              const total=mks.reduce(function(a,b){return a+b;},0);
+              const pct=maxT?((total/maxT)*100).toFixed(1):0;
+              h+='<tr style="background:'+(si%2?'#f8fafc':'#fff')+'">';
+              h+='<td style="padding:4px;border:1px solid #e2e8f0;text-align:center;color:#94a3b8">'+(si+1)+'</td>';
+              h+='<td style="padding:4px;border:1px solid #e2e8f0;font-family:monospace;font-size:10px">'+st.roll+'</td>';
+              h+='<td style="padding:4px;border:1px solid #e2e8f0">'+st.name+'</td>';
+              mks.forEach(function(m){ h+='<td style="padding:4px;border:1px solid #e2e8f0;text-align:center;font-weight:600">'+m+'</td>'; });
+              h+='<td style="padding:4px;border:1px solid #e2e8f0;text-align:center;font-weight:800;color:#1d4ed8">'+total+'</td>';
+              h+='<td style="padding:4px;border:1px solid #e2e8f0;text-align:center;color:'+(+pct>=60?'#059669':'#dc2626')+'">'+pct+'%</td>';
+              h+='</tr>';
+            });
+            h+='</tbody></table></div>';
+          });
+          return h;
+        }
+
+
+    const sectionPages=PAGES.slice(1).map(function(p,rawIdx){
+          const i=rawIdx+1; // actual page index
+          const hdr=secHeader(p.label,p.section,s.code,s.name,s.ay);
+          let content='';
+          if(i===2)       content=buildTab2();
+          else if(i===4)  content=buildTab4();
+          else if(i===6)  content=buildTab6();
+          else if(i===9)  content=buildTab9();
+          else if(i===10) content=buildTab10();
+          else {
+            const el=document.getElementById(p.id);
+            content=el?sanitizePage(el):'';
+          }
+          return '<div style="page-break-before:always;padding:28px 36px">'+hdr+content+'</div>';
+        }).join('');
 
     const allCSS=Array.from(document.styleSheets).map(function(ss){
       try{return Array.from(ss.cssRules).map(function(r){return r.cssText;}).join('\n');}
