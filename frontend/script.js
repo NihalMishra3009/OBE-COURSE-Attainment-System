@@ -3289,8 +3289,7 @@ function generateFullReport(){
             h+='<th style="padding:7px;border:1px solid #93c5fd;width:48px">Hours</th>';
             h+='</tr></thead><tbody>';
             s.syllabusModules.forEach(function(mod,mi){
-              const topicLines=(mod.topics||'').split('
-').filter(function(l){return l.trim();});
+              const topicLines=(mod.topics||'').split('\n').filter(function(l){return l.trim();});
               h+='<tr style="background:'+(mi%2?'#f0f7ff':'#fff')+';vertical-align:top">';
               h+='<td style="padding:6px;border:1px solid #bfdbfe;text-align:center;font-weight:800;color:#1d4ed8">'+mod.no+'</td>';
               h+='<td style="padding:6px;border:1px solid #bfdbfe;font-weight:600">'+mod.title+'</td>';
