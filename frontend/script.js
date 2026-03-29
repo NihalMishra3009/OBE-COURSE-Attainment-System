@@ -3644,7 +3644,13 @@ let toastTimer;
 function showToast(msg,type){
   const t=document.getElementById('toast');
   const icon=type==='success'?String.fromCharCode(9989):type==='error'?String.fromCharCode(10060):String.fromCharCode(8505);
-  const cleanMsg=String(msg||'').replace(/&#(\d+);/g,function(_,n){return String.fromCharCode(parseInt(n,10));});
+  let cleanMsg=String(msg||'');
+  // Decode numeric entities (handles both normal and escaped ampersand)
+  cleanMsg=cleanMsg
+    .replace(/&amp;#x([0-9a-fA-F]+);/g,function(_,n){return String.fromCharCode(parseInt(n,16));})
+    .replace(/&#x([0-9a-fA-F]+);/g,function(_,n){return String.fromCharCode(parseInt(n,16));})
+    .replace(/&amp;#(\d+);/g,function(_,n){return String.fromCharCode(parseInt(n,10));})
+    .replace(/&#(\d+);/g,function(_,n){return String.fromCharCode(parseInt(n,10));});
   t.textContent=icon+' '+cleanMsg;
   t.className='show '+(type||'success');
   clearTimeout(toastTimer);
