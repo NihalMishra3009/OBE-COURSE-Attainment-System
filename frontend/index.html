@@ -16,14 +16,20 @@
 <div id="loginPage">
   <div class="login-card">
     <div class="login-logo">
-      <img class="login-logo-img" src="SIGCE LOGO.jpeg" alt="SIGCE Logo">
-      <h1>Smt. Indira Gandhi College of Engineering</h1>
-      <p>OBE Attainment System</p>
+      <div class="badge">NBA</div>
+      <h1>OBE Attainment System</h1>
+      <p>National Board of Accreditation — Course File Manager</p>
     </div>
     <div class="login-tabs">
       <button class="login-tab active" onclick="switchLoginRole('admin')">Admin</button>
       <button class="login-tab" onclick="switchLoginRole('head')">Head</button>
       <button class="login-tab" onclick="switchLoginRole('faculty')">Faculty</button>
+    </div>
+    <div class="demo-accounts">
+      <strong>🔑 Demo Credentials</strong>
+      <div class="demo-row"><span>Admin</span><span><b>admin</b> / admin123</span></div>
+      <div class="demo-row"><span>Head</span><span><b>head</b> / head123</span></div>
+      <div class="demo-row"><span>Faculty</span><span><b>faculty1</b> / pass123</span></div>
     </div>
     <div class="form-field">
       <label>Username</label>
@@ -53,8 +59,8 @@
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <div class="sidebar-logo">
-          <img class="sidebar-logo-img" src="SIGCE LOGO.jpeg" alt="SIGCE Logo">
-          <div><h2>Smt. Indira Gandhi College of Engineering</h2><p>OBE Attainment System</p></div>
+          <div class="badge">NBA</div>
+          <div><h2>OBE System</h2><p>Attainment Calculator</p></div>
         </div>
       </div>
       <div class="sidebar-user">
@@ -86,7 +92,6 @@
           </div>
         </div>
         <div class="topbar-actions">
-          <button class="btn btn-sm btn-outline" onclick="manualSave()">Save</button>
           <button class="btn btn-sm btn-gold" onclick="generateFullReport()">📄 Full Report</button>
           <button class="btn btn-sm btn-success" onclick="exportAllExcel()">📊 Excel Export</button>
           <button class="btn btn-sm btn-purple" onclick="calculateAll()">⚡ Calculate All</button>
@@ -110,7 +115,8 @@
 
 <!-- TOAST -->
 <div id="toast">✓ Saved</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>`r`n<script src="script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="script.js"></script>
 </html>
 
 
