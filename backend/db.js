@@ -38,7 +38,7 @@ export const pool = new Pool({
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const schemaPath = path.resolve(__dirname, "schema.sql");
+const schemaPath = path.resolve(__dirname, "..", "database", "schema.sql");
 
 export async function ensureSchema(){
   const sql = fs.readFileSync(schemaPath, "utf8");

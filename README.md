@@ -9,6 +9,7 @@ A full-stack web app for NBA OBE course file creation and attainment calculation
 
 ## Project Structure
 ```
+database/   # Schema + database bootstrap
 backend/    # Express API + DB access
 frontend/   # Static UI (HTML/CSS/JS)
 ```
@@ -20,6 +21,7 @@ frontend/   # Static UI (HTML/CSS/JS)
    ```
 2. Configure env:
    - Copy `backend/.env.example` to `backend/.env` and update values.
+   - If you are using a separate frontend host, also set `frontend/config.js` to your backend URL.
 
 3. Install and init:
    ```bash
@@ -41,15 +43,6 @@ frontend/   # Static UI (HTML/CSS/JS)
 - The frontend auto-saves subject changes to the backend.
 - `backend/.env` is ignored by git.
 ## Deploying
-### Frontend (Cloudflare Pages)
-- Framework preset: `None`
-- Build command: (empty)
-- Build output directory: `frontend`
-- Set backend URL in `frontend/config.js`:
-  ```js
-  window.__API_BASE = "https://your-service.up.railway.app";
-  ```
-
 ### Backend (Railway)
 - Set environment variables:
   - `DATABASE_URL` = Supabase Postgres connection string
@@ -59,3 +52,7 @@ frontend/   # Static UI (HTML/CSS/JS)
 ### Database (Supabase)
 - Use the Supabase **Postgres** connection string.
 - Ensure it includes `sslmode=require` (Supabase provides this by default).
+
+### Frontend
+- If the frontend is served by the backend, leave `frontend/config.js` empty.
+- If the frontend is hosted separately, point `frontend/config.js` at the deployed backend URL.

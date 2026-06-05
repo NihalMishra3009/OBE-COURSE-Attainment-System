@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "init-db": "node scripts/init-db.js"
+    "init-db": "node ../database/init-db.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
