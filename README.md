@@ -47,7 +47,7 @@ frontend/   # Static UI (HTML/CSS/JS)
 - Set environment variables:
   - `DATABASE_URL` = your Postgres connection string
   - `JWT_SECRET` = any strong secret
-  - `CORS_ORIGIN` = your Cloudflare Pages URL
+  - `CORS_ORIGIN` = your Netlify URL
 - You can start from [`backend/.env.railway.example`](./backend/.env.railway.example).
 
 ### Database (Supabase)
