@@ -45,9 +45,10 @@ frontend/   # Static UI (HTML/CSS/JS)
 ## Deploying
 ### Backend (Railway)
 - Set environment variables:
-  - `DATABASE_URL` = Supabase Postgres connection string
+  - `DATABASE_URL` = your Postgres connection string
   - `JWT_SECRET` = any strong secret
-  - `CORS_ORIGIN` = your Cloudflare Pages URL (e.g. https://your-site.pages.dev)
+  - `CORS_ORIGIN` = your Cloudflare Pages URL
+- You can start from [`backend/.env.railway.example`](./backend/.env.railway.example).
 
 ### Database (Supabase)
 - Use the Supabase **Postgres** connection string.
