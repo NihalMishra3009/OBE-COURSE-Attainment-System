@@ -204,6 +204,7 @@ app.delete("/api/subjects/:id", auth, async (req,res)=>{
 });
 
 app.get("/health", (req,res)=>res.json({ok:true}));
+app.get("/", (req,res)=>res.json({ok:true, service:"obe-course-attainment-system-backend"}));
 app.get("/health/db", async (req,res)=>{
   try{
     await pool.query("SELECT 1");

@@ -38,10 +38,17 @@ export const pool = new Pool({
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-// Railway runs the backend files from the app root, so the schema lives beside backend files in /app/database.
-const schemaPath = path.resolve(__dirname, "database", "schema.sql");
+
+function findSchemaPath(){
+  const candidates = [
+    path.resolve(__dirname, "database", "schema.sql"),
+    path.resolve(__dirname, "..", "database", "schema.sql"),
+    path.resolve(process.cwd(), "database", "schema.sql"),
+  ];
+  return candidates.find((p) => fs.existsSync(p)) || candidates[0];
+}
 
 export async function ensureSchema(){
-  const sql = fs.readFileSync(schemaPath, "utf8");
+  const sql = fs.readFileSync(findSchemaPath(), "utf8");
   await pool.query(sql);
 }
