@@ -36,13 +36,21 @@ app.use(express.static(FRONTEND_DIR));
 
 const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
 
+// Track if schema and users are initialized to avoid repeated DB queries on every login
+let schemaInitialized = false;
+let defaultUsersInitialized = false;
+
 function signToken(user){
   return jwt.sign({username: user.username, role: user.role}, JWT_SECRET, {expiresIn: "7d"});
 }
 
 async function ensureDefaultUsers(){
+  if(defaultUsersInitialized) return;
   const {rows} = await pool.query("SELECT COUNT(*)::int AS cnt FROM users");
-  if(rows[0].cnt > 0) return;
+  if(rows[0].cnt > 0) {
+    defaultUsersInitialized = true;
+    return;
+  }
   const defaults = [
     {username:"admin", password:"admin123", role:"admin", name:"Admin User", dept:"Computer Engineering"},
     {username:"head", password:"head123", role:"head", name:"Head of Dept", dept:"Computer Engineering"},
@@ -55,6 +63,7 @@ async function ensureDefaultUsers(){
       [u.username, hash, u.role, u.name, u.dept]
     );
   }
+  defaultUsersInitialized = true;
 }
 
 function auth(req,res,next){
@@ -79,8 +88,6 @@ app.post("/api/auth/login", async (req,res)=>{
   const {username,password} = req.body || {};
   if(!username || !password) return res.status(400).json({error:"Missing credentials"});
   try{
-    await ensureSchema();
-    await ensureDefaultUsers();
     const {rows} = await pool.query(
       "SELECT username, pass_hash, role, name, dept FROM users WHERE username=$1",
       [username]
