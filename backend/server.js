@@ -21,6 +21,7 @@ app.use(cors({
     if (corsOrigins.includes(origin)) return cb(null, true);
     if (origin.endsWith(".pages.dev")) return cb(null, true);
     if (origin.endsWith(".netlify.app")) return cb(null, true);
+    if (origin.endsWith(".vercel.app")) return cb(null, true);
     if (origin === "http://localhost:3000") return cb(null, true);
     return cb(new Error("Not allowed by CORS"));
   }
@@ -91,7 +92,12 @@ app.post("/api/auth/login", async (req,res)=>{
     const token = signToken(user);
     res.json({token, user:{username:user.username, role:user.role, name:user.name, dept:user.dept}});
   }catch(e){
-    console.error("Login error:", e);
+    console.error("[ERROR] Login failed:", {
+      message: e.message,
+      code: e.code,
+      stack: e.stack,
+      username: username ? "[REDACTED]" : "missing"
+    });
     res.status(500).json({error:"Login failed"});
   }
 });
