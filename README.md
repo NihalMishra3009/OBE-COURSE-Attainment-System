@@ -56,4 +56,4 @@ frontend/   # Static UI (HTML/CSS/JS)
 
 ### Frontend
 - If the frontend is served by the backend, leave `frontend/config.js` empty.
-- If the frontend is hosted separately, point `frontend/config.js` at the deployed backend URL.
+- If the frontend is hosted separately, point `frontend/config.js` at the deployed backend URL, including `https://` (for example `https://your-service.up.railway.app`).

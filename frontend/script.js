@@ -8,6 +8,13 @@ let DEPARTMENTS = [
   'Chemical Engineering','Instrumentation Engineering'
 ];
 
+function normalizeApiBase(value){
+  const raw = (value || "").trim().replace(/\/+$/, "");
+  if (!raw) return "";
+  if (/^https?:\/\//i.test(raw)) return raw;
+  return "https://" + raw;
+}
+
 // ============================================================
 //  USERS
 // ============================================================
@@ -20,7 +27,7 @@ let USERS = {
 // ============================================================
 //  API HELPERS
 // ============================================================
-let API_BASE = (window.__API_BASE || '').trim();
+let API_BASE = normalizeApiBase(window.__API_BASE || '');
 if (!API_BASE) {
   if (location.protocol === 'file:' || (location.port && location.port !== '3000')) {
     API_BASE = 'http://localhost:3000';
