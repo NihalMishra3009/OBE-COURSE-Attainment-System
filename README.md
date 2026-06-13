@@ -43,17 +43,39 @@ frontend/   # Static UI (HTML/CSS/JS)
 - The frontend auto-saves subject changes to the backend.
 - `backend/.env` is ignored by git.
 ## Deploying
+
+### Architecture
+```
+Frontend (Vercel) → Backend API (Railway) → PostgreSQL (Railway)
+```
+
 ### Backend (Railway)
-- Set environment variables:
-  - `DATABASE_URL` = your Postgres connection string
-  - `JWT_SECRET` = any strong secret
-  - `CORS_ORIGIN` = your Netlify URL
-- You can start from [`backend/.env.railway.example`](./backend/.env.railway.example).
+1. Connect your GitHub repo to Railway
+2. In Railway > Backend Service > Variables, set these environment variables:
+   - `DATABASE_URL` = PostgreSQL connection string (Railway auto-populates if linked to Postgres plugin)
+   - `JWT_SECRET` = Strong random secret (minimum 32 characters, e.g., `openssl rand -base64 32`)
+   - `CORS_ORIGIN` = Your Vercel frontend URL (e.g., `https://obe-course-attainment-system.vercel.app`)
+3. Railway will automatically detect and run the `Procfile` in the repo root
+4. Once deployed, your Railway public URL will be used by the frontend
 
-### Database (Supabase)
-- Use the Supabase **Postgres** connection string.
-- Ensure it includes `sslmode=require` (Supabase provides this by default).
+**Reference:** See [`backend/.env.railway.example`](./backend/.env.railway.example) for template values.
 
-### Frontend
-- If the frontend is served by the backend, leave `frontend/config.js` empty.
-- If the frontend is hosted separately, point `frontend/config.js` at the deployed backend URL, including `https://` (for example `https://your-service.up.railway.app`).
+### Database (Railway PostgreSQL Plugin)
+1. In Railway project, add a **PostgreSQL** plugin
+2. Link it to your Backend service (Railway auto-sets `DATABASE_URL`)
+3. Schema is auto-created on first login (embedded in backend code as fallback)
+
+### Frontend (Vercel)
+1. Connect your GitHub repo to Vercel
+2. Frontend is automatically built and served from the `frontend/` directory
+3. Configure [`frontend/config.js`](./frontend/config.js):
+   - Set `window.__API_BASE = "https://your-railway-service-url.up.railway.app"`
+4. Redeploy after config changes
+
+### Troubleshooting
+If login fails after deployment:
+1. **Check Railway logs** for actual error (schema file not found, DB connection failed, etc.)
+2. **Verify CORS_ORIGIN** in Railway matches your Vercel domain (e.g., `https://obe-course-attainment-system.vercel.app`)
+3. **Verify DATABASE_URL** is set and the Postgres plugin is linked to the backend service
+4. **Check frontend config** points to correct Railway URL with `https://`
+5. **Check JWT_SECRET** is set (if missing, tokens won't sign correctly)

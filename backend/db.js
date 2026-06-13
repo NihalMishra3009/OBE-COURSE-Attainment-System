@@ -39,16 +39,55 @@ export const pool = new Pool({
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-function findSchemaPath(){
-  const candidates = [
-    path.resolve(__dirname, "database", "schema.sql"),
-    path.resolve(__dirname, "..", "database", "schema.sql"),
-    path.resolve(process.cwd(), "database", "schema.sql"),
-  ];
-  return candidates.find((p) => fs.existsSync(p)) || candidates[0];
-}
+const embeddedSchema = `
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  username TEXT UNIQUE NOT NULL,
+  pass_hash TEXT NOT NULL,
+  role TEXT NOT NULL,
+  name TEXT NOT NULL,
+  dept TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS departments (
+  name TEXT PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS subjects (
+  id TEXT PRIMARY KEY,
+  data JSONB NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+`;
 
 export async function ensureSchema(){
-  const sql = fs.readFileSync(findSchemaPath(), "utf8");
+  // Railway deployment: files are in /app, so check multiple paths
+  // Production-safe: Always use embedded schema as fallback
+  const candidates = [
+    // Current directory relative paths (for standard dev/prod)
+    path.resolve(__dirname, "..", "database", "schema.sql"),
+    path.resolve(__dirname, "database", "schema.sql"),
+    // Project root relative (for Railway /app layout)
+    path.resolve(process.cwd(), "database", "schema.sql"),
+    path.resolve(process.cwd(), "backend", "..", "database", "schema.sql"),
+  ];
+  
+  let sql = embeddedSchema;
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      try {
+        sql = fs.readFileSync(candidate, "utf8");
+        console.log(`[DB] Loaded schema from: ${candidate}`);
+        break;
+      } catch (err) {
+        console.warn(`[DB] Warning: Could not read schema file ${candidate}: ${err.message}`);
+      }
+    }
+  }
+  
+  if (sql === embeddedSchema) {
+    console.log(`[DB] Using embedded schema (no external schema.sql found)`);
+  }
+  
   await pool.query(sql);
 }
