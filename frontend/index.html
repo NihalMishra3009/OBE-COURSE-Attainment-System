@@ -7,9 +7,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link rel="stylesheet" href="styles.css">
+<style>
+/* Splash screen */
+#splash{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(135deg,#0f172a,#0b1220);color:#fff;z-index:9999}
+#splash .logo{width:96px;height:96px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;color:#0b1220;font-weight:800;font-size:28px;margin-bottom:12px}
+#splash h1{margin:0;font-size:20px;font-weight:700}
+#splash p{margin:6px 0 0;color:rgba(255,255,255,0.85);font-size:13px}
+.splash-hidden{opacity:0;transition:opacity .6s ease}
+</style>
 <script src="config.js"></script>
 </head>
 <body>
+  <div id="splash" role="presentation" aria-hidden="false">
+    <div class="logo">NBA</div>
+    <h1>OBE Attainment System</h1>
+    <p>Course Attainment · Loading…</p>
+  </div>
 <!-- =============================================================== -->
 <!--  LOGIN PAGE                                                     -->
 <!-- =============================================================== -->
