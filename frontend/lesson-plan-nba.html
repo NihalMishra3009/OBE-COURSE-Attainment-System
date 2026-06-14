@@ -1762,8 +1762,7 @@ function removeLessonRow(type,ri){
   plan.splice(ri,1);
   renderCOPage(document.getElementById(PAGES[2].id));
 }
-function saveLessonPlan(){
-  showToast('Lesson plan saved!','success');
+async function saveLessonPlan(){
   // Persist current textarea values before saving
   document.querySelectorAll('[data-lesson-field]').forEach(function(el){
     const ri=+el.getAttribute('data-ri');
@@ -1772,6 +1771,28 @@ function saveLessonPlan(){
     const plan=lt==='theory'?sub().theoryPlan:sub().practicalPlan;
     if(plan&&plan[ri]!==undefined) plan[ri][field]=el.value;
   });
+
+  // Attempt to persist subject (lesson plans included) to backend
+  const s = sub();
+  try{
+    const token = localStorage.getItem('auth_token') || '';
+    const headers = {'Content-Type':'application/json'};
+    if(token) headers['Authorization'] = 'Bearer ' + token;
+    const res = await fetch('/api/subjects/' + encodeURIComponent(s.id || (APP && APP.currentSubjectId) || ''), {
+      method: 'PUT',
+      headers: headers,
+      body: JSON.stringify(s)
+    });
+    if(!res.ok){
+      let msg = 'Save failed';
+      try{ const j = await res.json(); if(j && j.error) msg = j.error; }catch(e){}
+      showToast(msg,'error');
+    } else {
+      showToast('Lesson plan saved!','success');
+    }
+  }catch(e){
+    showToast('Save failed: '+(e.message||e),'error');
+  }
 }
 function downloadLessonTemplate(type){
   const s=sub();
