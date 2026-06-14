@@ -262,9 +262,21 @@ function switchLoginRole(r){
   const sel=document.getElementById('loginDept');
   if(sel){sel.innerHTML=DEPARTMENTS.map(d=>'<option>'+d+'</option>').join('');}
 }
+function setLoginLoading(on){
+  const btn = document.querySelector('#loginPage .btn.btn-primary');
+  const spinner = document.getElementById('loginSpinner');
+  const user = document.getElementById('loginUser');
+  const pass = document.getElementById('loginPass');
+  const dept = document.getElementById('loginDept');
+  [user,pass,dept].forEach(e=>{ if(e) e.disabled = !!on; });
+  if(btn){ btn.disabled = !!on; if(on){ btn.dataset.oldText = btn.innerHTML; btn.innerHTML = 'Signing in'; } else { btn.innerHTML = btn.dataset.oldText || 'Sign In '; }}
+  if(spinner) spinner.style.display = on ? 'inline-block' : 'none';
+}
+
 function doLogin(){
   const u=document.getElementById('loginUser').value.trim();
   const p=document.getElementById('loginPass').value.trim();
+  setLoginLoading(true);
   apiFetch('/api/auth/login',{method:'POST',body:JSON.stringify({username:u,password:p})})
     .then(async (data)=>{
       setAuthToken(data.token);
@@ -275,7 +287,8 @@ function doLogin(){
       document.getElementById('appShell').style.display='block';
       initApp();
     })
-    .catch(err=>showLoginErr(err.message||'Login failed'));
+    .catch(err=>{ showLoginErr(err.message||'Login failed'); })
+    .finally(()=> setLoginLoading(false));
 }
 function showLoginErr(m){
   const e=document.getElementById('loginErr');
