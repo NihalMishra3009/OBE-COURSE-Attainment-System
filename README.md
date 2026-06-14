@@ -1,81 +1,63 @@
 ﻿# OBE-COURSE-Attainment-System
 
-A full-stack web app for NBA OBE course file creation and attainment calculation. The UI is a single-page frontend served by a Node/Express backend with PostgreSQL for persistence.
+A full‑stack web application to create OBE course files and calculate attainment for courses. This README consolidates tech stack, project structure, setup, running, and deployment steps.
 
 ## Tech Stack
 - Frontend: HTML, CSS, JavaScript (vanilla)
 - Backend: Node.js, Express
 - Database: PostgreSQL
+- Hosting / Deployment: Vercel (frontend) / Railway / Heroku (backend & Postgres)
+- Dev tooling: npm, dotenv
 
 ## Project Structure
-```
-database/   # Schema + database bootstrap
-backend/    # Express API + DB access
-frontend/   # Static UI (HTML/CSS/JS)
-```
+- backend/  — Express API, database access, migrations
+- frontend/ — Static SPA served from this directory
+- database/ — Schema and DB scripts
+- scripts/  — helper scripts (init, seed)
 
-## Setup
-1. Create the database:
-   ```sql
-   CREATE DATABASE nba_db;
-   ```
-2. Configure env:
-   - Copy `backend/.env.example` to `backend/.env` and update values.
-   - If you are using a separate frontend host, also set `frontend/config.js` to your backend URL.
+## How it works (high level)
+1. Frontend (SPA) calls Backend REST API for CRUD on courses, subjects, and attainment data.
+2. Backend validates requests, handles auth (JWT), and persists data to PostgreSQL.
+3. Backend exposes endpoints for reports and export (CSV/PDF).
 
-3. Install and init:
-   ```bash
+## Environment & Config
+Create and configure environment files before running:
+- backend/.env (example: backend/.env.example)
+  - DATABASE_URL=postgres://user:pass@host:port/dbname
+  - JWT_SECRET=your_jwt_secret
+  - PORT=3000
+
+## Local Setup
+1. Backend:
+   `powershell
    cd backend
    npm install
-   npm run init-db
+   cp .env.example .env   # edit values
+   npm run init-db        # creates schema + seeds
    npm start
-   ```
+   `
+2. Frontend:
+   Serve rontend/ static files (or point Vercel to this folder). If developing locally, open rontend/index.html or run a static dev server.
 
-4. Open the app:
-   - `http://localhost:3000`
+## Database
+- Use PostgreSQL.
+- Schema creation: 
+pm run init-db (backend) or run SQL in database/.
+- Backups: export using pg_dump.
 
-## Default Users
-- `admin / admin123`
-- `head / head123`
-- `faculty1 / pass123`
+## Deployment
+- Recommended: Connect GitHub repo to Railway for backend and Postgres plugin.
+  - Set DATABASE_URL, JWT_SECRET, CORS_ORIGIN in Railway env vars.
+- Frontend: Deploy to Vercel pointing to rontend/ and set window.__API_BASE to the backend URL.
+- CI: Optional GitHub Actions to run tests and build.
 
-## Notes
-- The frontend auto-saves subject changes to the backend.
-- `backend/.env` is ignored by git.
-## Deploying
+## Troubleshooting
+- 500 errors: check backend logs, DB connectivity, and migrations.
+- CORS: ensure frontend origin matches CORS_ORIGIN.
 
-### Architecture
-```
-Frontend (Vercel) → Backend API (Railway) → PostgreSQL (Railway)
-```
+## Contributing
+- Fork, create a branch, run tests, and open a PR describing changes.
 
-### Backend (Railway)
-1. Connect your GitHub repo to Railway
-2. In Railway > Backend Service > Variables, set these environment variables:
-   - `DATABASE_URL` = PostgreSQL connection string (Railway auto-populates if linked to Postgres plugin)
-   - `JWT_SECRET` = Strong random secret (minimum 32 characters, e.g., `openssl rand -base64 32`)
-   - `CORS_ORIGIN` = Your Vercel frontend URL (e.g., `https://obe-course-attainment-system.vercel.app`)
-3. Railway will automatically detect and run the `Procfile` in the repo root
-4. Once deployed, your Railway public URL will be used by the frontend
+## Contact
+Project maintainer: see repo owner on GitHub
 
-**Reference:** See [`backend/.env.railway.example`](./backend/.env.railway.example) for template values.
-
-### Database (Railway PostgreSQL Plugin)
-1. In Railway project, add a **PostgreSQL** plugin
-2. Link it to your Backend service (Railway auto-sets `DATABASE_URL`)
-3. Schema is auto-created on first login (embedded in backend code as fallback)
-
-### Frontend (Vercel)
-1. Connect your GitHub repo to Vercel
-2. Frontend is automatically built and served from the `frontend/` directory
-3. Configure [`frontend/config.js`](./frontend/config.js):
-   - Set `window.__API_BASE = "https://your-railway-service-url.up.railway.app"`
-4. Redeploy after config changes
-
-### Troubleshooting
-If login fails after deployment:
-1. **Check Railway logs** for actual error (schema file not found, DB connection failed, etc.)
-2. **Verify CORS_ORIGIN** in Railway matches your Vercel domain (e.g., `https://obe-course-attainment-system.vercel.app`)
-3. **Verify DATABASE_URL** is set and the Postgres plugin is linked to the backend service
-4. **Check frontend config** points to correct Railway URL with `https://`
-5. **Check JWT_SECRET** is set (if missing, tokens won't sign correctly)
