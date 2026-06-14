@@ -40,6 +40,20 @@ function warmupBackend(){
   fetch(API_BASE + '/health/db').catch(()=>{});
 }
 warmupBackend();
+
+// Splash screen handling
+(function(){
+  function hideSplash(){
+    const s = document.getElementById('splash');
+    if(!s) return;
+    s.classList.add('splash-hidden');
+    setTimeout(()=>{ if(s && s.parentNode) s.parentNode.removeChild(s); }, 700);
+  }
+  window.addEventListener('load', ()=>{ setTimeout(hideSplash, 1200); });
+  // allow early dismissal via click or key
+  document.addEventListener('click', function onClick(){ hideSplash(); document.removeEventListener('click', onClick); });
+  document.addEventListener('keydown', function onKey(){ hideSplash(); document.removeEventListener('keydown', onKey); });
+})();
 setInterval(warmupBackend, 4 * 60 * 1000);
 let AUTH_TOKEN = localStorage.getItem('auth_token') || '';
 
