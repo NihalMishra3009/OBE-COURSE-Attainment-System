@@ -17,3 +17,7 @@ Thumbs.db
 !.dev.vars.example
 .env*
 !.env.example
+dist/
+build/
+__pycache__/
+*.log
