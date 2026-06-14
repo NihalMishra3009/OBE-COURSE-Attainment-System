@@ -3130,7 +3130,7 @@ function printCertificate(){
   const cert=document.getElementById('certPrint')?.innerHTML;
   if(!cert){showToast('Navigate to Certificate page first','error');return;}
   const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html><head><title>OBE Certificate</title>`
+  w.document.write(`<!DOCTYPE html><html><head><title>OBE Certificate</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>body{font-family:'Plus Jakarta Sans',sans-serif;background:#fff;padding:40px}</style>
     </head><body>${cert}<script>window.onload=()=>window.print()<\/script></body></html>`);
