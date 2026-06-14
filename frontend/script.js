@@ -3706,4 +3706,7 @@ function showToast(msg,type){
 }
 
 
-\nfunction renderLessonPlan(el){\n  el.innerHTML = "<div style=\"height:calc(100vh - 160px)\"><iframe src=\"lesson-plan-nba.html\" style=\"width:100%;height:100%;border:0\"></iframe></div>";\n}\n
+function renderLessonPlan(el){
+  el.innerHTML = '<div style="height:calc(100vh - 160px)"><iframe src="lesson-plan-nba.html" style="width:100%;height:100%;border:0"></iframe></div>';
+}
+
