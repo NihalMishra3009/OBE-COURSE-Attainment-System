@@ -14,6 +14,10 @@
 #splash h1{margin:0;font-size:20px;font-weight:700}
 #splash p{margin:6px 0 0;color:rgba(255,255,255,0.85);font-size:13px}
 .splash-hidden{opacity:0;transition:opacity .6s ease}
+
+/* Login spinner */
+.spinner{display:none;width:18px;height:18px;border-radius:50%;border:3px solid rgba(0,0,0,0.12);border-top-color:#2563eb;animation:spin 1s linear infinite;vertical-align:middle;margin-left:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 <script src="config.js"></script>
 </head>
@@ -58,7 +62,7 @@
         <option>Loading...</option>
       </select>
     </div>
-    <button class="btn btn-primary" onclick="doLogin()">Sign In →</button>
+    <button class="btn btn-primary" onclick="doLogin()">Sign In →</button><span id="loginSpinner" class="spinner" aria-hidden="true"></span>
     <p id="loginErr" style="color:var(--red);font-size:12px;margin-top:10px;text-align:center;display:none"></p>
   </div>
 </div>
