@@ -333,12 +333,6 @@ function buildSideNav(){
     div.onclick=()=>navigateTo(i);
     nav.appendChild(div);
   });
-    // Extra Lessons page (opens standalone lesson plan page)
-    const lessonDiv = document.createElement('div');
-    lessonDiv.className = 'nav-item';
-    lessonDiv.innerHTML = '<span class="nav-icon">📚</span><span>Lesson Plan</span>';
-    lessonDiv.onclick = ()=> window.open('lesson-plan-nba.html', '_blank');
-    nav.appendChild(lessonDiv);
 }
 
 function getVisibleSubjects(){
@@ -396,7 +390,7 @@ function renderPage(idx){
     renderLearnerAnalysis, renderMonitoring, renderPOHours,
     renderCOAttainment, renderCOChart, renderCOQuality,
     renderPOAttainment, renderPOChart, renderPOQuality,
-    renderPSOQuality, renderAnnexureWK, renderCertificate
+    renderPSOQuality, renderAnnexureWK, renderCertificate, renderLessonPlan
   ];
   if(fns[idx]) fns[idx](el);
   // Refresh charts for relevant tabs after render
@@ -3692,3 +3686,4 @@ function showToast(msg,type){
 }
 
 
+\nfunction renderLessonPlan(el){\n  el.innerHTML = "<div style=\"height:calc(100vh - 160px)\"><iframe src=\"lesson-plan-nba.html\" style=\"width:100%;height:100%;border:0\"></iframe></div>";\n}\n
