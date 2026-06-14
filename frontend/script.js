@@ -223,6 +223,13 @@ const APP = {
   }
 };
 
+// Ensure lesson plan arrays exist for all subjects
+Object.keys(APP.subjects).forEach(id => {
+  const s = APP.subjects[id];
+  if (!s.theoryPlan) s.theoryPlan = [];
+  if (!s.practicalPlan) s.practicalPlan = [];
+});
+
 // ============================================================
 //  AUTH
 // ============================================================
