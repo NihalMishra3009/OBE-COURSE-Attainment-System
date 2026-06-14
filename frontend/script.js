@@ -55,6 +55,26 @@ warmupBackend();
   document.addEventListener('keydown', function onKey(){ hideSplash(); document.removeEventListener('keydown', onKey); });
 })();
 setInterval(warmupBackend, 4 * 60 * 1000);
+
+// Splash screen handling (ensure splash is removed even if load event doesn't fire)
+(function(){
+  try {
+    function hideSplash(){
+      try{
+        const s = document.getElementById('splash');
+        if(!s) return;
+        s.classList.add('splash-hidden');
+        setTimeout(()=>{ if(s && s.parentNode) s.parentNode.removeChild(s); }, 700);
+      }catch(e){ console.error('hideSplash error', e); }
+    }
+    // Fallback: ensure splash removed after 6s even if load event doesn't fire
+    const fallbackTimer = setTimeout(hideSplash, 6000);
+    window.addEventListener('load', ()=>{ clearTimeout(fallbackTimer); try{ setTimeout(hideSplash, 1200); }catch(e){ hideSplash(); } });
+    // allow early dismissal via click or key
+    document.addEventListener('click', function onClick(){ try{ hideSplash(); }catch(e){} document.removeEventListener('click', onClick); });
+    document.addEventListener('keydown', function onKey(){ try{ hideSplash(); }catch(e){} document.removeEventListener('keydown', onKey); });
+  } catch(e){ console.error('Splash init failed', e); setTimeout(()=>{ const s=document.getElementById('splash'); if(s && s.parentNode) s.parentNode.removeChild(s); }, 2000); }
+})();
 let AUTH_TOKEN = localStorage.getItem('auth_token') || '';
 
 function setAuthToken(t){
