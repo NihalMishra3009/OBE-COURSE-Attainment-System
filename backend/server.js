@@ -19,10 +19,8 @@ app.use(cors({
     if (!origin) return cb(null, true);
     if (allowAll) return cb(null, true);
     if (corsOrigins.includes(origin)) return cb(null, true);
-    if (origin.endsWith(".pages.dev")) return cb(null, true);
-    if (origin.endsWith(".netlify.app")) return cb(null, true);
-    if (origin.endsWith(".vercel.app")) return cb(null, true);
     if (origin === "http://localhost:3000") return cb(null, true);
+    if (origin === "http://127.0.0.1:3000") return cb(null, true);
     return cb(new Error("Not allowed by CORS"));
   }
 }));

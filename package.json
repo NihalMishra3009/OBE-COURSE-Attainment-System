@@ -5,11 +5,6 @@
     "install:backend": "npm --prefix backend install",
     "postinstall": "npm --prefix backend install",
     "init-db": "npm --prefix backend run init-db",
-    "start": "npm --prefix backend start",
-    "deploy": "wrangler deploy",
-    "preview": "wrangler dev"
-  },
-  "devDependencies": {
-    "wrangler": "^4.98.0"
+    "start": "npm --prefix backend start"
   }
 }

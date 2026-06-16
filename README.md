@@ -1,63 +1,62 @@
-﻿# OBE-COURSE-Attainment-System
+# OBE-COURSE-Attainment-System
 
-A full‑stack web application to create OBE course files and calculate attainment for courses. This README consolidates tech stack, project structure, setup, running, and deployment steps.
+A full-stack web application to create OBE course files and calculate attainment for courses.
 
 ## Tech Stack
 - Frontend: HTML, CSS, JavaScript (vanilla)
 - Backend: Node.js, Express
 - Database: PostgreSQL
-- Hosting / Deployment: Vercel (frontend) / Railway / Heroku (backend & Postgres)
 - Dev tooling: npm, dotenv
 
 ## Project Structure
-- backend/  — Express API, database access, migrations
-- frontend/ — Static SPA served from this directory
-- database/ — Schema and DB scripts
-- scripts/  — helper scripts (init, seed)
+- `backend/` - Express API, database connection, and server startup
+- `frontend/` - Static SPA, browser config, styles, and media
+- `database/` - Schema and initialization scripts
+- `index.html` - Root redirect into the frontend app
 
-## How it works (high level)
-1. Frontend (SPA) calls Backend REST API for CRUD on courses, subjects, and attainment data.
-2. Backend validates requests, handles auth (JWT), and persists data to PostgreSQL.
-3. Backend exposes endpoints for reports and export (CSV/PDF).
+### Backend
+- `backend/server.js` - HTTP API and app bootstrap
+- `backend/db.js` - PostgreSQL pool and schema bootstrap
+- `backend/.env.example` - Local environment template
+
+### Frontend
+- `frontend/index.html` - Main UI shell
+- `frontend/script.js` - Browser logic and app state
+- `frontend/styles.css` - Styling
+- `frontend/config.js` - API base URL for the browser
+
+## How It Works
+1. The frontend calls the backend REST API for CRUD on courses, subjects, and attainment data.
+2. The backend validates requests, handles auth with JWT, and persists data to PostgreSQL.
+3. The backend exposes endpoints for reports and export features.
 
 ## Environment & Config
 Create and configure environment files before running:
-- backend/.env (example: backend/.env.example)
-  - DATABASE_URL=postgres://user:pass@host:port/dbname
-  - JWT_SECRET=your_jwt_secret
-  - PORT=3000
+- `backend/.env` from `backend/.env.example`
+  - `DATABASE_URL=postgres://user:pass@host:port/dbname`
+  - `JWT_SECRET=your_jwt_secret`
+  - `PORT=3000`
 
 ## Local Setup
 1. Backend:
-   `powershell
+   ```powershell
    cd backend
    npm install
-   cp .env.example .env   # edit values
-   npm run init-db        # creates schema + seeds
+   npm run init-db
    npm start
-   `
+   ```
 2. Frontend:
-   Serve rontend/ static files (or point Vercel to this folder). If developing locally, open rontend/index.html or run a static dev server.
+   Serve `frontend/` statically, or open `frontend/index.html` in a browser.
 
 ## Database
 - Use PostgreSQL.
-- Schema creation: 
-pm run init-db (backend) or run SQL in database/.
-- Backups: export using pg_dump.
+- Create schema with `npm run init-db` from `backend/`.
 
 ## Deployment
-- Recommended: Connect GitHub repo to Railway for backend and Postgres plugin.
-  - Set DATABASE_URL, JWT_SECRET, CORS_ORIGIN in Railway env vars.
-- Frontend: Deploy to Vercel pointing to rontend/ and set window.__API_BASE to the backend URL.
-- CI: Optional GitHub Actions to run tests and build.
+- This repo is configured for local or self-hosted use.
+- Set `DATABASE_URL`, `JWT_SECRET`, and optionally `CORS_ORIGIN` in `backend/.env`.
+- Set `window.__API_BASE` in `frontend/config.js` if your API is not running on `http://localhost:3000`.
 
 ## Troubleshooting
-- 500 errors: check backend logs, DB connectivity, and migrations.
-- CORS: ensure frontend origin matches CORS_ORIGIN.
-
-## Contributing
-- Fork, create a branch, run tests, and open a PR describing changes.
-
-## Contact
-Project maintainer: see repo owner on GitHub
-
+- `500` errors: check backend logs, DB connectivity, and migrations.
+- CORS: ensure the frontend origin matches `CORS_ORIGIN`.
