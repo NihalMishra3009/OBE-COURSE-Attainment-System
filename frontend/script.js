@@ -394,7 +394,7 @@ function buildSubjectSelector(){
   getVisibleSubjects().forEach(s=>{
     const opt=document.createElement('option');
     opt.value=s.id;
-    opt.textContent=s.code+' &#8212; '+s.name.substring(0,22);
+    opt.textContent=s.code+' — '+s.name.substring(0,22);
     sel.appendChild(opt);
   });
 }
@@ -419,7 +419,7 @@ function navigateTo(idx){
   document.querySelectorAll('.page').forEach((p,i)=>p.classList.toggle('active',i===idx));
   document.getElementById('topbarTitle').textContent=PAGES[idx].section;
   const s=sub();
-  document.getElementById('topbarSub').textContent=s?(s.code+' &#8212; '+s.name):'';
+  document.getElementById('topbarSub').textContent=s?(s.code+' — '+s.name):'';
   renderPage(idx);
 }
 
@@ -435,7 +435,12 @@ function renderPage(idx){
     renderPOAttainment, renderPOChart, renderPOQuality,
     renderPSOQuality, renderAnnexureWK, renderCertificate, renderLessonPlan
   ];
-  if(fns[idx]) fns[idx](el);
+  try{
+    if(fns[idx]) fns[idx](el);
+  }catch(err){
+    console.error('Render failed for page', idx, err);
+    el.innerHTML='<div class="card"><div class="card-body" style="padding:28px;color:var(--red)"><strong>Section failed to load.</strong><div style="margin-top:8px;color:var(--text2);font-size:13px">Please refresh the page or open the browser console to see the error.</div><pre style="margin-top:12px;white-space:pre-wrap;background:#fff5f5;border:1px solid #fecaca;padding:12px;border-radius:8px;overflow:auto">'+String(err && err.message ? err.message : err)+'</pre></div></div>';
+  }
   // Refresh charts for relevant tabs after render
   if(idx===5) setTimeout(renderDeliveryChart,50);
   if(idx===6) setTimeout(renderCOHoursChart,50);
@@ -788,7 +793,7 @@ function saveCourseInfo(){
   if(!s.attainLvlPct) s.attainLvlPct={};
   [1,2,3].forEach(l=>{const el2=document.getElementById('lvl_pct_'+l);if(el2)s.attainLvlPct[l]=+el2.value;});
   buildSubjectSelector();syncSubjectSelector();
-  document.getElementById('topbarSub').textContent=s.code+' &#8212; '+s.name;
+  document.getElementById('topbarSub').textContent=s.code+' — '+s.name;
   showToast('Configuration saved & reflected across all sections!','success');
 }
 
@@ -3111,8 +3116,8 @@ function renderCertificate(el){
     <div style="position:absolute;inset:10px;border:1px solid rgba(217,119,6,.2);border-radius:10px;pointer-events:none"></div>
     <div style="position:relative;z-index:1;text-align:center">
       <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:14px">
-        <div style="width:76px;display:flex;align-items:center;justify-content:flex-start;flex-shrink:0">
-          <img id="certLogo" src="images/clg-logo.png" alt="College Logo" style="width:68px;height:68px;object-fit:contain">
+        <div style="width:76px;height:76px;border-radius:18px;background:#f8fafc;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 18px rgba(15,23,42,.08)">
+          <img id="certLogo" src="images/clg-logo.png" alt="College Logo" style="width:58px;height:58px;object-fit:contain">
         </div>
         <div style="flex:1;text-align:center;font-size:17px;font-weight:800;color:#1d4ed8;letter-spacing:.4px;text-transform:uppercase;line-height:1.25">
           Smt. Indira Gandhi College of Engineering
@@ -3229,8 +3234,8 @@ function generateFullReport(){
     const logoSrc='images/clg-logo.png';
     const coverPage=
       '<div style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#fff;padding:60px 40px;text-align:center;page-break-after:always">'
-      +'<div style="width:110px;height:110px;border-radius:22px;background:#fff;display:flex;align-items:center;justify-content:center;margin-bottom:28px;box-shadow:0 16px 28px rgba(15,23,42,.18)">'
-      +'<img src="'+logoSrc+'" alt="SIGCE Logo" style="width:90px;height:90px;object-fit:contain"></div>'
+      +'<div style="width:110px;height:110px;border-radius:22px;background:#f8fafc;display:flex;align-items:center;justify-content:center;margin-bottom:28px;box-shadow:0 16px 28px rgba(15,23,42,.18);padding:12px">'
+      +'<img src="'+logoSrc+'" alt="SIGCE Logo" style="width:86px;height:86px;object-fit:contain"></div>'
       +'<div style="color:#0f172a;font-size:26px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px">Smt. Indira Gandhi College of Engineering</div>'
       +'<div style="color:#334155;font-size:16px;font-weight:600;margin-bottom:40px">Outcome Based Education &#8212; Attainment Report</div>'
       +'<div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:32px 48px;max-width:560px;width:100%;box-shadow:0 18px 40px rgba(15,23,42,.12)">'

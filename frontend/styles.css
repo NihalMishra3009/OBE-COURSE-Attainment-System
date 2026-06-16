@@ -385,6 +385,10 @@ td input[type=number]:focus,td input[type=text]:focus{border-color:var(--accent)
   .table-responsive,.tbl-wrap{border-radius:8px}
   .btn-primary{padding:12px 16px}
   .level-opt{min-width:96px}
+  .subject-card{padding:14px}
+  #certPrint{padding:24px 16px !important;border-width:2px !important}
+  #certPrint [id="certLogo"]{width:46px !important;height:46px !important}
+  #certPrint .cert-title{font-size:24px !important;letter-spacing:1px !important}
 }
 
 /* ===== PRINT ===== */
