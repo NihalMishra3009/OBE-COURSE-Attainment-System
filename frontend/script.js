@@ -3112,21 +3112,21 @@ function renderCertificate(el){
     <button class="btn btn-primary" style="margin-right:8px" onclick="printCertificate()">&#128424; Print Certificate</button>
     <button class="btn btn-sm btn-gold" onclick="generateFullReport()">&#128196; Full Report</button>
   </div>
-  <div id="certPrint" style="background:#fff;border:3px solid #d97706;border-radius:16px;max-width:780px;margin:0 auto;padding:42px 44px 36px;position:relative;overflow:hidden">
+  <div id="certPrint" style="background:#fff;border:3px solid #d97706;border-radius:16px;max-width:780px;margin:0 auto;padding:28px 38px 30px;position:relative;overflow:hidden;min-height:760px;box-sizing:border-box">
     <div style="position:absolute;inset:10px;border:1px solid rgba(217,119,6,.2);border-radius:10px;pointer-events:none"></div>
-    <div style="position:relative;z-index:1;text-align:center">
-      <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:14px">
-        <div style="width:96px;height:96px;border-radius:20px;background:#f8fafc;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 18px rgba(15,23,42,.08);padding:10px">
+    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center">
+      <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:10px;width:100%">
+        <div style="width:88px;height:88px;border-radius:18px;background:#f8fafc;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 18px rgba(15,23,42,.08);padding:8px">
           <img id="certLogo" src="images/sigce-crest.jpg" alt="College Logo" style="width:100%;height:100%;object-fit:contain">
         </div>
-        <div style="flex:1;text-align:center;font-size:17px;font-weight:800;color:#1d4ed8;letter-spacing:.4px;text-transform:uppercase;line-height:1.25">
+        <div style="flex:1;text-align:center;font-size:17px;font-weight:800;color:#1d4ed8;letter-spacing:.4px;text-transform:uppercase;line-height:1.25;max-width:520px">
           Smt. Indira Gandhi College of Engineering
         </div>
       </div>
-      <div class="cert-title" style="font-size:32px;font-weight:800;color:#0f172a;letter-spacing:1.4px;line-height:1.08">CERTIFICATE OF COURSE FILE</div>
-      <div style="font-size:13px;color:#64748b;margin:8px 0 20px;letter-spacing:1px">Outcome Based Education &#8212; Attainment Documentation</div>
-      <div style="width:80px;height:3px;background:linear-gradient(90deg,#d97706,transparent);margin:0 auto 24px"></div>
-      <div style="font-size:15px;line-height:1.85;color:#334155;max-width:580px;margin:0 auto 24px">
+      <div class="cert-title" style="font-size:30px;font-weight:800;color:#0f172a;letter-spacing:1.2px;line-height:1.08">CERTIFICATE OF COURSE FILE</div>
+      <div style="font-size:13px;color:#64748b;margin:6px 0 16px;letter-spacing:1px">Outcome Based Education &#8212; Attainment Documentation</div>
+      <div style="width:76px;height:3px;background:linear-gradient(90deg,#d97706,transparent);margin:0 auto 18px"></div>
+      <div style="font-size:14px;line-height:1.8;color:#334155;max-width:560px;margin:0 auto 18px">
         This is to certify that the Course File for <strong style="color:#2563eb">${s.name} (${s.code})</strong>
         offered in the Department of <strong style="color:#2563eb">${s.dept}</strong>
         at <strong style="color:#2563eb">${document.getElementById('inst_name')?.value||'Institution'}</strong>
@@ -3137,14 +3137,14 @@ function renderCertificate(el){
         The attainment calculations confirm that the course has been ${achieved>=4?'successfully':'partially'} aligned
         with the Program Outcomes as per NBA accreditation standards.
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:32px;gap:18px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:20px;gap:18px;width:100%">
         ${[['Course Faculty',s.faculty],['Head of Department','Signature'],['Principal / Director','Signature']].map(([role,name])=>`
         <div style="flex:1;text-align:center;min-width:0">
-          <div style="height:42px"></div>
-          <div style="border-top:1.5px solid #d97706;padding-top:8px;font-size:12px;color:#64748b;line-height:1.35">${role}<br><strong style="color:#2563eb">${name}</strong></div>
+          <div style="height:34px"></div>
+          <div style="border-top:1.5px solid #d97706;padding-top:7px;font-size:12px;color:#64748b;line-height:1.3">${role}<br><strong style="color:#2563eb">${name}</strong></div>
         </div>`).join('')}
       </div>
-      <div style="margin-top:18px;font-size:12px;color:#94a3b8">
+      <div style="margin-top:14px;font-size:12px;color:#94a3b8">
         Date: ${new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'})} |
         Course Code: ${s.code} | Semester: ${s.sem}
       </div>
