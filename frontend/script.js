@@ -349,7 +349,7 @@ function initApp(){
   const colors={admin:'#dc2626',head:'#d97706',faculty:'#2563eb'}; // avatar colors
   // Replace small sidebar avatar image with header-thumb if present
   const headerThumb = document.querySelector('.sidebar-logo .badge img') || document.querySelector('#splash .logo img');
-  if(headerThumb){ headerThumb.src = 'images/clg-logo.png'; headerThumb.style.borderRadius='10px'; headerThumb.style.width='40px'; headerThumb.style.height='40px'; headerThumb.style.objectFit='cover'; headerThumb.style.background='#fff'; headerThumb.style.padding='4px'; }
+  if(headerThumb){ headerThumb.src = 'images/sigce-crest.jpg'; headerThumb.style.borderRadius='10px'; headerThumb.style.width='40px'; headerThumb.style.height='40px'; headerThumb.style.objectFit='cover'; headerThumb.style.background='#fff'; headerThumb.style.padding='4px'; }
   document.getElementById('sideAvatar').style.background=colors[u.role]||'#2563eb';
   buildSideNav();
   buildSubjectSelector();
