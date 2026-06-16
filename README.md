@@ -53,9 +53,12 @@ Create and configure environment files before running:
 - Create schema with `npm run init-db` from `backend/`.
 
 ## Deployment
-- This repo is configured for local or self-hosted use.
-- Set `DATABASE_URL`, `JWT_SECRET`, and optionally `CORS_ORIGIN` in `backend/.env`.
-- Set `window.__API_BASE` in `frontend/config.js` if your API is not running on `http://localhost:3000`.
+- Frontend: deploy `frontend/` to Cloudflare Pages.
+- Backend: deploy `backend/` to Railway.
+- Database: use Railway PostgreSQL.
+- Set `DATABASE_URL`, `JWT_SECRET`, and `CORS_ORIGIN` in Railway variables.
+- Set `window.__API_BASE` in `frontend/config.js` to the Railway backend URL after the backend is live.
+- Keep `frontend/_redirects` in place so Cloudflare Pages can serve the SPA routes.
 
 ## Troubleshooting
 - `500` errors: check backend logs, DB connectivity, and migrations.

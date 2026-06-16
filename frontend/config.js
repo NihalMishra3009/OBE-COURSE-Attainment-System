@@ -1,2 +1,2 @@
-// Local-only default. Override this at runtime if you want to point to another API.
+// Default API base. Replace with your Railway backend URL after deployment.
 window.__API_BASE = "http://localhost:3000";
