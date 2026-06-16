@@ -2228,14 +2228,14 @@ function renderCES(el){
     h+='<div class="card"><div class="card-header"><div class="card-title">&#128202; Course Exit Survey (CES)</div>';
     h+='<div style="display:flex;gap:6px;flex-wrap:wrap">';
     h+='<button class="btn btn-sm btn-gold" onclick="downloadCESTemplate()">&#11015; Template</button>';
-    h+='<button class="btn btn-sm btn-outline" onclick="triggerUpload(\"cesUpload\")">&#128193; Upload Excel</button>';
+    h+='<button class="btn btn-sm btn-outline" onclick="triggerUpload(\'cesUpload\')">&#128193; Upload Excel</button>';
     h+='<input type="file" id="cesUpload" accept=".xlsx,.xls" style="display:none" onchange="uploadCES(this)">';
     h+='<button class="btn btn-sm btn-success" onclick="generateSampleCES()">&#127922; Sample</button>';
     h+='<button class="btn btn-sm btn-danger" style="background:var(--red-light);color:var(--red)" onclick="clearCESData()">&#128465; Clear</button>';
     h+='</div></div><div class="card-body">';
 
     if(!s.cesData||!s.cesData.length){
-      h+='<div class="upload-zone" onclick="triggerUpload(\"cesUpload\")" style="margin-bottom:16px">';
+      h+='<div class="upload-zone" onclick="triggerUpload(\'cesUpload\')" style="margin-bottom:16px">';
       h+='<div class="upload-icon">&#128202;</div>';
       h+='<div class="upload-title">Upload CES Survey Excel</div>';
       h+='<div class="upload-sub">Columns: Roll No, CO1_Rating &#8230; CO'+s.cos.length+'_Rating (1&#8211;5 scale). Or click &#127922; Sample to auto-generate.</div></div>';
