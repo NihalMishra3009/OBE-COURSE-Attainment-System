@@ -3137,14 +3137,14 @@ function renderCertificate(el){
         The attainment calculations confirm that the course has been ${achieved>=4?'successfully':'partially'} aligned
         with the Program Outcomes as per NBA accreditation standards.
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:28px;gap:18px;width:100%">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:52px;gap:18px;width:100%">
         ${[['Course Faculty',s.faculty],['Head of Department','Signature'],['Principal / Director','Signature']].map(([role,name])=>`
         <div style="flex:1;text-align:center;min-width:0">
-          <div style="height:34px"></div>
-          <div style="border-top:1.5px solid #d97706;padding-top:7px;font-size:12px;color:#64748b;line-height:1.3">${role}<br><strong style="color:#2563eb">${name}</strong></div>
+          <div style="height:44px"></div>
+          <div style="border-top:1.5px solid #d97706;padding-top:8px;font-size:12px;color:#64748b;line-height:1.3">${role}<br><strong style="color:#2563eb">${name}</strong></div>
         </div>`).join('')}
       </div>
-      <div style="margin-top:20px;font-size:12px;color:#94a3b8">
+      <div style="margin-top:28px;font-size:12px;color:#94a3b8">
         Date: ${new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'})} |
         Course Code: ${s.code} | Semester: ${s.sem}
       </div>
