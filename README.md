@@ -61,6 +61,11 @@ Create and configure environment files before running:
 - Set `window.__API_BASE` in `frontend/config.js` to the Railway backend URL after the backend is live.
 - Keep `frontend/_redirects` in place so Cloudflare Pages can serve the SPA routes.
 
+## Live Links
+- Frontend: https://obe-course-attainment-system.pages.dev/
+- Backend: https://obe-course-attainment-system-production.up.railway.app
+- GitHub: https://github.com/NihalMishra3009/OBE-COURSE-Attainment-System
+
 ## Troubleshooting
 - `500` errors: check backend logs, DB connectivity, and migrations.
 - CORS: ensure the frontend origin matches `CORS_ORIGIN`.
