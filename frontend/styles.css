@@ -393,11 +393,16 @@ td input[type=number]:focus,td input[type=text]:focus{border-color:var(--accent)
 
 /* ===== PRINT ===== */
 @media print{
+  @page{size:A4 portrait;margin:12mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .sidebar,.topbar,.btn,.modal-overlay,.instr{display:none!important}
-  .main-content{padding:0}
+  .main-content{padding:0!important;background:#fff!important}
   .page{display:block!important}
   .card{box-shadow:none;border:1px solid #ddd;break-inside:avoid;margin-bottom:16px}
-  body{background:#fff;font-size:11px}
+  body{background:#fff!important;font-size:11px}
+  #certPrint{max-width:100%!important;margin:0 auto!important;padding:26px 24px 22px!important;border-width:2px!important;box-shadow:none!important}
+  #certPrint [id="certLogo"]{max-width:78px!important;max-height:78px!important}
+  #certPrint .cert-title{font-size:26px!important;letter-spacing:1px!important}
   th,td{padding:5px 7px}
 }
 

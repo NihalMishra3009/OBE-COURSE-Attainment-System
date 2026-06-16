@@ -3116,14 +3116,14 @@ function renderCertificate(el){
     <div style="position:absolute;inset:10px;border:1px solid rgba(217,119,6,.2);border-radius:10px;pointer-events:none"></div>
     <div style="position:relative;z-index:1;text-align:center">
       <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:14px">
-        <div style="width:76px;height:76px;border-radius:18px;background:#f8fafc;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 18px rgba(15,23,42,.08)">
-          <img id="certLogo" src="images/clg-logo.png" alt="College Logo" style="width:58px;height:58px;object-fit:contain">
+        <div style="width:96px;height:96px;border-radius:20px;background:#f8fafc;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 18px rgba(15,23,42,.08);padding:10px">
+          <img id="certLogo" src="images/sigce-crest.jpg" alt="College Logo" style="width:100%;height:100%;object-fit:contain">
         </div>
         <div style="flex:1;text-align:center;font-size:17px;font-weight:800;color:#1d4ed8;letter-spacing:.4px;text-transform:uppercase;line-height:1.25">
           Smt. Indira Gandhi College of Engineering
         </div>
       </div>
-      <div style="font-size:32px;font-weight:800;color:#0f172a;letter-spacing:1.4px;line-height:1.08">CERTIFICATE OF COURSE FILE</div>
+      <div class="cert-title" style="font-size:32px;font-weight:800;color:#0f172a;letter-spacing:1.4px;line-height:1.08">CERTIFICATE OF COURSE FILE</div>
       <div style="font-size:13px;color:#64748b;margin:8px 0 20px;letter-spacing:1px">Outcome Based Education &#8212; Attainment Documentation</div>
       <div style="width:80px;height:3px;background:linear-gradient(90deg,#d97706,transparent);margin:0 auto 24px"></div>
       <div style="font-size:15px;line-height:1.85;color:#334155;max-width:580px;margin:0 auto 24px">
@@ -3231,11 +3231,11 @@ function generateFullReport(){
         +'</tr>';
     }).join('');
 
-    const logoSrc='images/clg-logo.png';
+    const logoSrc='images/sigce-crest.jpg';
     const coverPage=
-      '<div style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#fff;padding:60px 40px;text-align:center;page-break-after:always">'
-      +'<div style="width:110px;height:110px;border-radius:22px;background:#f8fafc;display:flex;align-items:center;justify-content:center;margin-bottom:28px;box-shadow:0 16px 28px rgba(15,23,42,.18);padding:12px">'
-      +'<img src="'+logoSrc+'" alt="SIGCE Logo" style="width:86px;height:86px;object-fit:contain"></div>'
+      '<div style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#fff;padding:48px 32px;text-align:center;page-break-after:always;box-sizing:border-box">'
+      +'<div style="width:132px;height:132px;border-radius:26px;background:#f8fafc;display:flex;align-items:center;justify-content:center;margin-bottom:24px;box-shadow:0 16px 28px rgba(15,23,42,.18);padding:14px">'
+      +'<img src="'+logoSrc+'" alt="SIGCE Logo" style="width:100%;height:100%;object-fit:contain"></div>'
       +'<div style="color:#0f172a;font-size:26px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px">Smt. Indira Gandhi College of Engineering</div>'
       +'<div style="color:#334155;font-size:16px;font-weight:600;margin-bottom:40px">Outcome Based Education &#8212; Attainment Report</div>'
       +'<div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:32px 48px;max-width:560px;width:100%;box-shadow:0 18px 40px rgba(15,23,42,.12)">'
@@ -3311,11 +3311,11 @@ function generateFullReport(){
           h+='<h3 style="color:#2563eb;font-size:14px;margin:0 0 10px;border-bottom:1px solid #e2e8f0;padding-bottom:6px">B. Course Outcomes with Bloom\'s Level, WK &amp; Performance Indicators</h3>';
           h+='<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:16px">';
           h+='<thead><tr style="background:#1e40af;color:#fff">';
-          h+='<th style="padding:7px;border:1px solid #93c5fd;width:40px">CO</th>';
-          h+='<th style="padding:7px;border:1px solid #93c5fd;text-align:left;min-width:160px">Outcome Statement</th>';
-          h+='<th style="padding:7px;border:1px solid #93c5fd;width:90px">Bloom\'s Level</th>';
-          h+='<th style="padding:7px;border:1px solid #93c5fd;width:100px">WK Level(s)</th>';
-          h+='<th style="padding:7px;border:1px solid #93c5fd;text-align:left">Performance Indicator</th>';
+          h+='<th style="padding:7px;border:1px solid #93c5fd;width:40px;color:#fff">CO</th>';
+          h+='<th style="padding:7px;border:1px solid #93c5fd;text-align:left;min-width:160px;color:#fff">Outcome Statement</th>';
+          h+='<th style="padding:7px;border:1px solid #93c5fd;width:90px;color:#fff">Bloom\'s Level</th>';
+          h+='<th style="padding:7px;border:1px solid #93c5fd;width:100px;color:#fff">WK Level(s)</th>';
+          h+='<th style="padding:7px;border:1px solid #93c5fd;text-align:left;color:#fff">Performance Indicator</th>';
           h+='</tr></thead><tbody>';
           s.cos.forEach(function(co,i){
             const wkArr=Array.isArray(co.wk)?co.wk:(co.wk?[co.wk]:[]);
@@ -3354,13 +3354,13 @@ function generateFullReport(){
             h+='<h3 style="color:#2563eb;font-size:14px;margin:16px 0 10px;border-bottom:1px solid #e2e8f0;padding-bottom:6px">D. Module-wise Syllabus</h3>';
             h+='<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:10px">';
             h+='<thead><tr style="background:#1e40af;color:#fff">';
-            h+='<th style="padding:7px;border:1px solid #93c5fd;width:50px;text-align:center">Mod No</th>';
-            h+='<th style="padding:7px;border:1px solid #93c5fd;min-width:110px">Module Title</th>';
-            h+='<th style="padding:7px;border:1px solid #93c5fd;text-align:left;min-width:180px">Detailed Syllabus</th>';
-            h+='<th style="padding:7px;border:1px solid #93c5fd;width:50px">CO(s)</th>';
-            h+='<th style="padding:7px;border:1px solid #93c5fd;width:80px">Bloom\'s</th>';
-            h+='<th style="padding:7px;border:1px solid #93c5fd;width:70px">WK(s)</th>';
-            h+='<th style="padding:7px;border:1px solid #93c5fd;width:48px">Hours</th>';
+            h+='<th style="padding:7px;border:1px solid #93c5fd;width:50px;text-align:center;color:#fff">Mod No</th>';
+            h+='<th style="padding:7px;border:1px solid #93c5fd;min-width:110px;color:#fff">Module Title</th>';
+            h+='<th style="padding:7px;border:1px solid #93c5fd;text-align:left;min-width:180px;color:#fff">Detailed Syllabus</th>';
+            h+='<th style="padding:7px;border:1px solid #93c5fd;width:50px;color:#fff">CO(s)</th>';
+            h+='<th style="padding:7px;border:1px solid #93c5fd;width:80px;color:#fff">Bloom\'s</th>';
+            h+='<th style="padding:7px;border:1px solid #93c5fd;width:70px;color:#fff">WK(s)</th>';
+            h+='<th style="padding:7px;border:1px solid #93c5fd;width:48px;color:#fff">Hours</th>';
             h+='</tr></thead><tbody>';
             s.syllabusModules.forEach(function(mod,mi){
               const topicLines=(mod.topics||'').split('\n').filter(function(l){return l.trim();});
