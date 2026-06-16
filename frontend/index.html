@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>NBA OBE — Course Attainment System</title>
+<title>NBA OBE � Course Attainment System</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link rel="stylesheet" href="styles.css">
@@ -16,7 +16,9 @@
 .splash-hidden{opacity:0;transition:opacity .6s ease}
 
 /* Login spinner */
-.spinner{display:none;width:18px;height:18px;border-radius:50%;border:3px solid rgba(0,0,0,0.12);border-top-color:#2563eb;animation:spin 1s linear infinite;vertical-align:middle;margin-left:8px}
+.login-btn{display:flex;align-items:center;justify-content:center;gap:10px}
+.login-btn.is-loading{cursor:wait}
+.spinner{display:none;width:18px;height:18px;border-radius:50%;border:3px solid rgba(255,255,255,0.35);border-top-color:#fff;animation:spin 1s linear infinite;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 <script src="config.js"></script>
@@ -25,7 +27,7 @@
   <div id="splash" role="presentation" aria-hidden="false">
     <div class="logo"><img src="images/sigce-crest.jpg" alt="Smt. Indira Gandhi College Of Engineering" style="width:96px;height:96px;border-radius:16px;object-fit:cover;background:#fff;padding:8px;box-shadow:0 6px 20px rgba(2,6,23,0.35)"></div>
     <h1>Smt. Indira Gandhi College Of Engineering</h1>
-    <p>OBE Attainment System · Loading…</p>
+    <p>OBE Attainment System � Loading�</p>
   </div>
 <!-- =============================================================== -->
 <!--  LOGIN PAGE                                                     -->
@@ -43,7 +45,7 @@
       <button class="login-tab" onclick="switchLoginRole('faculty')">Faculty</button>
     </div>
     <div class="demo-accounts">
-      <strong>🔑 Demo Credentials</strong>
+      <strong>?? Demo Credentials</strong>
       <div class="demo-row"><span>Admin</span><span><b>admin</b> / admin123</span></div>
       <div class="demo-row"><span>Head</span><span><b>head</b> / head123</span></div>
       <div class="demo-row"><span>Faculty</span><span><b>faculty1</b> / pass123</span></div>
@@ -62,7 +64,7 @@
         <option>Loading...</option>
       </select>
     </div>
-    <button class="btn btn-primary" onclick="doLogin()">Sign In →</button><span id="loginSpinner" class="spinner" aria-hidden="true"></span>
+    <button class="btn btn-primary login-btn" onclick="doLogin()"><span id="loginBtnText">Sign In</span><span id="loginSpinner" class="spinner" aria-hidden="true"></span></button>
     <p id="loginErr" style="color:var(--red);font-size:12px;margin-top:10px;text-align:center;display:none"></p>
   </div>
 </div>
@@ -77,17 +79,17 @@
       <div class="sidebar-header">
         <div class="sidebar-logo">
           <div class="badge"><img src="images/sigce-crest.jpg" alt="Smt. Indira Gandhi College Of Engineering" style="width:40px;height:40px;border-radius:10px;object-fit:cover;background:#fff;padding:4px;box-shadow:0 6px 14px rgba(2,6,23,0.28)"></div>
-          <div><h2>SMt. Indira Gandhi College of Engineering</h2><p>OBE Attainment System</p></div>
+          <div><h2>Smt. Indira Gandhi College of Engineering</h2><p>OBE Attainment System</p></div>
         </div>
       </div>
       <div class="sidebar-user">
         <div class="user-chip">
           <div class="user-avatar" id="sideAvatar" style="background:var(--accent)">A</div>
           <div class="user-info">
-            <div class="user-name" id="sideUserName">—</div>
-            <div class="user-role"><span class="role-badge" id="sideRoleBadge">—</span></div>
+            <div class="user-name" id="sideUserName">�</div>
+            <div class="user-role"><span class="role-badge" id="sideRoleBadge">�</span></div>
           </div>
-          <button class="btn btn-sm btn-outline" onclick="doLogout()" title="Logout" style="padding:4px 8px;font-size:11px;flex-shrink:0">⏻</button>
+          <button class="btn btn-sm btn-outline" onclick="doLogout()" title="Logout" style="padding:4px 8px;font-size:11px;flex-shrink:0">?</button>
         </div>
       </div>
       <nav class="sidebar-nav" id="sideNav"><!-- filled by JS --></nav>
@@ -102,16 +104,16 @@
     <div class="main-content">
       <div class="topbar">
         <div style="display:flex;align-items:center;gap:12px">
-          <div class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</div>
+          <div class="mobile-menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">?</div>
           <div class="topbar-title">
             <h2 id="topbarTitle">Dashboard</h2>
             <p id="topbarSub">NBA Course File Attainment System</p>
           </div>
         </div>
         <div class="topbar-actions">
-          <button class="btn btn-sm btn-gold" onclick="generateFullReport()">📄 Full Report</button>
-          <button class="btn btn-sm btn-success" onclick="exportAllExcel()">📊 Excel Export</button>
-          <button class="btn btn-sm btn-purple" onclick="calculateAll()">⚡ Calculate All</button>
+          <button class="btn btn-sm btn-gold" onclick="generateFullReport()">?? Full Report</button>
+          <button class="btn btn-sm btn-success" onclick="exportAllExcel()">?? Excel Export</button>
+          <button class="btn btn-sm btn-purple" onclick="calculateAll()">? Calculate All</button>
         </div>
       </div>
       <div class="content-body" id="contentBody">
@@ -124,16 +126,17 @@
 <!-- MODAL OVERLAY -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal" id="modal">
-    <div class="modal-header"><h3 id="modalTitle">Modal</h3><button class="btn btn-sm btn-outline" onclick="closeModal()">✕</button></div>
+    <div class="modal-header"><h3 id="modalTitle">Modal</h3><button class="btn btn-sm btn-outline" onclick="closeModal()">?</button></div>
     <div class="modal-body" id="modalBody"></div>
     <div class="modal-footer" id="modalFooter"></div>
   </div>
 </div>
 
 <!-- TOAST -->
-<div id="toast">✓ Saved</div>
+<div id="toast">? Saved</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="script.js"></script>
 </html>
+
 
 

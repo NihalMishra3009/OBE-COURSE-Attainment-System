@@ -1,2 +1,2 @@
-// Default API base. Replace with your Railway backend URL after deployment.
-window.__API_BASE = "obe-course-attainment-system-production.up.railway.app";
+// Default API base for the deployed frontend.
+window.__API_BASE = "https://obe-course-attainment-system-production.up.railway.app";

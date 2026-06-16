@@ -33,9 +33,10 @@ A full-stack web application to create OBE course files and calculate attainment
 ## Environment & Config
 Create and configure environment files before running:
 - `backend/.env` from `backend/.env.example`
-  - `DATABASE_URL=postgres://user:pass@host:port/dbname`
-  - `JWT_SECRET=your_jwt_secret`
-  - `PORT=3000`
+  - `DATABASE_URL=${{Postgres.DATABASE_URL}}`
+  - `DATABASE_PUBLIC_URL=${{Postgres.DATABASE_PUBLIC_URL}}`
+  - `JWT_SECRET=8f4d2a7c1b9e4f6d8a3c5e7f9b1d4a6c8e2f7a9c1d3e5f7b9a2c4d6e8f1a3b5`
+  - `CORS_ORIGIN=https://obe-course-attainment-system.pages.dev/`
 
 ## Local Setup
 1. Backend:

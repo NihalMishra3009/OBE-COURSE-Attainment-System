@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const rawUrl = process.env.DATABASE_URL || "";
+const rawUrl = process.env.DATABASE_URL || process.env.DATABASE_PUBLIC_URL || "";
 let dbUrl = rawUrl;
 const lower = rawUrl.toLowerCase();
 

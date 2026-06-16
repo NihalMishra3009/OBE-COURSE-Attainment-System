@@ -30,7 +30,7 @@ let USERS = {
 let API_BASE = normalizeApiBase(window.__API_BASE || '');
 if (!API_BASE) {
   if (location.protocol === 'file:' || (location.port && location.port !== '3000')) {
-    API_BASE = 'http://localhost:3000';
+    API_BASE = 'https://obe-course-attainment-system-production.up.railway.app';
   }
 }
 
@@ -91,7 +91,7 @@ async function apiFetch(path, options){
   try{
     res = await fetch(API_BASE + path, opts);
   }catch(e){
-    throw new Error('Backend not reachable. Start the server on http://localhost:3000');
+    throw new Error('Backend not reachable. Check the Railway deployment URL.');
   }
   if(!res.ok){
     let msg = 'Request failed';
@@ -265,11 +265,18 @@ function switchLoginRole(r){
 function setLoginLoading(on){
   const btn = document.querySelector('#loginPage .btn.btn-primary');
   const spinner = document.getElementById('loginSpinner');
+  const btnText = document.getElementById('loginBtnText');
   const user = document.getElementById('loginUser');
   const pass = document.getElementById('loginPass');
   const dept = document.getElementById('loginDept');
   [user,pass,dept].forEach(e=>{ if(e) e.disabled = !!on; });
-  if(btn){ btn.disabled = !!on; if(on){ btn.dataset.oldText = btn.innerHTML; btn.innerHTML = 'Signing in'; } else { btn.innerHTML = btn.dataset.oldText || 'Sign In '; }}
+  if(btn){
+    btn.disabled = !!on;
+    btn.classList.toggle('is-loading', !!on);
+  }
+  if(btnText){
+    btnText.textContent = on ? 'Signing in...' : 'Sign In';
+  }
   if(spinner) spinner.style.display = on ? 'inline-block' : 'none';
 }
 
@@ -3100,23 +3107,21 @@ function renderCertificate(el){
     <button class="btn btn-primary" style="margin-right:8px" onclick="printCertificate()">&#128424; Print Certificate</button>
     <button class="btn btn-sm btn-gold" onclick="generateFullReport()">&#128196; Full Report</button>
   </div>
-  <div id="certPrint" style="background:#fff;border:3px solid #d97706;border-radius:16px;max-width:800px;margin:0 auto;padding:48px;position:relative;overflow:hidden">
+  <div id="certPrint" style="background:#fff;border:3px solid #d97706;border-radius:16px;max-width:780px;margin:0 auto;padding:42px 44px 36px;position:relative;overflow:hidden">
     <div style="position:absolute;inset:10px;border:1px solid rgba(217,119,6,.2);border-radius:10px;pointer-events:none"></div>
     <div style="position:relative;z-index:1;text-align:center">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-        <div style="width:80px;display:flex;align-items:center;justify-content:flex-start">
-          <img id="certLogo" src="SIGCE LOGO.jpeg" alt="SIGCE Logo" style="width:70px;height:70px;object-fit:contain">
+      <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:14px">
+        <div style="width:76px;display:flex;align-items:center;justify-content:flex-start;flex-shrink:0">
+          <img id="certLogo" src="SIGCE LOGO.jpeg" alt="SIGCE Logo" style="width:68px;height:68px;object-fit:contain">
         </div>
-        <div style="flex:1;text-align:center;font-size:18px;font-weight:800;color:#1d4ed8;letter-spacing:.4px;text-transform:uppercase">
+        <div style="flex:1;text-align:center;font-size:17px;font-weight:800;color:#1d4ed8;letter-spacing:.4px;text-transform:uppercase;line-height:1.25">
           Smt. Indira Gandhi College Of Engineering
         </div>
-        <div style="width:80px"></div>
       </div>
-      <div style="font-size:11px;letter-spacing:3px;color:#d97706;text-transform:uppercase;margin-bottom:8px">SMt. Indira Gandhi College of Engineering</div>
-      <div style="font-size:32px;font-weight:800;color:#0f172a;letter-spacing:2px">CERTIFICATE OF COURSE FILE</div>
-      <div style="font-size:13px;color:#64748b;margin:6px 0 24px;letter-spacing:1px">Outcome Based Education &#8212; Attainment Documentation</div>
-      <div style="width:80px;height:3px;background:linear-gradient(90deg,#d97706,transparent);margin:0 auto 28px"></div>
-      <div style="font-size:15px;line-height:1.9;color:#334155;max-width:580px;margin:0 auto 28px">
+      <div style="font-size:32px;font-weight:800;color:#0f172a;letter-spacing:1.4px;line-height:1.08">CERTIFICATE OF COURSE FILE</div>
+      <div style="font-size:13px;color:#64748b;margin:8px 0 20px;letter-spacing:1px">Outcome Based Education &#8212; Attainment Documentation</div>
+      <div style="width:80px;height:3px;background:linear-gradient(90deg,#d97706,transparent);margin:0 auto 24px"></div>
+      <div style="font-size:15px;line-height:1.85;color:#334155;max-width:580px;margin:0 auto 24px">
         This is to certify that the Course File for <strong style="color:#2563eb">${s.name} (${s.code})</strong>
         offered in the Department of <strong style="color:#2563eb">${s.dept}</strong>
         at <strong style="color:#2563eb">${document.getElementById('inst_name')?.value||'Institution'}</strong>
@@ -3127,14 +3132,14 @@ function renderCertificate(el){
         The attainment calculations confirm that the course has been ${achieved>=4?'successfully':'partially'} aligned
         with the Program Outcomes as per NBA accreditation standards.
       </div>
-      <div style="display:flex;justify-content:space-around;margin-top:40px;gap:20px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:32px;gap:18px">
         ${[['Course Faculty',s.faculty],['Head of Department','Signature'],['Principal / Director','Signature']].map(([role,name])=>`
-        <div style="flex:1;text-align:center">
-          <div style="height:48px"></div>
-          <div style="border-top:1.5px solid #d97706;padding-top:8px;font-size:13px;color:#64748b">${role}<br><strong style="color:#2563eb">${name}</strong></div>
+        <div style="flex:1;text-align:center;min-width:0">
+          <div style="height:42px"></div>
+          <div style="border-top:1.5px solid #d97706;padding-top:8px;font-size:12px;color:#64748b;line-height:1.35">${role}<br><strong style="color:#2563eb">${name}</strong></div>
         </div>`).join('')}
       </div>
-      <div style="margin-top:24px;font-size:12px;color:#94a3b8">
+      <div style="margin-top:18px;font-size:12px;color:#94a3b8">
         Date: ${new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'})} |
         Course Code: ${s.code} | Semester: ${s.sem}
       </div>
@@ -3725,4 +3730,5 @@ function showToast(msg,type){
 function renderLessonPlan(el){
   el.innerHTML = '<div style="height:calc(100vh - 160px)"><iframe src="lesson-plan-nba.html" style="width:100%;height:100%;border:0"></iframe></div>';
 }
+
 
