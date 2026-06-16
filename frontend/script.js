@@ -275,7 +275,7 @@ function setLoginLoading(on){
     btn.classList.toggle('is-loading', !!on);
   }
   if(btnText){
-    btnText.textContent = on ? 'Signing in...' : 'Sign In';
+    btnText.textContent = on ? 'Signing in' : 'Sign In';
   }
   if(spinner) spinner.style.display = on ? 'inline-block' : 'none';
 }
@@ -349,7 +349,7 @@ function initApp(){
   const colors={admin:'#dc2626',head:'#d97706',faculty:'#2563eb'}; // avatar colors
   // Replace small sidebar avatar image with header-thumb if present
   const headerThumb = document.querySelector('.sidebar-logo .badge img') || document.querySelector('#splash .logo img');
-  if(headerThumb){ headerThumb.src = 'images/header-thumb.png'; headerThumb.style.borderRadius='10px'; headerThumb.style.width='40px'; headerThumb.style.height='40px'; headerThumb.style.objectFit='cover'; headerThumb.style.background='#fff'; headerThumb.style.padding='4px'; }
+  if(headerThumb){ headerThumb.src = 'images/clg-logo.png'; headerThumb.style.borderRadius='10px'; headerThumb.style.width='40px'; headerThumb.style.height='40px'; headerThumb.style.objectFit='cover'; headerThumb.style.background='#fff'; headerThumb.style.padding='4px'; }
   document.getElementById('sideAvatar').style.background=colors[u.role]||'#2563eb';
   buildSideNav();
   buildSubjectSelector();
@@ -3112,10 +3112,10 @@ function renderCertificate(el){
     <div style="position:relative;z-index:1;text-align:center">
       <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:14px">
         <div style="width:76px;display:flex;align-items:center;justify-content:flex-start;flex-shrink:0">
-          <img id="certLogo" src="SIGCE LOGO.jpeg" alt="SIGCE Logo" style="width:68px;height:68px;object-fit:contain">
+          <img id="certLogo" src="images/clg-logo.png" alt="College Logo" style="width:68px;height:68px;object-fit:contain">
         </div>
         <div style="flex:1;text-align:center;font-size:17px;font-weight:800;color:#1d4ed8;letter-spacing:.4px;text-transform:uppercase;line-height:1.25">
-          Smt. Indira Gandhi College Of Engineering
+          Smt. Indira Gandhi College of Engineering
         </div>
       </div>
       <div style="font-size:32px;font-weight:800;color:#0f172a;letter-spacing:1.4px;line-height:1.08">CERTIFICATE OF COURSE FILE</div>
@@ -3226,7 +3226,7 @@ function generateFullReport(){
         +'</tr>';
     }).join('');
 
-    const logoSrc=location.origin+'/SIGCE LOGO.jpeg';
+    const logoSrc='images/clg-logo.png';
     const coverPage=
       '<div style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#fff;padding:60px 40px;text-align:center;page-break-after:always">'
       +'<div style="width:110px;height:110px;border-radius:22px;background:#fff;display:flex;align-items:center;justify-content:center;margin-bottom:28px;box-shadow:0 16px 28px rgba(15,23,42,.18)">'
