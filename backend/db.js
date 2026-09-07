@@ -1,10 +1,19 @@
-﻿import { Pool } from "pg";
+import { Pool } from "pg";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 dotenv.config();
+if (fs.existsSync(path.resolve(__dirname, ".env"))) {
+  dotenv.config({ path: path.resolve(__dirname, ".env") });
+}
+if (fs.existsSync(path.resolve(__dirname, "..", ".env"))) {
+  dotenv.config({ path: path.resolve(__dirname, "..", ".env") });
+}
 
 const rawUrl = process.env.DATABASE_URL || process.env.DATABASE_PUBLIC_URL || "";
 let dbUrl = rawUrl;
@@ -35,9 +44,6 @@ export const pool = new Pool({
   connectionString: dbUrl,
   ssl: (needsSsl || allowInsecure) ? { rejectUnauthorized: false } : undefined
 });
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const embeddedSchema = `
 CREATE TABLE IF NOT EXISTS users (

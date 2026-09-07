@@ -1,4 +1,4 @@
-import bcrypt from "bcryptjs";
+import bcrypt from "../backend/node_modules/bcryptjs/index.js";
 import { pool, ensureSchema } from "../backend/db.js";
 
 const DEFAULT_DEPARTMENTS = [

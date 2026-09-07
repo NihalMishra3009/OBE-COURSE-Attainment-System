@@ -54,16 +54,18 @@ Create and configure environment files before running:
 - Create schema with `npm run init-db` from `backend/`.
 
 ## Deployment
-- Frontend: deploy `frontend/` to Cloudflare Pages.
-- Backend: deploy `backend/` to Railway.
-- Database: use Railway PostgreSQL.
-- Set `DATABASE_URL`, `JWT_SECRET`, and `CORS_ORIGIN` in Railway variables.
-- Set `window.__API_BASE` in `frontend/config.js` to the Railway backend URL after the backend is live.
-- Keep `frontend/_redirects` in place so Cloudflare Pages can serve the SPA routes.
+- **Frontend**: Deploy `frontend/` to **Cloudflare Pages** (Build output directory: `frontend`). Keep `frontend/_redirects` in place for SPA routing.
+- **Database**: Deploy PostgreSQL on **Render** (or managed PostgreSQL provider).
+- **Backend**: Deploy `backend/` to **Render Web Service** (Root directory: `backend`, Build command: `npm install`, Start command: `npm start`).
+- **Environment Variables** on Render Backend:
+  - `DATABASE_URL`: Your Render PostgreSQL database connection string (append `?sslmode=require`).
+  - `PGSSLMODE`: `require`
+  - `JWT_SECRET`: A secure random secret string.
+  - `CORS_ORIGIN`: Your Cloudflare Pages URL (e.g. `https://obe-course-attainment-system.pages.dev`).
+- Update `frontend/config.js` with your Render backend URL once deployed.
 
 ## Live Links
-- Frontend: https://obe-course-attainment-system.pages.dev/
-- Backend: https://obe-course-attainment-system-production.up.railway.app
+- Frontend (Cloudflare Pages): https://obe-course-attainment-system.pages.dev/
 - GitHub: https://github.com/NihalMishra3009/OBE-COURSE-Attainment-System
 
 ## Troubleshooting

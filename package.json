@@ -1,6 +1,7 @@
 {
   "name": "obe-course-attainment-system",
   "private": true,
+  "type": "module",
   "scripts": {
     "install:backend": "npm --prefix backend install",
     "postinstall": "npm --prefix backend install",
