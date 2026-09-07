@@ -1,73 +1,133 @@
-# OBE-COURSE-Attainment-System
+# OBE Course Attainment System
 
-A full-stack web application to create OBE course files and calculate attainment for courses.
+A modern full-stack web application designed for engineering institutions to create Outcome-Based Education (OBE) course files, compute Course Outcome (CO) and Program Outcome (PO) attainments, and generate NBA accreditation audit documentation.
 
-## Tech Stack
-- Frontend: HTML, CSS, JavaScript (vanilla)
-- Backend: Node.js, Express
-- Database: PostgreSQL
-- Dev tooling: npm, dotenv
+---
 
-## Project Structure
-- `backend/` - Express API, database connection, and server startup
-- `frontend/` - Static SPA, browser config, styles, and media
-- `database/` - Schema and initialization scripts
-- `index.html` - Root redirect into the frontend app
+## 🚀 Live Links & Monitoring
 
-### Backend
-- `backend/server.js` - HTTP API and app bootstrap
-- `backend/db.js` - PostgreSQL pool and schema bootstrap
-- `backend/.env.example` - Local environment template
+| Component | Platform | URL |
+| :--- | :--- | :--- |
+| **Frontend** | **Cloudflare Pages** | [https://obe-course-attainment-system.pages.dev](https://obe-course-attainment-system.pages.dev) |
+| **Backend API** | **Render Web Service** | [https://obe-course-attainment-system.onrender.com](https://obe-course-attainment-system.onrender.com) |
+| **Database** | **PostgreSQL (Render / Supabase)** | Managed Cloud PostgreSQL |
+| **Monitoring / Keep-Alive** | **Better Stack** | Active 3-min ping (Zero Cold Starts) |
+| **Repository** | **GitHub** | [NihalMishra3009/OBE-COURSE-Attainment-System](https://github.com/NihalMishra3009/OBE-COURSE-Attainment-System) |
 
-### Frontend
-- `frontend/index.html` - Main UI shell
-- `frontend/script.js` - Browser logic and app state
-- `frontend/styles.css` - Styling
-- `frontend/config.js` - API base URL for the browser
+---
 
-## How It Works
-1. The frontend calls the backend REST API for CRUD on courses, subjects, and attainment data.
-2. The backend validates requests, handles auth with JWT, and persists data to PostgreSQL.
-3. The backend exposes endpoints for reports and export features.
+## 🛠 Tech Stack
 
-## Environment & Config
-Create and configure environment files before running:
-- `backend/.env` from `backend/.env.example`
-  - `DATABASE_URL=${{Postgres.DATABASE_URL}}`
-  - `DATABASE_PUBLIC_URL=${{Postgres.DATABASE_PUBLIC_URL}}`
-  - `JWT_SECRET=8f4d2a7c1b9e4f6d8a3c5e7f9b1d4a6c8e2f7a9c1d3e5f7b9a2c4d6e8f1a3b5`
-  - `CORS_ORIGIN=https://obe-course-attainment-system.pages.dev/`
+- **Frontend**: Vanilla JavaScript (ES6+), HTML5, CSS3, SheetJS (`xlsx.full.min.js`) for Excel parsing & report exports
+- **Backend**: Node.js (ES Modules), Express.js
+- **Database**: PostgreSQL with `pg` connection pooling and SSL auto-negotiation
+- **Authentication**: JWT (`jsonwebtoken`) with `bcryptjs` password hashing
+- **Uptime Monitoring**: Better Stack Uptime Monitor
 
-## Local Setup
-1. Backend:
-   ```powershell
-   cd backend
+---
+
+## 🔑 Default Credentials
+
+| Role | Username | Password | Access Level |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin` | `admin123` | User & Department Management, Global Settings |
+| **Head of Dept** | `head` | `head123` | Department Overview, Curriculum & Attainment Review |
+| **Faculty** | `faculty1` | `pass123` | Course File Generation, Marks Entry, CO-PO Calculation |
+
+---
+
+## 📁 Project Structure
+
+```text
+├── backend/
+│   ├── server.js          # Express REST API, CORS & authentication routes
+│   ├── db.js              # PostgreSQL pool & automated schema bootstrap
+│   ├── .env.example       # Environment template
+│   └── package.json       # Backend dependencies
+├── database/
+│   ├── schema.sql         # SQL schema definitions (users, departments, subjects)
+│   └── init-db.js         # Database initialization & seed script
+├── frontend/
+│   ├── index.html         # Main SPA interface shell
+│   ├── script.js          # Attainment engine, state management & UI controller
+│   ├── styles.css         # Modern responsive styles & print templates
+│   ├── config.js          # API base endpoint configuration
+│   ├── _redirects         # Cloudflare Pages SPA routing
+│   └── lesson-plan-nba.html # Standalone NBA lesson plan module
+└── package.json           # Root package scripts
+```
+
+---
+
+## ⚙️ Environment Variables
+
+Create `backend/.env` based on `backend/.env.example`:
+
+```ini
+# PostgreSQL Connection URL (Render / Supabase / Local)
+DATABASE_URL=postgresql://user:password@hostname:5432/dbname?sslmode=require
+PGSSLMODE=require
+PGSSL_ALLOW_INSECURE=true
+
+# Authentication
+JWT_SECRET=8f4d2a7c1b9e4f6d8a3c5e7f9b1d4a6c8e2f7a9c1d3e5f7b9a2c4d6e8f1a3b5
+
+# Allowed CORS Origins
+CORS_ORIGIN=https://obe-course-attainment-system.pages.dev,http://localhost:3000,http://127.0.0.1:3000
+
+# Server Port
+PORT=3000
+```
+
+---
+
+## 💻 Local Setup & Development
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/NihalMishra3009/OBE-COURSE-Attainment-System.git
+   cd OBE-COURSE-Attainment-System
+   ```
+
+2. **Install dependencies**:
+   ```bash
    npm install
+   ```
+
+3. **Initialize Database & Seed Data**:
+   ```bash
    npm run init-db
+   ```
+
+4. **Start the application**:
+   ```bash
    npm start
    ```
-2. Frontend:
-   Serve `frontend/` statically, or open `frontend/index.html` in a browser.
+   Open `http://localhost:3000` in your browser.
 
-## Database
-- Use PostgreSQL.
-- Create schema with `npm run init-db` from `backend/`.
+---
 
-## Deployment
-- **Frontend**: Deploy `frontend/` to **Cloudflare Pages** (Build output directory: `frontend`). Keep `frontend/_redirects` in place for SPA routing.
-- **Database**: Deploy PostgreSQL on **Render** (or managed PostgreSQL provider).
-- **Backend**: Deploy `backend/` to **Render Web Service** (Root directory: `backend`, Build command: `npm install`, Start command: `npm start`).
-- **Environment Variables** on Render Backend:
-  - `DATABASE_URL`: Your Render PostgreSQL database connection string (append `?sslmode=require`).
-  - `PGSSLMODE`: `require`
-  - `JWT_SECRET`: A secure random secret string.
-  - `CORS_ORIGIN`: Your Cloudflare Pages URL (e.g. `https://obe-course-attainment-system.pages.dev`).
-- Update `frontend/config.js` with your Render backend URL once deployed.
+## ☁️ Deployment Architecture
 
-## Live Links
-- Frontend (Cloudflare Pages): https://obe-course-attainment-system.pages.dev/
-- GitHub: https://github.com/NihalMishra3009/OBE-COURSE-Attainment-System
+### 1. Database (Render / Supabase)
+- Create a PostgreSQL database instance.
+- Obtain the database connection URI (append `?sslmode=require`).
 
-## Troubleshooting
-- `500` errors: check backend logs, DB connectivity, and migrations.
-- CORS: ensure the frontend origin matches `CORS_ORIGIN`.
+### 2. Backend (Render Web Service)
+- **Root Directory**: `backend`
+- **Build Command**: `npm install`
+- **Start Command**: `npm start`
+- **Environment Variables**: Add `DATABASE_URL`, `PGSSLMODE`, `PGSSL_ALLOW_INSECURE`, `JWT_SECRET`, and `CORS_ORIGIN`.
+
+### 3. Frontend (Cloudflare Pages)
+- **Framework Preset**: `None`
+- **Build Output Directory**: `frontend`
+- Set `window.__API_BASE` in `frontend/config.js` to your backend URL.
+
+### 4. 24/7 Keep-Alive (Better Stack)
+- Create an HTTP monitor pointing to `https://obe-course-attainment-system.onrender.com/health` with a 3-minute interval to prevent free-tier instances from idling.
+
+---
+
+## 📄 License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
