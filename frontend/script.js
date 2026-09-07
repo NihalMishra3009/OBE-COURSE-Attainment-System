@@ -30,7 +30,7 @@ let USERS = {
 let API_BASE = normalizeApiBase(window.__API_BASE || '');
 if (!API_BASE) {
   if (location.protocol === 'file:' || (location.port && location.port !== '3000')) {
-    API_BASE = 'https://obe-course-attainment-system-production.up.railway.app';
+    API_BASE = 'https://obe-course-attainment-system.onrender.com';
   }
 }
 
