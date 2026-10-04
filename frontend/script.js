@@ -860,22 +860,22 @@ function renderCOPage(el){
   if(!window._coTab) window._coTab='cos';
   const tab=window._coTab;
 
-  let h='<div class="instr"><strong>&#128204; Instructions:</strong> Define Course Objectives &amp; Outcomes, select Bloom\'s level, upload syllabus, and refer to the Bloom\'s dictionary for action verbs.</div>';
+  let h='<div class="instr"><strong>📌 Instructions:</strong> Define Course Objectives &amp; Outcomes, select Bloom\'s level, upload or auto-parse syllabus, and use Bloom\'s dictionary for action verbs.</div>';
 
   // Sub-tab bar
   h+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;border-bottom:2px solid var(--border);padding-bottom:10px">';
-  h+='<button class="btn btn-sm '+(tab==='cos'?'btn-primary':'btn-outline')+'" onclick="setCoTab(\'cos\')">&#127919; CO / Outcomes</button>';
-  h+='<button class="btn btn-sm '+(tab==='bloom'?'btn-primary':'btn-outline')+'" onclick="setCoTab(\'bloom\')">&#129504; Bloom\'s Dictionary</button>';
-  h+='<button class="btn btn-sm '+(tab==='syllabus'?'btn-primary':'btn-outline')+'" onclick="setCoTab(\'syllabus\')">&#128196; Syllabus</button>';
+  h+='<button class="btn btn-sm '+(tab==='cos'?'btn-primary':'btn-outline')+'" onclick="setCoTab(\'cos\')">🎯 CO / Outcomes</button>';
+  h+='<button class="btn btn-sm '+(tab==='bloom'?'btn-primary':'btn-outline')+'" onclick="setCoTab(\'bloom\')">🧠 Bloom\'s Dictionary</button>';
+  h+='<button class="btn btn-sm '+(tab==='syllabus'?'btn-primary':'btn-outline')+'" onclick="setCoTab(\'syllabus\')">📄 Syllabus &amp; Modules</button>';
   h+='</div>';
 
-  // &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; CO / OUTCOMES TAB &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+  // ══════════ CO / OUTCOMES TAB ══════════
   if(tab==='cos'){
     // Objectives table
-    h+='<div class="card"><div class="card-header"><div class="card-title">&#127919; Course Objectives</div>';
+    h+='<div class="card"><div class="card-header"><div class="card-title">🎯 Course Objectives</div>';
     h+='<div style="display:flex;gap:6px">';
     h+='<button class="btn btn-sm btn-outline" onclick="addCO()">+ Add CO</button>';
-    h+='<button class="btn btn-sm btn-success" onclick="saveCOs()">&#128190; Save COs</button>';
+    h+='<button class="btn btn-sm btn-success" onclick="saveCOs()">💾 Save COs</button>';
     h+='</div></div><div class="card-body">';
     h+='<div class="tbl-wrap"><table><thead><tr>';
     h+='<th style="width:60px">CO</th>';
@@ -894,20 +894,20 @@ function renderCOPage(el){
       // CO id
       h+='<td style="padding-top:10px"><span class="co-tag">'+co.id+'</span></td>';
       // Objective
-      h+='<td class="left"><textarea rows="3" style="width:100%;padding:7px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:12px;resize:vertical" onchange="sub().cos['+i+'].objective=this.value">'+co.objective+'</textarea></td>';
+      h+='<td class="left"><textarea rows="3" style="width:100%;padding:7px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:12px;resize:vertical" oninput="sub().cos['+i+'].objective=this.value;scheduleSave()" onchange="sub().cos['+i+'].objective=this.value;scheduleSave()">'+co.objective+'</textarea></td>';
       // Outcome
-      h+='<td class="left"><textarea rows="3" style="width:100%;padding:7px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:12px;resize:vertical" onchange="sub().cos['+i+'].outcome=this.value">'+co.outcome+'</textarea></td>';
+      h+='<td class="left"><textarea rows="3" style="width:100%;padding:7px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:12px;resize:vertical" oninput="sub().cos['+i+'].outcome=this.value;scheduleSave()" onchange="sub().cos['+i+'].outcome=this.value;scheduleSave()">'+co.outcome+'</textarea></td>';
       // Bloom level
       h+='<td>';
-      h+='<select style="padding:6px;border:1.5px solid '+bColor+';border-radius:6px;font-family:inherit;font-size:12px;width:100%;color:'+bColor+';font-weight:700;background:'+bLight+'" onchange="sub().cos['+i+'].bloom=this.value;renderCOPage(document.getElementById(PAGES[2].id))">';
+      h+='<select style="padding:6px;border:1.5px solid '+bColor+';border-radius:6px;font-family:inherit;font-size:12px;width:100%;color:'+bColor+';font-weight:700;background:'+bLight+'" onchange="sub().cos['+i+'].bloom=this.value;scheduleSave();renderCOPage(document.getElementById(PAGES[2].id))">';
       BLOOM_LEVELS.forEach(function(b){ h+='<option'+(co.bloom===b?' selected':'')+'>'+b+'</option>'; });
       h+='</select>';
       h+='<div style="margin-top:4px;font-size:10px;color:'+bColor+';font-weight:700;text-align:center">L'+(BLOOM_LEVELS.indexOf(co.bloom)+1)+' &#8212; '+co.bloom+'</div>';
-      // Show 3 verbs from dictionary as hint
+      // Show verbs from dictionary as clickable tags
       if(BLOOM_DICT[co.bloom]){
         h+='<div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:2px">';
         BLOOM_DICT[co.bloom].verbs.slice(0,4).forEach(function(v){
-          h+='<span style="font-size:9px;background:'+bLight+';color:'+bColor+';padding:1px 5px;border-radius:10px;font-weight:600">'+v+'</span>';
+          h+='<span onclick="copyVerbToCO(\''+v+'\')" title="Click to copy verb" style="font-size:9px;background:'+bLight+';color:'+bColor+';padding:1px 5px;border-radius:10px;font-weight:600;cursor:pointer">'+v+'</span>';
         });
         h+='</div>';
       }
@@ -921,7 +921,7 @@ function renderCOPage(el){
       });
       h+='</div></td>';
       // PI textarea
-      h+='<td class="left"><textarea rows="3" placeholder="Enter PI code and description..." style="width:100%;padding:5px;border:1.5px solid var(--border2);border-radius:5px;font-family:inherit;font-size:11px;resize:vertical" onchange="sub().cos['+i+'].pi=this.value">'+(co.pi||'')+'</textarea></td>';
+      h+='<td class="left"><textarea rows="3" placeholder="Enter PI code and description..." style="width:100%;padding:5px;border:1.5px solid var(--border2);border-radius:5px;font-family:inherit;font-size:11px;resize:vertical" oninput="sub().cos['+i+'].pi=this.value;scheduleSave()" onchange="sub().cos['+i+'].pi=this.value;scheduleSave()">'+(co.pi||'')+'</textarea></td>';
       // Delete
       h+='<td style="padding-top:10px"><button class="btn btn-sm btn-danger" onclick="removeCO('+i+')">&#10005;</button></td>';
       h+='</tr>';
@@ -929,7 +929,7 @@ function renderCOPage(el){
     h+='</tbody></table></div></div></div>';
 
     // CO Summary preview
-    h+='<div class="card"><div class="card-header"><div class="card-title">&#128196; Report Preview &#8212; CO Summary</div></div><div class="card-body">';
+    h+='<div class="card"><div class="card-header"><div class="card-title">📄 Report Preview &#8212; CO Summary</div></div><div class="card-body">';
     h+='<div class="tbl-wrap"><table><thead><tr style="background:var(--surface3)">';
     h+='<th>CO</th><th class="left">Objective</th><th class="left">Outcome</th><th>Bloom</th><th>WK</th><th>PI</th></tr></thead><tbody>';
     s.cos.forEach(function(co){
@@ -937,8 +937,8 @@ function renderCOPage(el){
       const bColor=BLOOM_DICT[co.bloom]?BLOOM_DICT[co.bloom].color:'var(--accent)';
       h+='<tr>';
       h+='<td><strong>'+co.id+'</strong></td>';
-      h+='<td class="left" style="font-size:11px">'+co.objective.substring(0,55)+'&#8230;</td>';
-      h+='<td class="left" style="font-size:11px">'+co.outcome.substring(0,65)+'&#8230;</td>';
+      h+='<td class="left" style="font-size:11px">'+(co.objective||'').substring(0,55)+'&#8230;</td>';
+      h+='<td class="left" style="font-size:11px">'+(co.outcome||'').substring(0,65)+'&#8230;</td>';
       h+='<td><span style="padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;background:'+(BLOOM_DICT[co.bloom]?BLOOM_DICT[co.bloom].light:'#dbeafe')+';color:'+bColor+'">'+co.bloom+'</span></td>';
       h+='<td>'+wkArr.map(function(w){return '<span class="tag tag-blue" style="font-size:9px;margin:1px">'+w+'</span>';}).join('')+'</td>';
       h+='<td style="font-size:10px;color:var(--text2);max-width:140px">'+(co.pi||'&#8212;')+'</td>';
@@ -947,12 +947,18 @@ function renderCOPage(el){
     h+='</tbody></table></div></div></div>';
   }
 
-  // &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; BLOOM'S DICTIONARY TAB &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+  // ══════════ BLOOM'S DICTIONARY TAB ══════════
   if(tab==='bloom'){
+    h+='<div class="card" style="margin-bottom:14px"><div class="card-body" style="padding:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--surface2)">';
+    h+='<span style="font-size:12px;font-weight:700;color:var(--accent)">🔍 Search Verb:</span>';
+    h+='<input type="text" placeholder="Type verb (e.g. design, solve, evaluate)..." oninput="filterBloomVerbs(this.value)" style="padding:6px 12px;border:1.5px solid var(--border2);border-radius:20px;font-size:12px;width:260px;outline:none">';
+    h+='<span style="font-size:11px;color:var(--text2)">💡 Click any verb tag below to copy it!</span>';
+    h+='</div></div>';
+
     h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">';
     BLOOM_LEVELS.forEach(function(level,li){
       const d=BLOOM_DICT[level];
-      h+='<div class="card" style="border-left:5px solid '+d.color+'">';
+      h+='<div class="card bloom-card-level" data-level="'+level+'" style="border-left:5px solid '+d.color+'">';
       h+='<div class="card-header" style="background:'+d.light+';border-radius:8px 8px 0 0">';
       h+='<div class="card-title" style="color:'+d.color+'">L'+(li+1)+' &#8212; '+level+'</div>';
       h+='<span style="font-size:11px;color:'+d.color+';font-weight:600">Bloom\'s Level '+(li+1)+'</span>';
@@ -961,7 +967,7 @@ function renderCOPage(el){
       h+='<strong style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px">Action Verbs</strong>';
       h+='<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">';
       d.verbs.forEach(function(v){
-        h+='<span style="padding:3px 9px;border-radius:20px;background:'+d.light+';color:'+d.color+';font-size:11px;font-weight:700;border:1px solid '+d.color+'22">'+v+'</span>';
+        h+='<span class="bloom-verb-tag" onclick="copyVerbToCO(\''+v+'\')" title="Click to copy \''+v+'\'" style="padding:3px 9px;border-radius:20px;background:'+d.light+';color:'+d.color+';font-size:11px;font-weight:700;border:1px solid '+d.color+'44;cursor:pointer;transition:.15s">'+v+'</span>';
       });
       h+='</div>';
       // Show BLOOM_PI hints
@@ -976,28 +982,28 @@ function renderCOPage(el){
       h+='</div></div>';
     });
     h+='</div>';
+
     // Quick reference table
-    h+='<div class="card" style="margin-top:14px"><div class="card-header"><div class="card-title">&#128202; Quick Reference &#8212; All Verb Levels</div></div><div class="card-body">';
+    h+='<div class="card" style="margin-top:14px"><div class="card-header"><div class="card-title">📊 Quick Reference &#8212; All Verb Levels</div></div><div class="card-body">';
     h+='<div class="tbl-wrap"><table><thead><tr>';
     BLOOM_LEVELS.forEach(function(b,i){
       const d=BLOOM_DICT[b];
       h+='<th style="background:'+d.color+';color:#fff;min-width:110px">L'+(i+1)+': '+b+'</th>';
     });
     h+='</tr></thead><tbody>';
-    // max 14 verbs rows
     for(let r=0;r<14;r++){
       h+='<tr>';
       BLOOM_LEVELS.forEach(function(b){
         const v=BLOOM_DICT[b].verbs[r]||'';
         const d=BLOOM_DICT[b];
-        h+='<td style="font-size:11px;font-weight:600;color:'+d.color+';background:'+(r%2?d.light+'88':d.light+'44')+';padding:5px 8px">'+v+'</td>';
+        h+='<td style="font-size:11px;font-weight:600;color:'+d.color+';background:'+(r%2?d.light+'88':d.light+'44')+';padding:5px 8px">'+(v?'<span onclick="copyVerbToCO(\''+v+'\')" style="cursor:pointer">'+v+'</span>':'')+'</td>';
       });
       h+='</tr>';
     }
     h+='</tbody></table></div></div></div>';
   }
 
-  // &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; SYLLABUS TAB &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+  // ══════════ SYLLABUS TAB ══════════
   if(tab==='syllabus'){
     if(!s.syllabusModules||!s.syllabusModules.length){
       s.syllabusModules=s.cos.map(function(co,i){
@@ -1016,14 +1022,27 @@ function renderCOPage(el){
     const BLBg={'Remember':'#ede9fe','Understand':'#dbeafe','Apply':'#e0f2fe','Analyze':'#d1fae5','Evaluate':'#fef3c7','Create':'#fee2e2'};
     const WKL=['WK1','WK2','WK3','WK4','WK5','WK6','WK7','WK8','WK9'];
 
+    // Raw Syllabus Text Box & Auto-Parser
+    h+='<div class="card" style="margin-bottom:16px;border-left:4px solid var(--accent)">';
+    h+='<div class="card-header"><div class="card-title">📝 Raw Syllabus Text &amp; Auto-Parser</div>';
+    h+='<div style="display:flex;gap:6px;flex-wrap:wrap">';
+    h+='<button class="btn btn-sm btn-outline" onclick="triggerUpload(\'syllabusFile\')">📁 Upload TXT/DOCX</button>';
+    h+='<input type="file" id="syllabusFile" accept=".txt,.text,.docx" style="display:none" onchange="uploadSyllabus(this)">';
+    h+='<button class="btn btn-sm btn-purple" onclick="autoParseSyllabusModules()">⚡ Auto-Parse to Modules</button>';
+    h+='<button class="btn btn-sm btn-outline" onclick="clearSyllabus()">🗑️ Clear</button>';
+    h+='</div></div><div class="card-body">';
+    h+='<textarea id="syllabusText" rows="4" placeholder="Paste full course syllabus text here (or upload TXT/DOCX file)... Click \'Auto-Parse\' to automatically create syllabus modules!" style="width:100%;padding:8px;border:1.5px solid var(--border2);border-radius:6px;font-family:inherit;font-size:12px;resize:vertical" oninput="sub().syllabusText=this.value;scheduleSave()" onchange="sub().syllabusText=this.value;scheduleSave()">'+(s.syllabusText||'')+'</textarea>';
+    h+='<div style="margin-top:6px;font-size:11px;color:var(--text2);display:flex;justify-content:space-between">';
+    h+='<span>'+(s.syllabusFileName?'Uploaded file: <strong>'+s.syllabusFileName+'</strong>':'Paste syllabus text to quickly extract module topics')+'</span>';
+    h+='<button class="btn btn-sm btn-gold" onclick="autoMapCOsFromSyllabus()">💡 Suggest CO Outcomes</button>';
+    h+='</div></div></div>';
+
     h+='<div class="card">';
     h+='<div class="card-header">';
-    h+='<div class="card-title">&#128196; Syllabus &#8212; '+s.name+' ('+s.code+')</div>';
+    h+='<div class="card-title">📄 Syllabus Modules &#8212; '+s.name+' ('+s.code+')</div>';
     h+='<div style="display:flex;gap:6px;flex-wrap:wrap">';
-    h+='<button class="btn btn-sm btn-outline" onclick="triggerUpload(\'syllabusFile\')">&#128193; Upload TXT/DOCX</button>';
-    h+='<input type="file" id="syllabusFile" accept=".txt,.text,.docx" style="display:none" onchange="uploadSyllabus(this)">';
-    h+='<button class="btn btn-sm btn-success" onclick="saveSyllabusTable()">&#128190; Save</button>';
-    h+='<button class="btn btn-sm btn-purple" onclick="exportSyllabusExcel()">&#128202; Export Excel</button>';
+    h+='<button class="btn btn-sm btn-success" onclick="saveSyllabusTable()">💾 Save Syllabus</button>';
+    h+='<button class="btn btn-sm btn-gold" onclick="exportSyllabusExcel()">📊 Export Excel</button>';
     h+='</div></div>';
     h+='<div class="card-body">';
 
@@ -1204,6 +1223,22 @@ function renderCOPage(el){
   el.innerHTML=h;
 }
 function setCoTab(t){ window._coTab=t; renderCOPage(document.getElementById(PAGES[2].id)); }
+
+function copyVerbToCO(verb){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(verb).catch(()=>{});
+  }
+  showToast('Copied action verb: "'+verb+'"','info');
+}
+
+function filterBloomVerbs(q){
+  const term=(q||'').toLowerCase().trim();
+  document.querySelectorAll('.bloom-card-level').forEach(card=>{
+    const text=card.textContent.toLowerCase();
+    card.style.display=(!term || text.includes(term))?'block':'none';
+  });
+}
+
 function toggleSylMod(el,field){
   const mi=+el.getAttribute('data-mi');
   const s=sub();
@@ -1212,36 +1247,105 @@ function toggleSylMod(el,field){
   const val=el.getAttribute('data-co')||el.getAttribute('data-bl')||el.getAttribute('data-wk');
   if(el.checked){if(!mod[field].includes(val)) mod[field].push(val);}
   else mod[field]=mod[field].filter(function(x){return x!==val;});
+  scheduleSave();
 }
+
 function addSyllabusModule(){
   const s=sub();
   if(!s.syllabusModules) s.syllabusModules=[];
   const n=s.syllabusModules.length+1;
   s.syllabusModules.push({no:n,title:'Module '+n+': [Title]',topics:'Topic 1\nTopic 2\nTopic 3',
     cos:[(s.cos[0]||{id:'CO1'}).id],blooms:['Apply'],wks:['WK1'],hours:8});
+  scheduleSave();
   renderCOPage(document.getElementById(PAGES[2].id));
 }
+
 function removeSyllabusModule(mi){
   sub().syllabusModules.splice(mi,1);
+  scheduleSave();
   renderCOPage(document.getElementById(PAGES[2].id));
 }
+
 function addSyllabusBook(type){
   const key=type==='text'?'syllabusTextBooks':'syllabusRefBooks';
   if(!sub()[key]) sub()[key]=[];
   sub()[key].push({title:'',author:'',pub:'',ed:'',year:2020});
+  scheduleSave();
   renderCOPage(document.getElementById(PAGES[2].id));
 }
+
 function removeSyllabusBook(type,bi){
   const key=type==='text'?'syllabusTextBooks':'syllabusRefBooks';
   sub()[key].splice(bi,1);
+  scheduleSave();
   renderCOPage(document.getElementById(PAGES[2].id));
 }
+
 function saveSyllabusTable(){
-  showToast('Syllabus saved!','success');
+  manualSave();
 }
-function openSyllabusTemplateModal(){ renderCOPage(document.getElementById(PAGES[2].id)); }
-function generateSyllabusTemplate(){ renderCOPage(document.getElementById(PAGES[2].id)); }
-function applySyllabusTemplate(){ showToast('Syllabus saved','success'); }
+
+function autoParseSyllabusModules(){
+  const s=sub();
+  const el=document.getElementById('syllabusText');
+  if(el) s.syllabusText=el.value;
+  if(!s.syllabusText || !s.syllabusText.trim()){
+    showToast('Please paste or upload syllabus text first','error');
+    return;
+  }
+  const lines=s.syllabusText.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+  const modules=[];
+  let currentMod=null;
+
+  lines.forEach(line => {
+    const modMatch = line.match(/^(module|unit|chapter)\s*([0-9ivxlcdm]+)[:\.\s-]*(.*)/i);
+    if(modMatch) {
+      if(currentMod) modules.push(currentMod);
+      const modNo = modules.length + 1;
+      const title = line.length < 80 ? line : 'Module ' + modNo + ': ' + line.substring(0, 45) + '...';
+      currentMod = {
+        no: modNo,
+        title: title,
+        topics: '',
+        cos: ['CO' + (((modNo - 1) % s.cos.length) + 1)],
+        blooms: ['Apply'],
+        wks: ['WK1'],
+        hours: Math.round((s.totalHours || 48) / 6)
+      };
+    } else {
+      if(!currentMod) {
+        currentMod = {
+          no: 1,
+          title: 'Module 1: Core Topics',
+          topics: '',
+          cos: ['CO1'],
+          blooms: ['Apply'],
+          wks: ['WK1'],
+          hours: 8
+        };
+      }
+      currentMod.topics += (currentMod.topics ? '\n' : '') + line;
+    }
+  });
+  if(currentMod) modules.push(currentMod);
+
+  if(modules.length > 0){
+    const totHrs = s.totalHours || 48;
+    const perMod = Math.max(2, Math.floor(totHrs / modules.length));
+    modules.forEach((m, idx) => {
+      m.no = idx + 1;
+      m.hours = perMod;
+      m.cos = ['CO' + (((idx) % s.cos.length) + 1)];
+    });
+    s.syllabusModules = modules;
+    scheduleSave();
+    showToast('Auto-parsed ' + modules.length + ' modules from syllabus text!','success');
+    renderCOPage(document.getElementById(PAGES[2].id));
+  } else {
+    showToast('No module headings detected. Enter topics manually into module table.','info');
+  }
+}
+
 function exportSyllabusExcel(){
   const s=sub();
   const rows=[['Module No','Module Title','Topics','CO(s)','Bloom\'s Level(s)','WK(s)','Hours']];
@@ -1249,16 +1353,16 @@ function exportSyllabusExcel(){
     rows.push([m.no,m.title,(m.topics||'').replace(/\n/g,'; '),
       (m.cos||[]).join(', '),(m.blooms||[]).join(', '),(m.wks||[]).join(', '),m.hours||0]);
   });
-  rows.push([],['\ud83d\udcd7 TEXT BOOKS'],['#','Title','Author','Publisher','Edition','Year']);
+  rows.push([],['📗 TEXT BOOKS'],['#','Title','Author','Publisher','Edition','Year']);
   (s.syllabusTextBooks||[]).forEach(function(bk,i){
     rows.push([i+1,bk.title||'',bk.author||'',bk.pub||'',bk.ed||'',bk.year||'']);
   });
-  rows.push([],['\ud83d\udcd8 REFERENCE BOOKS'],['#','Title','Author','Publisher','Edition','Year']);
+  rows.push([],['📘 REFERENCE BOOKS'],['#','Title','Author','Publisher','Edition','Year']);
   (s.syllabusRefBooks||[]).forEach(function(bk,i){
     rows.push([i+1,bk.title||'',bk.author||'',bk.pub||'',bk.ed||'',bk.year||'']);
   });
   const asp=s.syllabusAssessment||{};
-  rows.push([],['\ud83d\udcca ASSESSMENT PATTERN'],['Component','Weight %','Pattern/Details']);
+  rows.push([],['📊 ASSESSMENT PATTERN'],['Component','Weight %','Pattern/Details']);
   rows.push(['CIE',asp.cie||40,asp.ciePattern||'']);
   rows.push(['ESE',asp.ese||60,asp.esePattern||'']);
   if(asp.other) rows.push(['Other','',asp.other]);
@@ -1269,6 +1373,7 @@ function exportSyllabusExcel(){
   XLSX.writeFile(wb,(s.code||'Course')+'_Syllabus.xlsx');
   showToast('Exported!','success');
 }
+
 function addCO(){
   const s=sub();
   const n=s.cos.length+1;
@@ -1280,9 +1385,11 @@ function addCO(){
   if(!s.coHours) s.coHours=[];
   s.coHours.push(Array((s.hourCols||[]).length).fill(0));
   s.coAttainment=s.cos.map(function(){return null;});
+  scheduleSave();
   renderCOPage(document.getElementById(PAGES[2].id));
   showToast('CO'+n+' added','success');
 }
+
 function removeCO(i){
   const s=sub();
   if(s.cos.length<=1){showToast('At least 1 CO required','error');return;}
@@ -1292,32 +1399,51 @@ function removeCO(i){
   if(s.coHours) s.coHours.splice(i,1);
   s.cos.forEach(function(co,idx){co.id='CO'+(idx+1);});
   s.coAttainment=s.cos.map(function(){return null;});
+  scheduleSave();
   renderCOPage(document.getElementById(PAGES[2].id));
   showToast('CO removed','info');
 }
+
 function uploadSyllabus(input){
   const f=input.files[0];if(!f)return;
   sub().syllabusFileName=f.name;
   const name=f.name.toLowerCase();
   const reader=new FileReader();
   if(name.endsWith('.txt')||name.endsWith('.text')){
-    reader.onload=function(e){sub().syllabusText=e.target.result;showToast('Loaded: '+f.name,'success');renderCOPage(document.getElementById(PAGES[2].id));};
+    reader.onload=function(e){
+      sub().syllabusText=e.target.result;
+      showToast('Loaded: '+f.name,'success');
+      autoParseSyllabusModules();
+    };
     reader.readAsText(f);
   } else if(name.endsWith('.docx')){
     reader.onload=function(e){
       if(typeof mammoth!=='undefined'){
         mammoth.extractRawText({arrayBuffer:e.target.result}).then(function(r){
-          sub().syllabusText=r.value||'';showToast('DOCX extracted: '+f.name,'success');renderCOPage(document.getElementById(PAGES[2].id));
+          sub().syllabusText=r.value||'';
+          showToast('DOCX extracted: '+f.name,'success');
+          autoParseSyllabusModules();
         }).catch(function(){showToast('Could not extract DOCX','error');});
       } else {showToast('mammoth library not loaded','error');}
     };
     reader.readAsArrayBuffer(f);
   } else {showToast('Supports TXT and DOCX only','info');}
 }
-function buildSyllabusPreview(t){return '';}
-function livePreviewSyllabus(t){sub().syllabusText=t;}
-function clearSyllabus(){sub().syllabusText='';sub().syllabusFileName='';renderCOPage(document.getElementById(PAGES[2].id));showToast('Cleared','info');}
-function saveSyllabus(){const el=document.getElementById('syllabusText');if(el)sub().syllabusText=el.value;showToast('Saved!','success');}
+
+function clearSyllabus(){
+  sub().syllabusText='';
+  sub().syllabusFileName='';
+  sub().syllabusModules=[];
+  scheduleSave();
+  renderCOPage(document.getElementById(PAGES[2].id));
+  showToast('Syllabus cleared','info');
+}
+
+function saveSyllabus(){
+  const el=document.getElementById('syllabusText');
+  if(el) sub().syllabusText=el.value;
+  manualSave();
+}
 
 function autoMapCOsFromSyllabus(){
   const s=sub();
@@ -1334,12 +1460,16 @@ function autoMapCOsFromSyllabus(){
   if(hints.length){
     showToast(hints.length+' outcome suggestions &#8212; check CO outcomes!','info');
     s.cos.forEach(function(co,i){if(hints[i]) co.outcome='Students will be able to '+hints[i];});
+    scheduleSave();
     renderCOPage(document.getElementById(PAGES[2].id));
   } else {
     showToast('Could not auto-detect &#8212; edit COs manually','info');
   }
 }
-function saveCOs(){showToast('Course Objectives & Outcomes saved!','success');}
+
+function saveCOs(){
+  manualSave();
+}
 function toggleCOWK(ci,wk,checked){
   const co=sub().cos[ci];
   if(!Array.isArray(co.wk)) co.wk=co.wk?[co.wk]:[];
@@ -3405,7 +3535,7 @@ function generateFullReport(){
           return h;
         }
 
-        // &#9472;&#9472; Generate Tab 4 content: Matrix + Justification &#9472;&#9472;
+        // ══════════ Generate Tab 4 content: Matrix + Justification ══════════
         function buildTab4(){
           const allPOs=[...s.pos.map(function(_,i){return 'PO'+(i+1);}), ...s.psos.map(function(_,i){return 'PSO'+(i+1);})];
           const allPONames=[...s.pos,...s.psos];
@@ -3440,27 +3570,60 @@ function generateFullReport(){
           h+='<td style="border:1px solid #bfdbfe"></td></tr>';
           h+='</tbody></table>';
 
-          // Justification
-          if(s.copoJustification&&Object.keys(s.copoJustification).length){
-            h+='<h3 style="color:#2563eb;font-size:14px;margin:16px 0 10px;border-bottom:1px solid #e2e8f0;padding-bottom:6px">B. CO-PO Mapping Justification</h3>';
-            h+='<table style="width:100%;border-collapse:collapse;font-size:11px">';
-            h+='<thead><tr style="background:#0f172a;color:#fff"><th style="padding:7px;border:1px solid #334155;width:40px">CO</th><th style="padding:7px;border:1px solid #334155;width:50px">PO/PSO</th><th style="padding:7px;border:1px solid #334155;width:50px">Level</th><th style="padding:7px;border:1px solid #334155;text-align:left">Justification</th></tr></thead><tbody>';
-            s.cos.forEach(function(co,ci){
-              s.copoPOMatrix[ci].forEach(function(v,pi){
-                if(!v) return;
-                const key=co.id+'_'+allPOs[pi];
-                const just=(s.copoJustification&&s.copoJustification[key])||'';
-                const str=v===3?'High':v===2?'Medium':'Low';
-                h+='<tr style="background:'+(ci%2?'#f8fafc':'#fff')+'">';
-                h+='<td style="padding:5px 8px;border:1px solid #e2e8f0;font-weight:700;color:#2563eb">'+co.id+'</td>';
-                h+='<td style="padding:5px 8px;border:1px solid #e2e8f0;font-weight:700">'+allPOs[pi]+'</td>';
-                h+='<td style="padding:5px 8px;border:1px solid #e2e8f0;color:'+(v===3?'#059669':v===2?'#d97706':'#2563eb')+'">'+str+'</td>';
-                h+='<td style="padding:5px 8px;border:1px solid #e2e8f0">'+(just||'<em style="color:#94a3b8">Not provided</em>')+'</td>';
-                h+='</tr>';
-              });
+          // B. CO-PO Mapping Justifications Table
+          h+='<h3 style="color:#2563eb;font-size:14px;margin:16px 0 10px;border-bottom:1px solid #e2e8f0;padding-bottom:6px">B. CO-PO / CO-PSO Mapping Justifications</h3>';
+          h+='<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:16px">';
+          h+='<thead><tr style="background:#0f172a;color:#fff">';
+          h+='<th style="padding:7px;border:1px solid #334155;width:45px;text-align:center">CO</th>';
+          h+='<th style="padding:7px;border:1px solid #334155;width:65px;text-align:center">PO/PSO</th>';
+          h+='<th style="padding:7px;border:1px solid #334155;width:80px;text-align:center">Strength</th>';
+          h+='<th style="padding:7px;border:1px solid #334155;text-align:left">Detailed Justification Rationale</th>';
+          h+='</tr></thead><tbody>';
+
+          let hasPair=false;
+          s.cos.forEach(function(co,ci){
+            const matrixRow = s.copoPOMatrix[ci] || [];
+            matrixRow.forEach(function(v,pi){
+              if(!v) return;
+              hasPair=true;
+              const key=co.id+'_'+allPOs[pi];
+              const just=(s.copoJustification&&s.copoJustification[key])?s.copoJustification[key].trim():'';
+              const str=v===3?'High (3)':v===2?'Medium (2)':'Low (1)';
+              const badgeBg=v===3?'#d1fae5':v===2?'#fef3c7':'#dbeafe';
+              const badgeCol=v===3?'#059669':v===2?'#d97706':'#2563eb';
+
+              h+='<tr style="background:'+(ci%2?'#f8fafc':'#fff')+'">';
+              h+='<td style="padding:6px 8px;border:1px solid #e2e8f0;font-weight:800;color:#2563eb;text-align:center">'+co.id+'</td>';
+              h+='<td style="padding:6px 8px;border:1px solid #e2e8f0;font-weight:800;text-align:center;color:#475569">'+allPOs[pi]+'</td>';
+              h+='<td style="padding:6px 8px;border:1px solid #e2e8f0;text-align:center"><span style="padding:2px 7px;border-radius:10px;background:'+badgeBg+';color:'+badgeCol+';font-weight:700;font-size:10px">'+str+'</span></td>';
+              h+='<td style="padding:6px 8px;border:1px solid #e2e8f0;line-height:1.4">'+(just?just.replace(/\n/g,'<br>'):'<em style="color:#94a3b8">Justification pending</em>')+'</td>';
+              h+='</tr>';
             });
-            h+='</tbody></table>';
+          });
+
+          if(!hasPair){
+            h+='<tr><td colspan="4" style="padding:10px;border:1px solid #e2e8f0;text-align:center;color:#94a3b8">No CO-PO/PSO mappings defined yet.</td></tr>';
           }
+          h+='</tbody></table>';
+
+          // C. Overall CO Program Rationale Summaries
+          let hasSummary=false;
+          let sumHtml='<h3 style="color:#2563eb;font-size:14px;margin:16px 0 10px;border-bottom:1px solid #e2e8f0;padding-bottom:6px">C. Overall CO Program Rationale Summaries</h3>';
+          sumHtml+='<table style="width:100%;border-collapse:collapse;font-size:11px">';
+          sumHtml+='<thead><tr style="background:#1e40af;color:#fff"><th style="padding:7px;border:1px solid #93c5fd;width:60px;text-align:center">CO</th><th style="padding:7px;border:1px solid #93c5fd;text-align:left">Program Contribution Rationale Summary</th></tr></thead><tbody>';
+
+          s.cos.forEach(function(co){
+            const coKey=co.id+'_summary';
+            const sumText=(s.copoJustification&&s.copoJustification[coKey])?s.copoJustification[coKey].trim():'';
+            if(sumText){
+              hasSummary=true;
+              sumHtml+='<tr><td style="padding:6px 8px;border:1px solid #e2e8f0;font-weight:800;color:#2563eb;text-align:center">'+co.id+'</td>';
+              sumHtml+='<td style="padding:6px 8px;border:1px solid #e2e8f0;line-height:1.4">'+sumText.replace(/\n/g,'<br>')+'</td></tr>';
+            }
+          });
+          sumHtml+='</tbody></table>';
+          if(hasSummary) h+=sumHtml;
+
           return h;
         }
 
@@ -3592,18 +3755,21 @@ function generateFullReport(){
         +'<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">'
         +'<style>'
         +allCSS
-        +'body{background:#fff!important;font-family:"Plus Jakarta Sans",sans-serif;color:#000!important}'
-        +'*{color:#000!important}'
+        +'body{background:#fff!important;font-family:"Plus Jakarta Sans",sans-serif;color:#0f172a!important}'
+        +'table{width:100%!important;border-collapse:collapse!important;margin-bottom:14px!important}'
+        +'tr{page-break-inside:avoid!important;break-inside:avoid!important}'
+        +'th,td{border-color:#cbd5e1!important}'
         +'.sidebar,.topbar,.mobile-menu-btn,.nav-item,.btn-primary,.btn-outline,.btn-sm,.btn-gold,.btn-success,.btn-purple,.btn-danger,.subject-selector,.sidebar-footer,.instr{display:none!important}'
         +'.page{display:block!important;opacity:1!important}'
         +'.shell-grid,.main-content{display:block!important}'
         +'.content-body{padding:0!important}'
-        +'@page{margin:15mm;size:A4}'
+        +'@page{margin:12mm;size:A4 portrait}'
         +'@media print{'
-        +'  .page{page-break-inside:avoid}'
-        +'  button,.btn{display:none!important}'
-        +'  input[type=range]{display:none}'
+        +'  body{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}'
+        +'  button,.btn,.no-print{display:none!important}'
+        +'  input[type=range]{display:none!important}'
         +'  .tbl-wrap{overflow:visible!important}'
+        +'  tr{break-inside:avoid!important;page-break-inside:avoid!important}'
         +'}'
         +'</style>'
         +'</head><body>'
