@@ -94,6 +94,12 @@ async function apiFetch(path, options){
     throw new Error('Backend not reachable. Please verify backend service on Render.');
   }
   if(!res.ok){
+    if(res.status === 401 && path !== '/api/auth/login'){
+      setAuthToken('');
+      if(typeof doLogout === 'function') doLogout();
+      if(typeof showLoginErr === 'function') showLoginErr('Session expired. Please sign in again.');
+      throw new Error('Session expired. Please sign in again.');
+    }
     let msg = 'Request failed';
     try{ const j = await res.json(); if(j && j.error) msg = j.error; }catch(e){}
     throw new Error(msg);
@@ -102,6 +108,7 @@ async function apiFetch(path, options){
 }
 
 async function loadBootstrap(){
+  if(!AUTH_TOKEN) return;
   const data = await apiFetch('/api/bootstrap');
   if(Array.isArray(data.departments)) DEPARTMENTS = data.departments;
   if(data.subjects && typeof data.subjects === 'object') APP.subjects = data.subjects;
@@ -115,10 +122,15 @@ async function loadBootstrap(){
 let saveTimer;
 function scheduleSave(){
   clearTimeout(saveTimer);
+  if(!AUTH_TOKEN) return;
   saveTimer = setTimeout(()=>saveSubject(APP.currentSubjectId).catch(()=>{}), 800);
 }
 
 function manualSave(){
+  if(!AUTH_TOKEN){
+    showToast('Please sign in to save changes to cloud.','info');
+    return;
+  }
   saveSubject(APP.currentSubjectId)
     .then(()=>showToast('Saved','success'))
     .catch((e)=>showToast(e.message||'Save failed','error'));
@@ -126,7 +138,7 @@ function manualSave(){
 
 async function saveSubject(id){
   const s = APP.subjects[id];
-  if(!s) return;
+  if(!s || !AUTH_TOKEN) return;
   await apiFetch('/api/subjects/'+encodeURIComponent(id), {method:'PUT', body: JSON.stringify(s)});
 }
 
