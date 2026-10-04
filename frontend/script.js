@@ -91,7 +91,7 @@ async function apiFetch(path, options){
   try{
     res = await fetch(API_BASE + path, opts);
   }catch(e){
-    throw new Error('Backend not reachable. Check the Railway deployment URL.');
+    throw new Error('Backend not reachable. Please verify backend service on Render.');
   }
   if(!res.ok){
     let msg = 'Request failed';

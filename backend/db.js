@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
+import bcrypt from "bcryptjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,32 +18,35 @@ if (fs.existsSync(path.resolve(__dirname, "..", ".env"))) {
 
 const rawUrl = process.env.DATABASE_URL || process.env.DATABASE_PUBLIC_URL || "";
 let dbUrl = rawUrl;
-const lower = rawUrl.toLowerCase();
+let sslOptions = undefined;
 
-const needsSsl =
-  (process.env.PGSSLMODE && process.env.PGSSLMODE.toLowerCase() === "require") ||
-  lower.includes("sslmode=require");
-
-const allowInsecure =
-  (process.env.PGSSL_ALLOW_INSECURE && process.env.PGSSL_ALLOW_INSECURE.toLowerCase() === "true") ||
-  lower.includes("supabase.com") ||
-  lower.includes("pooler.supabase.com");
-
-// If we need to allow insecure SSL, strip sslmode from URL to prevent override
-if (allowInsecure && rawUrl) {
+if (rawUrl) {
   try {
     const u = new URL(rawUrl);
+    const hasSslMode = u.searchParams.has("sslmode");
     u.searchParams.delete("sslmode");
     u.searchParams.delete("sslrootcert");
+    u.searchParams.delete("sslcert");
+    u.searchParams.delete("sslkey");
     dbUrl = u.toString();
-  } catch {
+
+    const isLocal = (u.hostname === "localhost" || u.hostname === "127.0.0.1") && 
+                    !hasSslMode && 
+                    !process.env.PGSSLMODE && 
+                    process.env.PGSSL_ALLOW_INSECURE !== "true";
+
+    if (!isLocal) {
+      sslOptions = { rejectUnauthorized: false };
+    }
+  } catch (e) {
     dbUrl = rawUrl;
+    sslOptions = { rejectUnauthorized: false };
   }
 }
 
 export const pool = new Pool({
-  connectionString: dbUrl,
-  ssl: (needsSsl || allowInsecure) ? { rejectUnauthorized: false } : undefined
+  connectionString: dbUrl || undefined,
+  ssl: sslOptions
 });
 
 const embeddedSchema = `
@@ -66,14 +70,10 @@ CREATE TABLE IF NOT EXISTS subjects (
 );
 `;
 
-export async function ensureSchema(){
-  // Railway deployment: files are in /app, so check multiple paths
-  // Production-safe: Always use embedded schema as fallback
+export async function ensureSchema() {
   const candidates = [
-    // Current directory relative paths (for standard dev/prod)
     path.resolve(__dirname, "..", "database", "schema.sql"),
     path.resolve(__dirname, "database", "schema.sql"),
-    // Project root relative (for Railway /app layout)
     path.resolve(process.cwd(), "database", "schema.sql"),
     path.resolve(process.cwd(), "backend", "..", "database", "schema.sql"),
   ];
@@ -92,8 +92,68 @@ export async function ensureSchema(){
   }
   
   if (sql === embeddedSchema) {
-    console.log(`[DB] Using embedded schema (no external schema.sql found)`);
+    console.log(`[DB] Using embedded schema`);
   }
   
   await pool.query(sql);
 }
+
+export async function ensureDefaultDepartments() {
+  const DEFAULT_DEPARTMENTS = [
+    "Computer Engineering",
+    "Electronics & Telecommunication",
+    "Mechanical Engineering",
+    "Civil Engineering",
+    "Information Technology",
+    "Electrical Engineering",
+    "Chemical Engineering",
+    "Instrumentation Engineering"
+  ];
+  for (const dept of DEFAULT_DEPARTMENTS) {
+    await pool.query(
+      "INSERT INTO departments (name) VALUES ($1) ON CONFLICT (name) DO NOTHING",
+      [dept]
+    );
+  }
+}
+
+export async function ensureDefaultUsers() {
+  const defaults = [
+    { username: "admin", password: "admin123", role: "admin", name: "Admin User", dept: "Computer Engineering" },
+    { username: "head", password: "head123", role: "head", name: "Head of Dept", dept: "Computer Engineering" },
+    { username: "faculty1", password: "pass123", role: "faculty", name: "Dr. A. Sharma", dept: "Computer Engineering" }
+  ];
+  for (const u of defaults) {
+    const hash = await bcrypt.hash(u.password, 10);
+    await pool.query(
+      "INSERT INTO users (username, pass_hash, role, name, dept) VALUES ($1,$2,$3,$4,$5) ON CONFLICT (username) DO NOTHING",
+      [u.username, hash, u.role, u.name, u.dept]
+    );
+  }
+}
+
+let dbInitialized = false;
+let dbInitPromise = null;
+
+export async function ensureDbInitialized() {
+  if (dbInitialized) return true;
+  if (dbInitPromise) return dbInitPromise;
+
+  dbInitPromise = (async () => {
+    try {
+      await ensureSchema();
+      await ensureDefaultDepartments();
+      await ensureDefaultUsers();
+      dbInitialized = true;
+      console.log("[DB] Database initialized successfully (schema, departments, users)");
+      return true;
+    } catch (err) {
+      dbInitPromise = null;
+      console.error("[DB Init Error]:", err.message);
+      throw err;
+    }
+  })();
+
+  return dbInitPromise;
+}
+
